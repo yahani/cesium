@@ -435,12 +435,12 @@
             "content" : [{
                 "id" : "/Application/STK/Scenario/simple/Satellite/ISS",
                 "overlay" : {
-                    "content" : "<div><form><input id='go' type='button' value='Go' /></form></div>",
+                    "content" : "<div  style='width:200px; height:70px; background-color:gray;' ><form>Conjunction Analysis<br/>Radius (km): <input type='number' name='radius' value='50'/><input id='go' type='button' value='Go' /></form></div>",
                     "origin" : "OBJECT",
-                    "horizontalOrigin" : "CENTER",
-                    "verticalOrigin" : "CENTER",
+                    "horizontalOrigin" : "LEFT",
+                    "verticalOrigin" : "BOTTOM",
                     "offset" : {
-                        "cartesian2" : [0, 0]
+                        "cartesian2" : [24, -24]
                     },
                     "goButton":"go",
                     "goTemplate":"Gallery/test.czml"
