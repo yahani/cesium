@@ -211,6 +211,19 @@ define([
         }
     };
 
+//    CompositeDynamicObjectCollection.prototype._onObjectsRemoved = function(dynamicObjectCollection, removedObjects) {
+//        if (removedObjects.length > 0) {
+//            var myRemoved = [];
+//            for ( var i = 0; i < removedObjects.length; i++) {
+//                var composite = this._hash[removedObjects[i].id];
+//                var index = this._array.indexOf(composite);
+//                myRemoved.push(this._array.splice(index, 1)[0]);
+//                this._hash[removedObjects[i].id] = undefined;
+//            }
+//            this.objectsRemoved.raiseEvent(this, myRemoved);
+//        }
+//    };
+
     CompositeDynamicObjectCollection.prototype._onObjectPropertiesChanged = function(dynamicObjectCollection, updatedObjects) {
         var thisMergeFunctions = this.mergeFunctions;
         var thisCleanFunctions = this.cleanFunctions;

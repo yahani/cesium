@@ -168,8 +168,14 @@ define([
     };
 
     DynamicOverlayVisualizer.prototype._updateObject = function(time, dynamicObject) {
+        var overlayDiv = dynamicObject._overlayDiv;
         var dynamicOverlay = dynamicObject.overlay;
         if (typeof dynamicOverlay === 'undefined') {
+            if (typeof overlayDiv !== 'undefined') {
+                overlayDiv.parentNode.removeChild(overlayDiv);
+                dynamicObject._overlayDiv = undefined;
+                dynamicObject._overlayContent = undefined;
+            }
             return;
         }
 
@@ -179,7 +185,6 @@ define([
         }
 
         var showProperty = dynamicOverlay.show;
-        var overlayDiv = dynamicObject._overlayDiv;
         var show = dynamicObject.isAvailable(time) && (typeof showProperty === 'undefined' || showProperty.getValue(time));
 
         if (!show) {
@@ -194,7 +199,7 @@ define([
         if (typeof overlayDiv === 'undefined') {
             overlayDiv = document.createElement('div');
             dynamicObject._overlayDiv = overlayDiv;
-            overlayDiv.id = dynamicObject.id;
+            //overlayDiv.id = dynamicObject.id;
             overlayDiv.style.position='absolute';
             overlayDiv.style.left='0px';
             overlayDiv.style.top='0px';
