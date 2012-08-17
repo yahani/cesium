@@ -1,13 +1,13 @@
 
 [
-  {
+   {
     "id":"logo",
     "overlay":{
       "content":"<img src='../../Images/baby.gif' />",
       "origin":"LOWER_RIGHT",
       "offset":{
-        "interpolationAlgorithm":"LAGRANGE",
-        "interpolationDegree":2,
+       "interpolationAlgorithm":"LAGRANGE",
+       "interpolationDegree":2,
         "epoch":"2012-08-17T12:00:00Z",
         "cartesian2":[
           0.0, 0.0, 0.0,
@@ -17,7 +17,7 @@
     }
   },
   {
-    "id":"/Application/STK/Scenario/Hackathon/Satellite/IRIDIUM_10_24839",
+    "id":"24839",
     "availability":"2012-08-17T12:00:00Z/2012-08-17T18:00:00Z",
     "billboard":{
       "color":{
@@ -66,6 +66,28 @@
       "show":true,
       "leadTime":0.0,
       "trailTime":0.0
+    },
+    "whenSelected":{
+      "czml":{
+        "content":[
+          {
+            "id":"24839",
+            "overlay":{
+              "content":"<div  style='width:200px; height:70px; background-color:gray;' ><form>Conjunction Analysis<br/>Max Range (km): <input type='number' id='maxRange' value='50'/><input id='go' type='button' value='Go' /></form></div>",
+              "origin":"OBJECT",
+              "horizontalOrigin":"LEFT",
+              "verticalOrigin":"BOTTOM",
+              "offset":{
+                "cartesian2":[
+                  24,-24
+                ]
+              },
+              "goButton":"go",
+              "goTemplate":"http://localhost/lovelacelos/conjunctions?ssc=`selectedObjectID`&start=`timelineStart`&stop=`timelineStop`&maxRange=`maxRange`&f=JSON"
+            }
+          }
+        ]
+      }
     },
     "position":{
       "interpolationAlgorithm":"LAGRANGE",
@@ -437,7 +459,7 @@
     }
   },
   {
-    "id":"/Application/STK/Scenario/Hackathon/Satellite/IRIDIUM_11_25578",
+    "id":"25578",
     "availability":"2012-08-17T12:00:00Z/2012-08-17T18:00:00Z",
     "billboard":{
       "color":{
@@ -486,6 +508,28 @@
       "show":true,
       "leadTime":0.0,
       "trailTime":0.0
+    },
+    "whenSelected":{
+      "czml":{
+        "content":[
+          {
+            "id":"25578",
+            "overlay":{
+              "content":"<div  style='width:200px; height:70px; background-color:gray;' ><form>Conjunction Analysis<br/>Max Range (km): <input type='number' id='maxRange' value='50'/><input id='go' type='button' value='Go' /></form></div>",
+              "origin":"OBJECT",
+              "horizontalOrigin":"LEFT",
+              "verticalOrigin":"BOTTOM",
+              "offset":{
+                "cartesian2":[
+                  24,-24
+                ]
+              },
+              "goButton":"go",
+              "goTemplate":"http://localhost/lovelacelos/conjunctions?ssc=`selectedObjectID`&start=`timelineStart`&stop=`timelineStop`&maxRange=`maxRange`&f=JSON"
+            }
+          }
+        ]
+      }
     },
     "position":{
       "interpolationAlgorithm":"LAGRANGE",
@@ -857,7 +901,7 @@
     }
   },
   {
-    "id":"/Application/STK/Scenario/Hackathon/Satellite/IRIDIUM_12_24837",
+    "id":"24837",
     "availability":"2012-08-17T12:00:00Z/2012-08-17T18:00:00Z",
     "billboard":{
       "color":{
@@ -906,6 +950,28 @@
       "show":true,
       "leadTime":0.0,
       "trailTime":0.0
+    },
+    "whenSelected":{
+      "czml":{
+        "content":[
+          {
+            "id":"24837",
+            "overlay":{
+              "content":"<div  style='width:200px; height:70px; background-color:gray;' ><form>Conjunction Analysis<br/>Max Range (km): <input type='number' id='maxRange' value='50'/><input id='go' type='button' value='Go' /></form></div>",
+              "origin":"OBJECT",
+              "horizontalOrigin":"LEFT",
+              "verticalOrigin":"BOTTOM",
+              "offset":{
+                "cartesian2":[
+                  24,-24
+                ]
+              },
+              "goButton":"go",
+              "goTemplate":"http://localhost/lovelacelos/conjunctions?ssc=`selectedObjectID`&start=`timelineStart`&stop=`timelineStop`&maxRange=`maxRange`&f=JSON"
+            }
+          }
+        ]
+      }
     },
     "position":{
       "interpolationAlgorithm":"LAGRANGE",
@@ -1277,7 +1343,7 @@
     }
   },
   {
-    "id":"/Application/STK/Scenario/Hackathon/Satellite/IRIDIUM_13_24840",
+    "id":"24840",
     "availability":"2012-08-17T12:00:00Z/2012-08-17T18:00:00Z",
     "billboard":{
       "color":{
@@ -1326,6 +1392,28 @@
       "show":true,
       "leadTime":0.0,
       "trailTime":0.0
+    },
+    "whenSelected":{
+      "czml":{
+        "content":[
+          {
+            "id":"24840",
+            "overlay":{
+              "content":"<div  style='width:200px; height:70px; background-color:gray;' ><form>Conjunction Analysis<br/>Max Range (km): <input type='number' id='maxRange' value='50'/><input id='go' type='button' value='Go' /></form></div>",
+              "origin":"OBJECT",
+              "horizontalOrigin":"LEFT",
+              "verticalOrigin":"BOTTOM",
+              "offset":{
+                "cartesian2":[
+                  24,-24
+                ]
+              },
+              "goButton":"go",
+              "goTemplate":"http://localhost/lovelacelos/conjunctions?ssc=`selectedObjectID`&start=`timelineStart`&stop=`timelineStop`&maxRange=`maxRange`&f=JSON"
+            }
+          }
+        ]
+      }
     },
     "position":{
       "interpolationAlgorithm":"LAGRANGE",
@@ -1697,7 +1785,7 @@
     }
   },
   {
-    "id":"/Application/STK/Scenario/Hackathon/Satellite/IRIDIUM_14_25777",
+    "id":"25777",
     "availability":"2012-08-17T12:00:00Z/2012-08-17T18:00:00Z",
     "billboard":{
       "color":{
@@ -1746,6 +1834,28 @@
       "show":true,
       "leadTime":0.0,
       "trailTime":0.0
+    },
+    "whenSelected":{
+      "czml":{
+        "content":[
+          {
+            "id":"25777",
+            "overlay":{
+              "content":"<div  style='width:200px; height:70px; background-color:gray;' ><form>Conjunction Analysis<br/>Max Range (km): <input type='number' id='maxRange' value='50'/><input id='go' type='button' value='Go' /></form></div>",
+              "origin":"OBJECT",
+              "horizontalOrigin":"LEFT",
+              "verticalOrigin":"BOTTOM",
+              "offset":{
+                "cartesian2":[
+                  24,-24
+                ]
+              },
+              "goButton":"go",
+              "goTemplate":"http://localhost/lovelacelos/conjunctions?ssc=`selectedObjectID`&start=`timelineStart`&stop=`timelineStop`&maxRange=`maxRange`&f=JSON"
+            }
+          }
+        ]
+      }
     },
     "position":{
       "interpolationAlgorithm":"LAGRANGE",
@@ -2117,7 +2227,7 @@
     }
   },
   {
-    "id":"/Application/STK/Scenario/Hackathon/Satellite/IRIDIUM_15_24869",
+    "id":"24869",
     "availability":"2012-08-17T12:00:00Z/2012-08-17T18:00:00Z",
     "billboard":{
       "color":{
@@ -2166,6 +2276,28 @@
       "show":true,
       "leadTime":0.0,
       "trailTime":0.0
+    },
+    "whenSelected":{
+      "czml":{
+        "content":[
+          {
+            "id":"24869",
+            "overlay":{
+              "content":"<div  style='width:200px; height:70px; background-color:gray;' ><form>Conjunction Analysis<br/>Max Range (km): <input type='number' id='maxRange' value='50'/><input id='go' type='button' value='Go' /></form></div>",
+              "origin":"OBJECT",
+              "horizontalOrigin":"LEFT",
+              "verticalOrigin":"BOTTOM",
+              "offset":{
+                "cartesian2":[
+                  24,-24
+                ]
+              },
+              "goButton":"go",
+              "goTemplate":"http://localhost/lovelacelos/conjunctions?ssc=`selectedObjectID`&start=`timelineStart`&stop=`timelineStop`&maxRange=`maxRange`&f=JSON"
+            }
+          }
+        ]
+      }
     },
     "position":{
       "interpolationAlgorithm":"LAGRANGE",
@@ -2537,7 +2669,7 @@
     }
   },
   {
-    "id":"/Application/STK/Scenario/Hackathon/Satellite/IRIDIUM_18_24872",
+    "id":"24872",
     "availability":"2012-08-17T12:00:00Z/2012-08-17T18:00:00Z",
     "billboard":{
       "color":{
@@ -2586,6 +2718,28 @@
       "show":true,
       "leadTime":0.0,
       "trailTime":0.0
+    },
+    "whenSelected":{
+      "czml":{
+        "content":[
+          {
+            "id":"24872",
+            "overlay":{
+              "content":"<div  style='width:200px; height:70px; background-color:gray;' ><form>Conjunction Analysis<br/>Max Range (km): <input type='number' id='maxRange' value='50'/><input id='go' type='button' value='Go' /></form></div>",
+              "origin":"OBJECT",
+              "horizontalOrigin":"LEFT",
+              "verticalOrigin":"BOTTOM",
+              "offset":{
+                "cartesian2":[
+                  24,-24
+                ]
+              },
+              "goButton":"go",
+              "goTemplate":"http://localhost/lovelacelos/conjunctions?ssc=`selectedObjectID`&start=`timelineStart`&stop=`timelineStop`&maxRange=`maxRange`&f=JSON"
+            }
+          }
+        ]
+      }
     },
     "position":{
       "interpolationAlgorithm":"LAGRANGE",
@@ -2957,7 +3111,7 @@
     }
   },
   {
-    "id":"/Application/STK/Scenario/Hackathon/Satellite/IRIDIUM_19_24965",
+    "id":"24965",
     "availability":"2012-08-17T12:00:00Z/2012-08-17T18:00:00Z",
     "billboard":{
       "color":{
@@ -3006,6 +3160,28 @@
       "show":true,
       "leadTime":0.0,
       "trailTime":0.0
+    },
+    "whenSelected":{
+      "czml":{
+        "content":[
+          {
+            "id":"24965",
+            "overlay":{
+              "content":"<div  style='width:200px; height:70px; background-color:gray;' ><form>Conjunction Analysis<br/>Max Range (km): <input type='number' id='maxRange' value='50'/><input id='go' type='button' value='Go' /></form></div>",
+              "origin":"OBJECT",
+              "horizontalOrigin":"LEFT",
+              "verticalOrigin":"BOTTOM",
+              "offset":{
+                "cartesian2":[
+                  24,-24
+                ]
+              },
+              "goButton":"go",
+              "goTemplate":"http://localhost/lovelacelos/conjunctions?ssc=`selectedObjectID`&start=`timelineStart`&stop=`timelineStop`&maxRange=`maxRange`&f=JSON"
+            }
+          }
+        ]
+      }
     },
     "position":{
       "interpolationAlgorithm":"LAGRANGE",
@@ -3377,7 +3553,7 @@
     }
   },
   {
-    "id":"/Application/STK/Scenario/Hackathon/Satellite/IRIDIUM_20_25577",
+    "id":"25577",
     "availability":"2012-08-17T12:00:00Z/2012-08-17T18:00:00Z",
     "billboard":{
       "color":{
@@ -3426,6 +3602,28 @@
       "show":true,
       "leadTime":0.0,
       "trailTime":0.0
+    },
+    "whenSelected":{
+      "czml":{
+        "content":[
+          {
+            "id":"25577",
+            "overlay":{
+              "content":"<div  style='width:200px; height:70px; background-color:gray;' ><form>Conjunction Analysis<br/>Max Range (km): <input type='number' id='maxRange' value='50'/><input id='go' type='button' value='Go' /></form></div>",
+              "origin":"OBJECT",
+              "horizontalOrigin":"LEFT",
+              "verticalOrigin":"BOTTOM",
+              "offset":{
+                "cartesian2":[
+                  24,-24
+                ]
+              },
+              "goButton":"go",
+              "goTemplate":"http://localhost/lovelacelos/conjunctions?ssc=`selectedObjectID`&start=`timelineStart`&stop=`timelineStop`&maxRange=`maxRange`&f=JSON"
+            }
+          }
+        ]
+      }
     },
     "position":{
       "interpolationAlgorithm":"LAGRANGE",
@@ -3797,7 +3995,7 @@
     }
   },
   {
-    "id":"/Application/STK/Scenario/Hackathon/Satellite/IRIDIUM_21_25778",
+    "id":"25778",
     "availability":"2012-08-17T12:00:00Z/2012-08-17T18:00:00Z",
     "billboard":{
       "color":{
@@ -3846,6 +4044,28 @@
       "show":true,
       "leadTime":0.0,
       "trailTime":0.0
+    },
+    "whenSelected":{
+      "czml":{
+        "content":[
+          {
+            "id":"25778",
+            "overlay":{
+              "content":"<div  style='width:200px; height:70px; background-color:gray;' ><form>Conjunction Analysis<br/>Max Range (km): <input type='number' id='maxRange' value='50'/><input id='go' type='button' value='Go' /></form></div>",
+              "origin":"OBJECT",
+              "horizontalOrigin":"LEFT",
+              "verticalOrigin":"BOTTOM",
+              "offset":{
+                "cartesian2":[
+                  24,-24
+                ]
+              },
+              "goButton":"go",
+              "goTemplate":"http://localhost/lovelacelos/conjunctions?ssc=`selectedObjectID`&start=`timelineStart`&stop=`timelineStop`&maxRange=`maxRange`&f=JSON"
+            }
+          }
+        ]
+      }
     },
     "position":{
       "interpolationAlgorithm":"LAGRANGE",
@@ -4217,7 +4437,7 @@
     }
   },
   {
-    "id":"/Application/STK/Scenario/Hackathon/Satellite/IRIDIUM_22_24907",
+    "id":"24907",
     "availability":"2012-08-17T12:00:00Z/2012-08-17T18:00:00Z",
     "billboard":{
       "color":{
@@ -4266,6 +4486,28 @@
       "show":true,
       "leadTime":0.0,
       "trailTime":0.0
+    },
+    "whenSelected":{
+      "czml":{
+        "content":[
+          {
+            "id":"24907",
+            "overlay":{
+              "content":"<div  style='width:200px; height:70px; background-color:gray;' ><form>Conjunction Analysis<br/>Max Range (km): <input type='number' id='maxRange' value='50'/><input id='go' type='button' value='Go' /></form></div>",
+              "origin":"OBJECT",
+              "horizontalOrigin":"LEFT",
+              "verticalOrigin":"BOTTOM",
+              "offset":{
+                "cartesian2":[
+                  24,-24
+                ]
+              },
+              "goButton":"go",
+              "goTemplate":"http://localhost/lovelacelos/conjunctions?ssc=`selectedObjectID`&start=`timelineStart`&stop=`timelineStop`&maxRange=`maxRange`&f=JSON"
+            }
+          }
+        ]
+      }
     },
     "position":{
       "interpolationAlgorithm":"LAGRANGE",
@@ -4637,7 +4879,7 @@
     }
   },
   {
-    "id":"/Application/STK/Scenario/Hackathon/Satellite/IRIDIUM_23_24906",
+    "id":"24906",
     "availability":"2012-08-17T12:00:00Z/2012-08-17T18:00:00Z",
     "billboard":{
       "color":{
@@ -4686,6 +4928,28 @@
       "show":true,
       "leadTime":0.0,
       "trailTime":0.0
+    },
+    "whenSelected":{
+      "czml":{
+        "content":[
+          {
+            "id":"24906",
+            "overlay":{
+              "content":"<div  style='width:200px; height:70px; background-color:gray;' ><form>Conjunction Analysis<br/>Max Range (km): <input type='number' id='maxRange' value='50'/><input id='go' type='button' value='Go' /></form></div>",
+              "origin":"OBJECT",
+              "horizontalOrigin":"LEFT",
+              "verticalOrigin":"BOTTOM",
+              "offset":{
+                "cartesian2":[
+                  24,-24
+                ]
+              },
+              "goButton":"go",
+              "goTemplate":"http://localhost/lovelacelos/conjunctions?ssc=`selectedObjectID`&start=`timelineStart`&stop=`timelineStop`&maxRange=`maxRange`&f=JSON"
+            }
+          }
+        ]
+      }
     },
     "position":{
       "interpolationAlgorithm":"LAGRANGE",
@@ -5057,7 +5321,7 @@
     }
   },
   {
-    "id":"/Application/STK/Scenario/Hackathon/Satellite/IRIDIUM_25_24904",
+    "id":"24904",
     "availability":"2012-08-17T12:00:00Z/2012-08-17T18:00:00Z",
     "billboard":{
       "color":{
@@ -5106,6 +5370,28 @@
       "show":true,
       "leadTime":0.0,
       "trailTime":0.0
+    },
+    "whenSelected":{
+      "czml":{
+        "content":[
+          {
+            "id":"24904",
+            "overlay":{
+              "content":"<div  style='width:200px; height:70px; background-color:gray;' ><form>Conjunction Analysis<br/>Max Range (km): <input type='number' id='maxRange' value='50'/><input id='go' type='button' value='Go' /></form></div>",
+              "origin":"OBJECT",
+              "horizontalOrigin":"LEFT",
+              "verticalOrigin":"BOTTOM",
+              "offset":{
+                "cartesian2":[
+                  24,-24
+                ]
+              },
+              "goButton":"go",
+              "goTemplate":"http://localhost/lovelacelos/conjunctions?ssc=`selectedObjectID`&start=`timelineStart`&stop=`timelineStop`&maxRange=`maxRange`&f=JSON"
+            }
+          }
+        ]
+      }
     },
     "position":{
       "interpolationAlgorithm":"LAGRANGE",
@@ -5477,7 +5763,7 @@
     }
   },
   {
-    "id":"/Application/STK/Scenario/Hackathon/Satellite/IRIDIUM_26_24903",
+    "id":"24903",
     "availability":"2012-08-17T12:00:00Z/2012-08-17T18:00:00Z",
     "billboard":{
       "color":{
@@ -5526,6 +5812,28 @@
       "show":true,
       "leadTime":0.0,
       "trailTime":0.0
+    },
+    "whenSelected":{
+      "czml":{
+        "content":[
+          {
+            "id":"24903",
+            "overlay":{
+              "content":"<div  style='width:200px; height:70px; background-color:gray;' ><form>Conjunction Analysis<br/>Max Range (km): <input type='number' id='maxRange' value='50'/><input id='go' type='button' value='Go' /></form></div>",
+              "origin":"OBJECT",
+              "horizontalOrigin":"LEFT",
+              "verticalOrigin":"BOTTOM",
+              "offset":{
+                "cartesian2":[
+                  24,-24
+                ]
+              },
+              "goButton":"go",
+              "goTemplate":"http://localhost/lovelacelos/conjunctions?ssc=`selectedObjectID`&start=`timelineStart`&stop=`timelineStop`&maxRange=`maxRange`&f=JSON"
+            }
+          }
+        ]
+      }
     },
     "position":{
       "interpolationAlgorithm":"LAGRANGE",
@@ -5897,7 +6205,7 @@
     }
   },
   {
-    "id":"/Application/STK/Scenario/Hackathon/Satellite/IRIDIUM_29_24944",
+    "id":"24944",
     "availability":"2012-08-17T12:00:00Z/2012-08-17T18:00:00Z",
     "billboard":{
       "color":{
@@ -5946,6 +6254,28 @@
       "show":true,
       "leadTime":0.0,
       "trailTime":0.0
+    },
+    "whenSelected":{
+      "czml":{
+        "content":[
+          {
+            "id":"24944",
+            "overlay":{
+              "content":"<div  style='width:200px; height:70px; background-color:gray;' ><form>Conjunction Analysis<br/>Max Range (km): <input type='number' id='maxRange' value='50'/><input id='go' type='button' value='Go' /></form></div>",
+              "origin":"OBJECT",
+              "horizontalOrigin":"LEFT",
+              "verticalOrigin":"BOTTOM",
+              "offset":{
+                "cartesian2":[
+                  24,-24
+                ]
+              },
+              "goButton":"go",
+              "goTemplate":"http://localhost/lovelacelos/conjunctions?ssc=`selectedObjectID`&start=`timelineStart`&stop=`timelineStop`&maxRange=`maxRange`&f=JSON"
+            }
+          }
+        ]
+      }
     },
     "position":{
       "interpolationAlgorithm":"LAGRANGE",
@@ -6317,7 +6647,7 @@
     }
   },
   {
-    "id":"/Application/STK/Scenario/Hackathon/Satellite/IRIDIUM_30_24949",
+    "id":"24949",
     "availability":"2012-08-17T12:00:00Z/2012-08-17T18:00:00Z",
     "billboard":{
       "color":{
@@ -6366,6 +6696,28 @@
       "show":true,
       "leadTime":0.0,
       "trailTime":0.0
+    },
+    "whenSelected":{
+      "czml":{
+        "content":[
+          {
+            "id":"24949",
+            "overlay":{
+              "content":"<div  style='width:200px; height:70px; background-color:gray;' ><form>Conjunction Analysis<br/>Max Range (km): <input type='number' id='maxRange' value='50'/><input id='go' type='button' value='Go' /></form></div>",
+              "origin":"OBJECT",
+              "horizontalOrigin":"LEFT",
+              "verticalOrigin":"BOTTOM",
+              "offset":{
+                "cartesian2":[
+                  24,-24
+                ]
+              },
+              "goButton":"go",
+              "goTemplate":"http://localhost/lovelacelos/conjunctions?ssc=`selectedObjectID`&start=`timelineStart`&stop=`timelineStop`&maxRange=`maxRange`&f=JSON"
+            }
+          }
+        ]
+      }
     },
     "position":{
       "interpolationAlgorithm":"LAGRANGE",
@@ -6737,7 +7089,7 @@
     }
   },
   {
-    "id":"/Application/STK/Scenario/Hackathon/Satellite/IRIDIUM_31_24950",
+    "id":"24950",
     "availability":"2012-08-17T12:00:00Z/2012-08-17T18:00:00Z",
     "billboard":{
       "color":{
@@ -6786,6 +7138,28 @@
       "show":true,
       "leadTime":0.0,
       "trailTime":0.0
+    },
+    "whenSelected":{
+      "czml":{
+        "content":[
+          {
+            "id":"24950",
+            "overlay":{
+              "content":"<div  style='width:200px; height:70px; background-color:gray;' ><form>Conjunction Analysis<br/>Max Range (km): <input type='number' id='maxRange' value='50'/><input id='go' type='button' value='Go' /></form></div>",
+              "origin":"OBJECT",
+              "horizontalOrigin":"LEFT",
+              "verticalOrigin":"BOTTOM",
+              "offset":{
+                "cartesian2":[
+                  24,-24
+                ]
+              },
+              "goButton":"go",
+              "goTemplate":"http://localhost/lovelacelos/conjunctions?ssc=`selectedObjectID`&start=`timelineStart`&stop=`timelineStop`&maxRange=`maxRange`&f=JSON"
+            }
+          }
+        ]
+      }
     },
     "position":{
       "interpolationAlgorithm":"LAGRANGE",
@@ -7157,7 +7531,7 @@
     }
   },
   {
-    "id":"/Application/STK/Scenario/Hackathon/Satellite/IRIDIUM_32_24945",
+    "id":"24945",
     "availability":"2012-08-17T12:00:00Z/2012-08-17T18:00:00Z",
     "billboard":{
       "color":{
@@ -7206,6 +7580,28 @@
       "show":true,
       "leadTime":0.0,
       "trailTime":0.0
+    },
+    "whenSelected":{
+      "czml":{
+        "content":[
+          {
+            "id":"24945",
+            "overlay":{
+              "content":"<div  style='width:200px; height:70px; background-color:gray;' ><form>Conjunction Analysis<br/>Max Range (km): <input type='number' id='maxRange' value='50'/><input id='go' type='button' value='Go' /></form></div>",
+              "origin":"OBJECT",
+              "horizontalOrigin":"LEFT",
+              "verticalOrigin":"BOTTOM",
+              "offset":{
+                "cartesian2":[
+                  24,-24
+                ]
+              },
+              "goButton":"go",
+              "goTemplate":"http://localhost/lovelacelos/conjunctions?ssc=`selectedObjectID`&start=`timelineStart`&stop=`timelineStop`&maxRange=`maxRange`&f=JSON"
+            }
+          }
+        ]
+      }
     },
     "position":{
       "interpolationAlgorithm":"LAGRANGE",
@@ -7577,7 +7973,7 @@
     }
   },
   {
-    "id":"/Application/STK/Scenario/Hackathon/Satellite/IRIDIUM_34_24969",
+    "id":"24969",
     "availability":"2012-08-17T12:00:00Z/2012-08-17T18:00:00Z",
     "billboard":{
       "color":{
@@ -7626,6 +8022,28 @@
       "show":true,
       "leadTime":0.0,
       "trailTime":0.0
+    },
+    "whenSelected":{
+      "czml":{
+        "content":[
+          {
+            "id":"24969",
+            "overlay":{
+              "content":"<div  style='width:200px; height:70px; background-color:gray;' ><form>Conjunction Analysis<br/>Max Range (km): <input type='number' id='maxRange' value='50'/><input id='go' type='button' value='Go' /></form></div>",
+              "origin":"OBJECT",
+              "horizontalOrigin":"LEFT",
+              "verticalOrigin":"BOTTOM",
+              "offset":{
+                "cartesian2":[
+                  24,-24
+                ]
+              },
+              "goButton":"go",
+              "goTemplate":"http://localhost/lovelacelos/conjunctions?ssc=`selectedObjectID`&start=`timelineStart`&stop=`timelineStop`&maxRange=`maxRange`&f=JSON"
+            }
+          }
+        ]
+      }
     },
     "position":{
       "interpolationAlgorithm":"LAGRANGE",
@@ -7997,7 +8415,7 @@
     }
   },
   {
-    "id":"/Application/STK/Scenario/Hackathon/Satellite/IRIDIUM_35_24966",
+    "id":"24966",
     "availability":"2012-08-17T12:00:00Z/2012-08-17T18:00:00Z",
     "billboard":{
       "color":{
@@ -8046,6 +8464,28 @@
       "show":true,
       "leadTime":0.0,
       "trailTime":0.0
+    },
+    "whenSelected":{
+      "czml":{
+        "content":[
+          {
+            "id":"24966",
+            "overlay":{
+              "content":"<div  style='width:200px; height:70px; background-color:gray;' ><form>Conjunction Analysis<br/>Max Range (km): <input type='number' id='maxRange' value='50'/><input id='go' type='button' value='Go' /></form></div>",
+              "origin":"OBJECT",
+              "horizontalOrigin":"LEFT",
+              "verticalOrigin":"BOTTOM",
+              "offset":{
+                "cartesian2":[
+                  24,-24
+                ]
+              },
+              "goButton":"go",
+              "goTemplate":"http://localhost/lovelacelos/conjunctions?ssc=`selectedObjectID`&start=`timelineStart`&stop=`timelineStop`&maxRange=`maxRange`&f=JSON"
+            }
+          }
+        ]
+      }
     },
     "position":{
       "interpolationAlgorithm":"LAGRANGE",
@@ -8417,7 +8857,7 @@
     }
   },
   {
-    "id":"/Application/STK/Scenario/Hackathon/Satellite/IRIDIUM_37_24968",
+    "id":"24968",
     "availability":"2012-08-17T12:00:00Z/2012-08-17T18:00:00Z",
     "billboard":{
       "color":{
@@ -8466,6 +8906,28 @@
       "show":true,
       "leadTime":0.0,
       "trailTime":0.0
+    },
+    "whenSelected":{
+      "czml":{
+        "content":[
+          {
+            "id":"24968",
+            "overlay":{
+              "content":"<div  style='width:200px; height:70px; background-color:gray;' ><form>Conjunction Analysis<br/>Max Range (km): <input type='number' id='maxRange' value='50'/><input id='go' type='button' value='Go' /></form></div>",
+              "origin":"OBJECT",
+              "horizontalOrigin":"LEFT",
+              "verticalOrigin":"BOTTOM",
+              "offset":{
+                "cartesian2":[
+                  24,-24
+                ]
+              },
+              "goButton":"go",
+              "goTemplate":"http://localhost/lovelacelos/conjunctions?ssc=`selectedObjectID`&start=`timelineStart`&stop=`timelineStop`&maxRange=`maxRange`&f=JSON"
+            }
+          }
+        ]
+      }
     },
     "position":{
       "interpolationAlgorithm":"LAGRANGE",
@@ -8837,7 +9299,7 @@
     }
   },
   {
-    "id":"/Application/STK/Scenario/Hackathon/Satellite/IRIDIUM_39_25042",
+    "id":"25042",
     "availability":"2012-08-17T12:00:00Z/2012-08-17T18:00:00Z",
     "billboard":{
       "color":{
@@ -8886,6 +9348,28 @@
       "show":true,
       "leadTime":0.0,
       "trailTime":0.0
+    },
+    "whenSelected":{
+      "czml":{
+        "content":[
+          {
+            "id":"25042",
+            "overlay":{
+              "content":"<div  style='width:200px; height:70px; background-color:gray;' ><form>Conjunction Analysis<br/>Max Range (km): <input type='number' id='maxRange' value='50'/><input id='go' type='button' value='Go' /></form></div>",
+              "origin":"OBJECT",
+              "horizontalOrigin":"LEFT",
+              "verticalOrigin":"BOTTOM",
+              "offset":{
+                "cartesian2":[
+                  24,-24
+                ]
+              },
+              "goButton":"go",
+              "goTemplate":"http://localhost/lovelacelos/conjunctions?ssc=`selectedObjectID`&start=`timelineStart`&stop=`timelineStop`&maxRange=`maxRange`&f=JSON"
+            }
+          }
+        ]
+      }
     },
     "position":{
       "interpolationAlgorithm":"LAGRANGE",
@@ -9257,7 +9741,7 @@
     }
   },
   {
-    "id":"/Application/STK/Scenario/Hackathon/Satellite/IRIDIUM_3_25431",
+    "id":"25431",
     "availability":"2012-08-17T12:00:00Z/2012-08-17T18:00:00Z",
     "billboard":{
       "color":{
@@ -9306,6 +9790,28 @@
       "show":true,
       "leadTime":0.0,
       "trailTime":0.0
+    },
+    "whenSelected":{
+      "czml":{
+        "content":[
+          {
+            "id":"25431",
+            "overlay":{
+              "content":"<div  style='width:200px; height:70px; background-color:gray;' ><form>Conjunction Analysis<br/>Max Range (km): <input type='number' id='maxRange' value='50'/><input id='go' type='button' value='Go' /></form></div>",
+              "origin":"OBJECT",
+              "horizontalOrigin":"LEFT",
+              "verticalOrigin":"BOTTOM",
+              "offset":{
+                "cartesian2":[
+                  24,-24
+                ]
+              },
+              "goButton":"go",
+              "goTemplate":"http://localhost/lovelacelos/conjunctions?ssc=`selectedObjectID`&start=`timelineStart`&stop=`timelineStop`&maxRange=`maxRange`&f=JSON"
+            }
+          }
+        ]
+      }
     },
     "position":{
       "interpolationAlgorithm":"LAGRANGE",
@@ -9677,7 +10183,7 @@
     }
   },
   {
-    "id":"/Application/STK/Scenario/Hackathon/Satellite/IRIDIUM_40_25041",
+    "id":"25041",
     "availability":"2012-08-17T12:00:00Z/2012-08-17T18:00:00Z",
     "billboard":{
       "color":{
@@ -9726,6 +10232,28 @@
       "show":true,
       "leadTime":0.0,
       "trailTime":0.0
+    },
+    "whenSelected":{
+      "czml":{
+        "content":[
+          {
+            "id":"25041",
+            "overlay":{
+              "content":"<div  style='width:200px; height:70px; background-color:gray;' ><form>Conjunction Analysis<br/>Max Range (km): <input type='number' id='maxRange' value='50'/><input id='go' type='button' value='Go' /></form></div>",
+              "origin":"OBJECT",
+              "horizontalOrigin":"LEFT",
+              "verticalOrigin":"BOTTOM",
+              "offset":{
+                "cartesian2":[
+                  24,-24
+                ]
+              },
+              "goButton":"go",
+              "goTemplate":"http://localhost/lovelacelos/conjunctions?ssc=`selectedObjectID`&start=`timelineStart`&stop=`timelineStop`&maxRange=`maxRange`&f=JSON"
+            }
+          }
+        ]
+      }
     },
     "position":{
       "interpolationAlgorithm":"LAGRANGE",
@@ -10097,7 +10625,7 @@
     }
   },
   {
-    "id":"/Application/STK/Scenario/Hackathon/Satellite/IRIDIUM_41_25040",
+    "id":"25040",
     "availability":"2012-08-17T12:00:00Z/2012-08-17T18:00:00Z",
     "billboard":{
       "color":{
@@ -10146,6 +10674,28 @@
       "show":true,
       "leadTime":0.0,
       "trailTime":0.0
+    },
+    "whenSelected":{
+      "czml":{
+        "content":[
+          {
+            "id":"25040",
+            "overlay":{
+              "content":"<div  style='width:200px; height:70px; background-color:gray;' ><form>Conjunction Analysis<br/>Max Range (km): <input type='number' id='maxRange' value='50'/><input id='go' type='button' value='Go' /></form></div>",
+              "origin":"OBJECT",
+              "horizontalOrigin":"LEFT",
+              "verticalOrigin":"BOTTOM",
+              "offset":{
+                "cartesian2":[
+                  24,-24
+                ]
+              },
+              "goButton":"go",
+              "goTemplate":"http://localhost/lovelacelos/conjunctions?ssc=`selectedObjectID`&start=`timelineStart`&stop=`timelineStop`&maxRange=`maxRange`&f=JSON"
+            }
+          }
+        ]
+      }
     },
     "position":{
       "interpolationAlgorithm":"LAGRANGE",
@@ -10517,7 +11067,7 @@
     }
   },
   {
-    "id":"/Application/STK/Scenario/Hackathon/Satellite/IRIDIUM_42_25077",
+    "id":"25077",
     "availability":"2012-08-17T12:00:00Z/2012-08-17T18:00:00Z",
     "billboard":{
       "color":{
@@ -10566,6 +11116,28 @@
       "show":true,
       "leadTime":0.0,
       "trailTime":0.0
+    },
+    "whenSelected":{
+      "czml":{
+        "content":[
+          {
+            "id":"25077",
+            "overlay":{
+              "content":"<div  style='width:200px; height:70px; background-color:gray;' ><form>Conjunction Analysis<br/>Max Range (km): <input type='number' id='maxRange' value='50'/><input id='go' type='button' value='Go' /></form></div>",
+              "origin":"OBJECT",
+              "horizontalOrigin":"LEFT",
+              "verticalOrigin":"BOTTOM",
+              "offset":{
+                "cartesian2":[
+                  24,-24
+                ]
+              },
+              "goButton":"go",
+              "goTemplate":"http://localhost/lovelacelos/conjunctions?ssc=`selectedObjectID`&start=`timelineStart`&stop=`timelineStop`&maxRange=`maxRange`&f=JSON"
+            }
+          }
+        ]
+      }
     },
     "position":{
       "interpolationAlgorithm":"LAGRANGE",
@@ -10937,7 +11509,7 @@
     }
   },
   {
-    "id":"/Application/STK/Scenario/Hackathon/Satellite/IRIDIUM_43_25039",
+    "id":"25039",
     "availability":"2012-08-17T12:00:00Z/2012-08-17T18:00:00Z",
     "billboard":{
       "color":{
@@ -10986,6 +11558,28 @@
       "show":true,
       "leadTime":0.0,
       "trailTime":0.0
+    },
+    "whenSelected":{
+      "czml":{
+        "content":[
+          {
+            "id":"25039",
+            "overlay":{
+              "content":"<div  style='width:200px; height:70px; background-color:gray;' ><form>Conjunction Analysis<br/>Max Range (km): <input type='number' id='maxRange' value='50'/><input id='go' type='button' value='Go' /></form></div>",
+              "origin":"OBJECT",
+              "horizontalOrigin":"LEFT",
+              "verticalOrigin":"BOTTOM",
+              "offset":{
+                "cartesian2":[
+                  24,-24
+                ]
+              },
+              "goButton":"go",
+              "goTemplate":"http://localhost/lovelacelos/conjunctions?ssc=`selectedObjectID`&start=`timelineStart`&stop=`timelineStop`&maxRange=`maxRange`&f=JSON"
+            }
+          }
+        ]
+      }
     },
     "position":{
       "interpolationAlgorithm":"LAGRANGE",
@@ -11357,7 +11951,7 @@
     }
   },
   {
-    "id":"/Application/STK/Scenario/Hackathon/Satellite/IRIDIUM_45_25104",
+    "id":"25104",
     "availability":"2012-08-17T12:00:00Z/2012-08-17T18:00:00Z",
     "billboard":{
       "color":{
@@ -11406,6 +12000,28 @@
       "show":true,
       "leadTime":0.0,
       "trailTime":0.0
+    },
+    "whenSelected":{
+      "czml":{
+        "content":[
+          {
+            "id":"25104",
+            "overlay":{
+              "content":"<div  style='width:200px; height:70px; background-color:gray;' ><form>Conjunction Analysis<br/>Max Range (km): <input type='number' id='maxRange' value='50'/><input id='go' type='button' value='Go' /></form></div>",
+              "origin":"OBJECT",
+              "horizontalOrigin":"LEFT",
+              "verticalOrigin":"BOTTOM",
+              "offset":{
+                "cartesian2":[
+                  24,-24
+                ]
+              },
+              "goButton":"go",
+              "goTemplate":"http://localhost/lovelacelos/conjunctions?ssc=`selectedObjectID`&start=`timelineStart`&stop=`timelineStop`&maxRange=`maxRange`&f=JSON"
+            }
+          }
+        ]
+      }
     },
     "position":{
       "interpolationAlgorithm":"LAGRANGE",
@@ -11777,7 +12393,7 @@
     }
   },
   {
-    "id":"/Application/STK/Scenario/Hackathon/Satellite/IRIDIUM_46_24905",
+    "id":"24905",
     "availability":"2012-08-17T12:00:00Z/2012-08-17T18:00:00Z",
     "billboard":{
       "color":{
@@ -11826,6 +12442,28 @@
       "show":true,
       "leadTime":0.0,
       "trailTime":0.0
+    },
+    "whenSelected":{
+      "czml":{
+        "content":[
+          {
+            "id":"24905",
+            "overlay":{
+              "content":"<div  style='width:200px; height:70px; background-color:gray;' ><form>Conjunction Analysis<br/>Max Range (km): <input type='number' id='maxRange' value='50'/><input id='go' type='button' value='Go' /></form></div>",
+              "origin":"OBJECT",
+              "horizontalOrigin":"LEFT",
+              "verticalOrigin":"BOTTOM",
+              "offset":{
+                "cartesian2":[
+                  24,-24
+                ]
+              },
+              "goButton":"go",
+              "goTemplate":"http://localhost/lovelacelos/conjunctions?ssc=`selectedObjectID`&start=`timelineStart`&stop=`timelineStop`&maxRange=`maxRange`&f=JSON"
+            }
+          }
+        ]
+      }
     },
     "position":{
       "interpolationAlgorithm":"LAGRANGE",
@@ -12197,7 +12835,7 @@
     }
   },
   {
-    "id":"/Application/STK/Scenario/Hackathon/Satellite/IRIDIUM_47_25106",
+    "id":"25106",
     "availability":"2012-08-17T12:00:00Z/2012-08-17T18:00:00Z",
     "billboard":{
       "color":{
@@ -12246,6 +12884,28 @@
       "show":true,
       "leadTime":0.0,
       "trailTime":0.0
+    },
+    "whenSelected":{
+      "czml":{
+        "content":[
+          {
+            "id":"25106",
+            "overlay":{
+              "content":"<div  style='width:200px; height:70px; background-color:gray;' ><form>Conjunction Analysis<br/>Max Range (km): <input type='number' id='maxRange' value='50'/><input id='go' type='button' value='Go' /></form></div>",
+              "origin":"OBJECT",
+              "horizontalOrigin":"LEFT",
+              "verticalOrigin":"BOTTOM",
+              "offset":{
+                "cartesian2":[
+                  24,-24
+                ]
+              },
+              "goButton":"go",
+              "goTemplate":"http://localhost/lovelacelos/conjunctions?ssc=`selectedObjectID`&start=`timelineStart`&stop=`timelineStop`&maxRange=`maxRange`&f=JSON"
+            }
+          }
+        ]
+      }
     },
     "position":{
       "interpolationAlgorithm":"LAGRANGE",
@@ -12617,7 +13277,7 @@
     }
   },
   {
-    "id":"/Application/STK/Scenario/Hackathon/Satellite/IRIDIUM_49_25108",
+    "id":"25108",
     "availability":"2012-08-17T12:00:00Z/2012-08-17T18:00:00Z",
     "billboard":{
       "color":{
@@ -12666,6 +13326,28 @@
       "show":true,
       "leadTime":0.0,
       "trailTime":0.0
+    },
+    "whenSelected":{
+      "czml":{
+        "content":[
+          {
+            "id":"25108",
+            "overlay":{
+              "content":"<div  style='width:200px; height:70px; background-color:gray;' ><form>Conjunction Analysis<br/>Max Range (km): <input type='number' id='maxRange' value='50'/><input id='go' type='button' value='Go' /></form></div>",
+              "origin":"OBJECT",
+              "horizontalOrigin":"LEFT",
+              "verticalOrigin":"BOTTOM",
+              "offset":{
+                "cartesian2":[
+                  24,-24
+                ]
+              },
+              "goButton":"go",
+              "goTemplate":"http://localhost/lovelacelos/conjunctions?ssc=`selectedObjectID`&start=`timelineStart`&stop=`timelineStop`&maxRange=`maxRange`&f=JSON"
+            }
+          }
+        ]
+      }
     },
     "position":{
       "interpolationAlgorithm":"LAGRANGE",
@@ -13037,7 +13719,7 @@
     }
   },
   {
-    "id":"/Application/STK/Scenario/Hackathon/Satellite/IRIDIUM_4_24796",
+    "id":"24796",
     "availability":"2012-08-17T12:00:00Z/2012-08-17T18:00:00Z",
     "billboard":{
       "color":{
@@ -13086,6 +13768,28 @@
       "show":true,
       "leadTime":0.0,
       "trailTime":0.0
+    },
+    "whenSelected":{
+      "czml":{
+        "content":[
+          {
+            "id":"24796",
+            "overlay":{
+              "content":"<div  style='width:200px; height:70px; background-color:gray;' ><form>Conjunction Analysis<br/>Max Range (km): <input type='number' id='maxRange' value='50'/><input id='go' type='button' value='Go' /></form></div>",
+              "origin":"OBJECT",
+              "horizontalOrigin":"LEFT",
+              "verticalOrigin":"BOTTOM",
+              "offset":{
+                "cartesian2":[
+                  24,-24
+                ]
+              },
+              "goButton":"go",
+              "goTemplate":"http://localhost/lovelacelos/conjunctions?ssc=`selectedObjectID`&start=`timelineStart`&stop=`timelineStop`&maxRange=`maxRange`&f=JSON"
+            }
+          }
+        ]
+      }
     },
     "position":{
       "interpolationAlgorithm":"LAGRANGE",
@@ -13457,7 +14161,7 @@
     }
   },
   {
-    "id":"/Application/STK/Scenario/Hackathon/Satellite/IRIDIUM_50_25172",
+    "id":"25172",
     "availability":"2012-08-17T12:00:00Z/2012-08-17T18:00:00Z",
     "billboard":{
       "color":{
@@ -13506,6 +14210,28 @@
       "show":true,
       "leadTime":0.0,
       "trailTime":0.0
+    },
+    "whenSelected":{
+      "czml":{
+        "content":[
+          {
+            "id":"25172",
+            "overlay":{
+              "content":"<div  style='width:200px; height:70px; background-color:gray;' ><form>Conjunction Analysis<br/>Max Range (km): <input type='number' id='maxRange' value='50'/><input id='go' type='button' value='Go' /></form></div>",
+              "origin":"OBJECT",
+              "horizontalOrigin":"LEFT",
+              "verticalOrigin":"BOTTOM",
+              "offset":{
+                "cartesian2":[
+                  24,-24
+                ]
+              },
+              "goButton":"go",
+              "goTemplate":"http://localhost/lovelacelos/conjunctions?ssc=`selectedObjectID`&start=`timelineStart`&stop=`timelineStop`&maxRange=`maxRange`&f=JSON"
+            }
+          }
+        ]
+      }
     },
     "position":{
       "interpolationAlgorithm":"LAGRANGE",
@@ -13877,7 +14603,7 @@
     }
   },
   {
-    "id":"/Application/STK/Scenario/Hackathon/Satellite/IRIDIUM_51_25262",
+    "id":"25262",
     "availability":"2012-08-17T12:00:00Z/2012-08-17T18:00:00Z",
     "billboard":{
       "color":{
@@ -13926,6 +14652,28 @@
       "show":true,
       "leadTime":0.0,
       "trailTime":0.0
+    },
+    "whenSelected":{
+      "czml":{
+        "content":[
+          {
+            "id":"25262",
+            "overlay":{
+              "content":"<div  style='width:200px; height:70px; background-color:gray;' ><form>Conjunction Analysis<br/>Max Range (km): <input type='number' id='maxRange' value='50'/><input id='go' type='button' value='Go' /></form></div>",
+              "origin":"OBJECT",
+              "horizontalOrigin":"LEFT",
+              "verticalOrigin":"BOTTOM",
+              "offset":{
+                "cartesian2":[
+                  24,-24
+                ]
+              },
+              "goButton":"go",
+              "goTemplate":"http://localhost/lovelacelos/conjunctions?ssc=`selectedObjectID`&start=`timelineStart`&stop=`timelineStop`&maxRange=`maxRange`&f=JSON"
+            }
+          }
+        ]
+      }
     },
     "position":{
       "interpolationAlgorithm":"LAGRANGE",
@@ -14297,7 +15045,7 @@
     }
   },
   {
-    "id":"/Application/STK/Scenario/Hackathon/Satellite/IRIDIUM_52_25169",
+    "id":"25169",
     "availability":"2012-08-17T12:00:00Z/2012-08-17T18:00:00Z",
     "billboard":{
       "color":{
@@ -14346,6 +15094,28 @@
       "show":true,
       "leadTime":0.0,
       "trailTime":0.0
+    },
+    "whenSelected":{
+      "czml":{
+        "content":[
+          {
+            "id":"25169",
+            "overlay":{
+              "content":"<div  style='width:200px; height:70px; background-color:gray;' ><form>Conjunction Analysis<br/>Max Range (km): <input type='number' id='maxRange' value='50'/><input id='go' type='button' value='Go' /></form></div>",
+              "origin":"OBJECT",
+              "horizontalOrigin":"LEFT",
+              "verticalOrigin":"BOTTOM",
+              "offset":{
+                "cartesian2":[
+                  24,-24
+                ]
+              },
+              "goButton":"go",
+              "goTemplate":"http://localhost/lovelacelos/conjunctions?ssc=`selectedObjectID`&start=`timelineStart`&stop=`timelineStop`&maxRange=`maxRange`&f=JSON"
+            }
+          }
+        ]
+      }
     },
     "position":{
       "interpolationAlgorithm":"LAGRANGE",
@@ -14717,7 +15487,7 @@
     }
   },
   {
-    "id":"/Application/STK/Scenario/Hackathon/Satellite/IRIDIUM_53_25173",
+    "id":"25173",
     "availability":"2012-08-17T12:00:00Z/2012-08-17T18:00:00Z",
     "billboard":{
       "color":{
@@ -14766,6 +15536,28 @@
       "show":true,
       "leadTime":0.0,
       "trailTime":0.0
+    },
+    "whenSelected":{
+      "czml":{
+        "content":[
+          {
+            "id":"25173",
+            "overlay":{
+              "content":"<div  style='width:200px; height:70px; background-color:gray;' ><form>Conjunction Analysis<br/>Max Range (km): <input type='number' id='maxRange' value='50'/><input id='go' type='button' value='Go' /></form></div>",
+              "origin":"OBJECT",
+              "horizontalOrigin":"LEFT",
+              "verticalOrigin":"BOTTOM",
+              "offset":{
+                "cartesian2":[
+                  24,-24
+                ]
+              },
+              "goButton":"go",
+              "goTemplate":"http://localhost/lovelacelos/conjunctions?ssc=`selectedObjectID`&start=`timelineStart`&stop=`timelineStop`&maxRange=`maxRange`&f=JSON"
+            }
+          }
+        ]
+      }
     },
     "position":{
       "interpolationAlgorithm":"LAGRANGE",
@@ -15137,7 +15929,7 @@
     }
   },
   {
-    "id":"/Application/STK/Scenario/Hackathon/Satellite/IRIDIUM_54_25171",
+    "id":"25171",
     "availability":"2012-08-17T12:00:00Z/2012-08-17T18:00:00Z",
     "billboard":{
       "color":{
@@ -15186,6 +15978,28 @@
       "show":true,
       "leadTime":0.0,
       "trailTime":0.0
+    },
+    "whenSelected":{
+      "czml":{
+        "content":[
+          {
+            "id":"25171",
+            "overlay":{
+              "content":"<div  style='width:200px; height:70px; background-color:gray;' ><form>Conjunction Analysis<br/>Max Range (km): <input type='number' id='maxRange' value='50'/><input id='go' type='button' value='Go' /></form></div>",
+              "origin":"OBJECT",
+              "horizontalOrigin":"LEFT",
+              "verticalOrigin":"BOTTOM",
+              "offset":{
+                "cartesian2":[
+                  24,-24
+                ]
+              },
+              "goButton":"go",
+              "goTemplate":"http://localhost/lovelacelos/conjunctions?ssc=`selectedObjectID`&start=`timelineStart`&stop=`timelineStop`&maxRange=`maxRange`&f=JSON"
+            }
+          }
+        ]
+      }
     },
     "position":{
       "interpolationAlgorithm":"LAGRANGE",
@@ -15557,7 +16371,7 @@
     }
   },
   {
-    "id":"/Application/STK/Scenario/Hackathon/Satellite/IRIDIUM_55_25272",
+    "id":"25272",
     "availability":"2012-08-17T12:00:00Z/2012-08-17T18:00:00Z",
     "billboard":{
       "color":{
@@ -15606,6 +16420,28 @@
       "show":true,
       "leadTime":0.0,
       "trailTime":0.0
+    },
+    "whenSelected":{
+      "czml":{
+        "content":[
+          {
+            "id":"25272",
+            "overlay":{
+              "content":"<div  style='width:200px; height:70px; background-color:gray;' ><form>Conjunction Analysis<br/>Max Range (km): <input type='number' id='maxRange' value='50'/><input id='go' type='button' value='Go' /></form></div>",
+              "origin":"OBJECT",
+              "horizontalOrigin":"LEFT",
+              "verticalOrigin":"BOTTOM",
+              "offset":{
+                "cartesian2":[
+                  24,-24
+                ]
+              },
+              "goButton":"go",
+              "goTemplate":"http://localhost/lovelacelos/conjunctions?ssc=`selectedObjectID`&start=`timelineStart`&stop=`timelineStop`&maxRange=`maxRange`&f=JSON"
+            }
+          }
+        ]
+      }
     },
     "position":{
       "interpolationAlgorithm":"LAGRANGE",
@@ -15977,7 +16813,7 @@
     }
   },
   {
-    "id":"/Application/STK/Scenario/Hackathon/Satellite/IRIDIUM_56_25170",
+    "id":"25170",
     "availability":"2012-08-17T12:00:00Z/2012-08-17T18:00:00Z",
     "billboard":{
       "color":{
@@ -16026,6 +16862,28 @@
       "show":true,
       "leadTime":0.0,
       "trailTime":0.0
+    },
+    "whenSelected":{
+      "czml":{
+        "content":[
+          {
+            "id":"25170",
+            "overlay":{
+              "content":"<div  style='width:200px; height:70px; background-color:gray;' ><form>Conjunction Analysis<br/>Max Range (km): <input type='number' id='maxRange' value='50'/><input id='go' type='button' value='Go' /></form></div>",
+              "origin":"OBJECT",
+              "horizontalOrigin":"LEFT",
+              "verticalOrigin":"BOTTOM",
+              "offset":{
+                "cartesian2":[
+                  24,-24
+                ]
+              },
+              "goButton":"go",
+              "goTemplate":"http://localhost/lovelacelos/conjunctions?ssc=`selectedObjectID`&start=`timelineStart`&stop=`timelineStop`&maxRange=`maxRange`&f=JSON"
+            }
+          }
+        ]
+      }
     },
     "position":{
       "interpolationAlgorithm":"LAGRANGE",
@@ -16397,7 +17255,7 @@
     }
   },
   {
-    "id":"/Application/STK/Scenario/Hackathon/Satellite/IRIDIUM_57_25273",
+    "id":"25273",
     "availability":"2012-08-17T12:00:00Z/2012-08-17T18:00:00Z",
     "billboard":{
       "color":{
@@ -16446,6 +17304,28 @@
       "show":true,
       "leadTime":0.0,
       "trailTime":0.0
+    },
+    "whenSelected":{
+      "czml":{
+        "content":[
+          {
+            "id":"25273",
+            "overlay":{
+              "content":"<div  style='width:200px; height:70px; background-color:gray;' ><form>Conjunction Analysis<br/>Max Range (km): <input type='number' id='maxRange' value='50'/><input id='go' type='button' value='Go' /></form></div>",
+              "origin":"OBJECT",
+              "horizontalOrigin":"LEFT",
+              "verticalOrigin":"BOTTOM",
+              "offset":{
+                "cartesian2":[
+                  24,-24
+                ]
+              },
+              "goButton":"go",
+              "goTemplate":"http://localhost/lovelacelos/conjunctions?ssc=`selectedObjectID`&start=`timelineStart`&stop=`timelineStop`&maxRange=`maxRange`&f=JSON"
+            }
+          }
+        ]
+      }
     },
     "position":{
       "interpolationAlgorithm":"LAGRANGE",
@@ -16817,7 +17697,7 @@
     }
   },
   {
-    "id":"/Application/STK/Scenario/Hackathon/Satellite/IRIDIUM_58_25274",
+    "id":"25274",
     "availability":"2012-08-17T12:00:00Z/2012-08-17T18:00:00Z",
     "billboard":{
       "color":{
@@ -16866,6 +17746,28 @@
       "show":true,
       "leadTime":0.0,
       "trailTime":0.0
+    },
+    "whenSelected":{
+      "czml":{
+        "content":[
+          {
+            "id":"25274",
+            "overlay":{
+              "content":"<div  style='width:200px; height:70px; background-color:gray;' ><form>Conjunction Analysis<br/>Max Range (km): <input type='number' id='maxRange' value='50'/><input id='go' type='button' value='Go' /></form></div>",
+              "origin":"OBJECT",
+              "horizontalOrigin":"LEFT",
+              "verticalOrigin":"BOTTOM",
+              "offset":{
+                "cartesian2":[
+                  24,-24
+                ]
+              },
+              "goButton":"go",
+              "goTemplate":"http://localhost/lovelacelos/conjunctions?ssc=`selectedObjectID`&start=`timelineStart`&stop=`timelineStop`&maxRange=`maxRange`&f=JSON"
+            }
+          }
+        ]
+      }
     },
     "position":{
       "interpolationAlgorithm":"LAGRANGE",
@@ -17237,7 +18139,7 @@
     }
   },
   {
-    "id":"/Application/STK/Scenario/Hackathon/Satellite/IRIDIUM_59_25275",
+    "id":"25275",
     "availability":"2012-08-17T12:00:00Z/2012-08-17T18:00:00Z",
     "billboard":{
       "color":{
@@ -17286,6 +18188,28 @@
       "show":true,
       "leadTime":0.0,
       "trailTime":0.0
+    },
+    "whenSelected":{
+      "czml":{
+        "content":[
+          {
+            "id":"25275",
+            "overlay":{
+              "content":"<div  style='width:200px; height:70px; background-color:gray;' ><form>Conjunction Analysis<br/>Max Range (km): <input type='number' id='maxRange' value='50'/><input id='go' type='button' value='Go' /></form></div>",
+              "origin":"OBJECT",
+              "horizontalOrigin":"LEFT",
+              "verticalOrigin":"BOTTOM",
+              "offset":{
+                "cartesian2":[
+                  24,-24
+                ]
+              },
+              "goButton":"go",
+              "goTemplate":"http://localhost/lovelacelos/conjunctions?ssc=`selectedObjectID`&start=`timelineStart`&stop=`timelineStop`&maxRange=`maxRange`&f=JSON"
+            }
+          }
+        ]
+      }
     },
     "position":{
       "interpolationAlgorithm":"LAGRANGE",
@@ -17657,7 +18581,7 @@
     }
   },
   {
-    "id":"/Application/STK/Scenario/Hackathon/Satellite/IRIDIUM_5_24795",
+    "id":"24795",
     "availability":"2012-08-17T12:00:00Z/2012-08-17T18:00:00Z",
     "billboard":{
       "color":{
@@ -17706,6 +18630,28 @@
       "show":true,
       "leadTime":0.0,
       "trailTime":0.0
+    },
+    "whenSelected":{
+      "czml":{
+        "content":[
+          {
+            "id":"24795",
+            "overlay":{
+              "content":"<div  style='width:200px; height:70px; background-color:gray;' ><form>Conjunction Analysis<br/>Max Range (km): <input type='number' id='maxRange' value='50'/><input id='go' type='button' value='Go' /></form></div>",
+              "origin":"OBJECT",
+              "horizontalOrigin":"LEFT",
+              "verticalOrigin":"BOTTOM",
+              "offset":{
+                "cartesian2":[
+                  24,-24
+                ]
+              },
+              "goButton":"go",
+              "goTemplate":"http://localhost/lovelacelos/conjunctions?ssc=`selectedObjectID`&start=`timelineStart`&stop=`timelineStop`&maxRange=`maxRange`&f=JSON"
+            }
+          }
+        ]
+      }
     },
     "position":{
       "interpolationAlgorithm":"LAGRANGE",
@@ -18077,7 +19023,7 @@
     }
   },
   {
-    "id":"/Application/STK/Scenario/Hackathon/Satellite/IRIDIUM_60_25276",
+    "id":"25276",
     "availability":"2012-08-17T12:00:00Z/2012-08-17T18:00:00Z",
     "billboard":{
       "color":{
@@ -18126,6 +19072,28 @@
       "show":true,
       "leadTime":0.0,
       "trailTime":0.0
+    },
+    "whenSelected":{
+      "czml":{
+        "content":[
+          {
+            "id":"25276",
+            "overlay":{
+              "content":"<div  style='width:200px; height:70px; background-color:gray;' ><form>Conjunction Analysis<br/>Max Range (km): <input type='number' id='maxRange' value='50'/><input id='go' type='button' value='Go' /></form></div>",
+              "origin":"OBJECT",
+              "horizontalOrigin":"LEFT",
+              "verticalOrigin":"BOTTOM",
+              "offset":{
+                "cartesian2":[
+                  24,-24
+                ]
+              },
+              "goButton":"go",
+              "goTemplate":"http://localhost/lovelacelos/conjunctions?ssc=`selectedObjectID`&start=`timelineStart`&stop=`timelineStop`&maxRange=`maxRange`&f=JSON"
+            }
+          }
+        ]
+      }
     },
     "position":{
       "interpolationAlgorithm":"LAGRANGE",
@@ -18497,7 +19465,7 @@
     }
   },
   {
-    "id":"/Application/STK/Scenario/Hackathon/Satellite/IRIDIUM_61_25263",
+    "id":"25263",
     "availability":"2012-08-17T12:00:00Z/2012-08-17T18:00:00Z",
     "billboard":{
       "color":{
@@ -18546,6 +19514,28 @@
       "show":true,
       "leadTime":0.0,
       "trailTime":0.0
+    },
+    "whenSelected":{
+      "czml":{
+        "content":[
+          {
+            "id":"25263",
+            "overlay":{
+              "content":"<div  style='width:200px; height:70px; background-color:gray;' ><form>Conjunction Analysis<br/>Max Range (km): <input type='number' id='maxRange' value='50'/><input id='go' type='button' value='Go' /></form></div>",
+              "origin":"OBJECT",
+              "horizontalOrigin":"LEFT",
+              "verticalOrigin":"BOTTOM",
+              "offset":{
+                "cartesian2":[
+                  24,-24
+                ]
+              },
+              "goButton":"go",
+              "goTemplate":"http://localhost/lovelacelos/conjunctions?ssc=`selectedObjectID`&start=`timelineStart`&stop=`timelineStop`&maxRange=`maxRange`&f=JSON"
+            }
+          }
+        ]
+      }
     },
     "position":{
       "interpolationAlgorithm":"LAGRANGE",
@@ -18917,7 +19907,7 @@
     }
   },
   {
-    "id":"/Application/STK/Scenario/Hackathon/Satellite/IRIDIUM_62_25285",
+    "id":"25285",
     "availability":"2012-08-17T12:00:00Z/2012-08-17T18:00:00Z",
     "billboard":{
       "color":{
@@ -18966,6 +19956,28 @@
       "show":true,
       "leadTime":0.0,
       "trailTime":0.0
+    },
+    "whenSelected":{
+      "czml":{
+        "content":[
+          {
+            "id":"25285",
+            "overlay":{
+              "content":"<div  style='width:200px; height:70px; background-color:gray;' ><form>Conjunction Analysis<br/>Max Range (km): <input type='number' id='maxRange' value='50'/><input id='go' type='button' value='Go' /></form></div>",
+              "origin":"OBJECT",
+              "horizontalOrigin":"LEFT",
+              "verticalOrigin":"BOTTOM",
+              "offset":{
+                "cartesian2":[
+                  24,-24
+                ]
+              },
+              "goButton":"go",
+              "goTemplate":"http://localhost/lovelacelos/conjunctions?ssc=`selectedObjectID`&start=`timelineStart`&stop=`timelineStop`&maxRange=`maxRange`&f=JSON"
+            }
+          }
+        ]
+      }
     },
     "position":{
       "interpolationAlgorithm":"LAGRANGE",
@@ -19337,7 +20349,7 @@
     }
   },
   {
-    "id":"/Application/STK/Scenario/Hackathon/Satellite/IRIDIUM_63_25286",
+    "id":"25286",
     "availability":"2012-08-17T12:00:00Z/2012-08-17T18:00:00Z",
     "billboard":{
       "color":{
@@ -19386,6 +20398,28 @@
       "show":true,
       "leadTime":0.0,
       "trailTime":0.0
+    },
+    "whenSelected":{
+      "czml":{
+        "content":[
+          {
+            "id":"25286",
+            "overlay":{
+              "content":"<div  style='width:200px; height:70px; background-color:gray;' ><form>Conjunction Analysis<br/>Max Range (km): <input type='number' id='maxRange' value='50'/><input id='go' type='button' value='Go' /></form></div>",
+              "origin":"OBJECT",
+              "horizontalOrigin":"LEFT",
+              "verticalOrigin":"BOTTOM",
+              "offset":{
+                "cartesian2":[
+                  24,-24
+                ]
+              },
+              "goButton":"go",
+              "goTemplate":"http://localhost/lovelacelos/conjunctions?ssc=`selectedObjectID`&start=`timelineStart`&stop=`timelineStop`&maxRange=`maxRange`&f=JSON"
+            }
+          }
+        ]
+      }
     },
     "position":{
       "interpolationAlgorithm":"LAGRANGE",
@@ -19757,7 +20791,7 @@
     }
   },
   {
-    "id":"/Application/STK/Scenario/Hackathon/Satellite/IRIDIUM_64_25287",
+    "id":"25287",
     "availability":"2012-08-17T12:00:00Z/2012-08-17T18:00:00Z",
     "billboard":{
       "color":{
@@ -19806,6 +20840,28 @@
       "show":true,
       "leadTime":0.0,
       "trailTime":0.0
+    },
+    "whenSelected":{
+      "czml":{
+        "content":[
+          {
+            "id":"25287",
+            "overlay":{
+              "content":"<div  style='width:200px; height:70px; background-color:gray;' ><form>Conjunction Analysis<br/>Max Range (km): <input type='number' id='maxRange' value='50'/><input id='go' type='button' value='Go' /></form></div>",
+              "origin":"OBJECT",
+              "horizontalOrigin":"LEFT",
+              "verticalOrigin":"BOTTOM",
+              "offset":{
+                "cartesian2":[
+                  24,-24
+                ]
+              },
+              "goButton":"go",
+              "goTemplate":"http://localhost/lovelacelos/conjunctions?ssc=`selectedObjectID`&start=`timelineStart`&stop=`timelineStop`&maxRange=`maxRange`&f=JSON"
+            }
+          }
+        ]
+      }
     },
     "position":{
       "interpolationAlgorithm":"LAGRANGE",
@@ -20177,7 +21233,7 @@
     }
   },
   {
-    "id":"/Application/STK/Scenario/Hackathon/Satellite/IRIDIUM_65_25288",
+    "id":"25288",
     "availability":"2012-08-17T12:00:00Z/2012-08-17T18:00:00Z",
     "billboard":{
       "color":{
@@ -20226,6 +21282,28 @@
       "show":true,
       "leadTime":0.0,
       "trailTime":0.0
+    },
+    "whenSelected":{
+      "czml":{
+        "content":[
+          {
+            "id":"25288",
+            "overlay":{
+              "content":"<div  style='width:200px; height:70px; background-color:gray;' ><form>Conjunction Analysis<br/>Max Range (km): <input type='number' id='maxRange' value='50'/><input id='go' type='button' value='Go' /></form></div>",
+              "origin":"OBJECT",
+              "horizontalOrigin":"LEFT",
+              "verticalOrigin":"BOTTOM",
+              "offset":{
+                "cartesian2":[
+                  24,-24
+                ]
+              },
+              "goButton":"go",
+              "goTemplate":"http://localhost/lovelacelos/conjunctions?ssc=`selectedObjectID`&start=`timelineStart`&stop=`timelineStop`&maxRange=`maxRange`&f=JSON"
+            }
+          }
+        ]
+      }
     },
     "position":{
       "interpolationAlgorithm":"LAGRANGE",
@@ -20597,7 +21675,7 @@
     }
   },
   {
-    "id":"/Application/STK/Scenario/Hackathon/Satellite/IRIDIUM_66_25289",
+    "id":"25289",
     "availability":"2012-08-17T12:00:00Z/2012-08-17T18:00:00Z",
     "billboard":{
       "color":{
@@ -20646,6 +21724,28 @@
       "show":true,
       "leadTime":0.0,
       "trailTime":0.0
+    },
+    "whenSelected":{
+      "czml":{
+        "content":[
+          {
+            "id":"25289",
+            "overlay":{
+              "content":"<div  style='width:200px; height:70px; background-color:gray;' ><form>Conjunction Analysis<br/>Max Range (km): <input type='number' id='maxRange' value='50'/><input id='go' type='button' value='Go' /></form></div>",
+              "origin":"OBJECT",
+              "horizontalOrigin":"LEFT",
+              "verticalOrigin":"BOTTOM",
+              "offset":{
+                "cartesian2":[
+                  24,-24
+                ]
+              },
+              "goButton":"go",
+              "goTemplate":"http://localhost/lovelacelos/conjunctions?ssc=`selectedObjectID`&start=`timelineStart`&stop=`timelineStop`&maxRange=`maxRange`&f=JSON"
+            }
+          }
+        ]
+      }
     },
     "position":{
       "interpolationAlgorithm":"LAGRANGE",
@@ -21017,7 +22117,7 @@
     }
   },
   {
-    "id":"/Application/STK/Scenario/Hackathon/Satellite/IRIDIUM_67_25290",
+    "id":"25290",
     "availability":"2012-08-17T12:00:00Z/2012-08-17T18:00:00Z",
     "billboard":{
       "color":{
@@ -21066,6 +22166,28 @@
       "show":true,
       "leadTime":0.0,
       "trailTime":0.0
+    },
+    "whenSelected":{
+      "czml":{
+        "content":[
+          {
+            "id":"25290",
+            "overlay":{
+              "content":"<div  style='width:200px; height:70px; background-color:gray;' ><form>Conjunction Analysis<br/>Max Range (km): <input type='number' id='maxRange' value='50'/><input id='go' type='button' value='Go' /></form></div>",
+              "origin":"OBJECT",
+              "horizontalOrigin":"LEFT",
+              "verticalOrigin":"BOTTOM",
+              "offset":{
+                "cartesian2":[
+                  24,-24
+                ]
+              },
+              "goButton":"go",
+              "goTemplate":"http://localhost/lovelacelos/conjunctions?ssc=`selectedObjectID`&start=`timelineStart`&stop=`timelineStop`&maxRange=`maxRange`&f=JSON"
+            }
+          }
+        ]
+      }
     },
     "position":{
       "interpolationAlgorithm":"LAGRANGE",
@@ -21437,7 +22559,7 @@
     }
   },
   {
-    "id":"/Application/STK/Scenario/Hackathon/Satellite/IRIDIUM_68_25291",
+    "id":"25291",
     "availability":"2012-08-17T12:00:00Z/2012-08-17T18:00:00Z",
     "billboard":{
       "color":{
@@ -21486,6 +22608,28 @@
       "show":true,
       "leadTime":0.0,
       "trailTime":0.0
+    },
+    "whenSelected":{
+      "czml":{
+        "content":[
+          {
+            "id":"25291",
+            "overlay":{
+              "content":"<div  style='width:200px; height:70px; background-color:gray;' ><form>Conjunction Analysis<br/>Max Range (km): <input type='number' id='maxRange' value='50'/><input id='go' type='button' value='Go' /></form></div>",
+              "origin":"OBJECT",
+              "horizontalOrigin":"LEFT",
+              "verticalOrigin":"BOTTOM",
+              "offset":{
+                "cartesian2":[
+                  24,-24
+                ]
+              },
+              "goButton":"go",
+              "goTemplate":"http://localhost/lovelacelos/conjunctions?ssc=`selectedObjectID`&start=`timelineStart`&stop=`timelineStop`&maxRange=`maxRange`&f=JSON"
+            }
+          }
+        ]
+      }
     },
     "position":{
       "interpolationAlgorithm":"LAGRANGE",
@@ -21857,7 +23001,7 @@
     }
   },
   {
-    "id":"/Application/STK/Scenario/Hackathon/Satellite/IRIDIUM_6_24794",
+    "id":"24794",
     "availability":"2012-08-17T12:00:00Z/2012-08-17T18:00:00Z",
     "billboard":{
       "color":{
@@ -21906,6 +23050,28 @@
       "show":true,
       "leadTime":0.0,
       "trailTime":0.0
+    },
+    "whenSelected":{
+      "czml":{
+        "content":[
+          {
+            "id":"24794",
+            "overlay":{
+              "content":"<div  style='width:200px; height:70px; background-color:gray;' ><form>Conjunction Analysis<br/>Max Range (km): <input type='number' id='maxRange' value='50'/><input id='go' type='button' value='Go' /></form></div>",
+              "origin":"OBJECT",
+              "horizontalOrigin":"LEFT",
+              "verticalOrigin":"BOTTOM",
+              "offset":{
+                "cartesian2":[
+                  24,-24
+                ]
+              },
+              "goButton":"go",
+              "goTemplate":"http://localhost/lovelacelos/conjunctions?ssc=`selectedObjectID`&start=`timelineStart`&stop=`timelineStop`&maxRange=`maxRange`&f=JSON"
+            }
+          }
+        ]
+      }
     },
     "position":{
       "interpolationAlgorithm":"LAGRANGE",
@@ -22277,7 +23443,7 @@
     }
   },
   {
-    "id":"/Application/STK/Scenario/Hackathon/Satellite/IRIDIUM_70_25342",
+    "id":"25342",
     "availability":"2012-08-17T12:00:00Z/2012-08-17T18:00:00Z",
     "billboard":{
       "color":{
@@ -22326,6 +23492,28 @@
       "show":true,
       "leadTime":0.0,
       "trailTime":0.0
+    },
+    "whenSelected":{
+      "czml":{
+        "content":[
+          {
+            "id":"25342",
+            "overlay":{
+              "content":"<div  style='width:200px; height:70px; background-color:gray;' ><form>Conjunction Analysis<br/>Max Range (km): <input type='number' id='maxRange' value='50'/><input id='go' type='button' value='Go' /></form></div>",
+              "origin":"OBJECT",
+              "horizontalOrigin":"LEFT",
+              "verticalOrigin":"BOTTOM",
+              "offset":{
+                "cartesian2":[
+                  24,-24
+                ]
+              },
+              "goButton":"go",
+              "goTemplate":"http://localhost/lovelacelos/conjunctions?ssc=`selectedObjectID`&start=`timelineStart`&stop=`timelineStop`&maxRange=`maxRange`&f=JSON"
+            }
+          }
+        ]
+      }
     },
     "position":{
       "interpolationAlgorithm":"LAGRANGE",
@@ -22697,7 +23885,7 @@
     }
   },
   {
-    "id":"/Application/STK/Scenario/Hackathon/Satellite/IRIDIUM_72_25343",
+    "id":"25343",
     "availability":"2012-08-17T12:00:00Z/2012-08-17T18:00:00Z",
     "billboard":{
       "color":{
@@ -22746,6 +23934,28 @@
       "show":true,
       "leadTime":0.0,
       "trailTime":0.0
+    },
+    "whenSelected":{
+      "czml":{
+        "content":[
+          {
+            "id":"25343",
+            "overlay":{
+              "content":"<div  style='width:200px; height:70px; background-color:gray;' ><form>Conjunction Analysis<br/>Max Range (km): <input type='number' id='maxRange' value='50'/><input id='go' type='button' value='Go' /></form></div>",
+              "origin":"OBJECT",
+              "horizontalOrigin":"LEFT",
+              "verticalOrigin":"BOTTOM",
+              "offset":{
+                "cartesian2":[
+                  24,-24
+                ]
+              },
+              "goButton":"go",
+              "goTemplate":"http://localhost/lovelacelos/conjunctions?ssc=`selectedObjectID`&start=`timelineStart`&stop=`timelineStop`&maxRange=`maxRange`&f=JSON"
+            }
+          }
+        ]
+      }
     },
     "position":{
       "interpolationAlgorithm":"LAGRANGE",
@@ -23117,7 +24327,7 @@
     }
   },
   {
-    "id":"/Application/STK/Scenario/Hackathon/Satellite/IRIDIUM_74_25345",
+    "id":"25345",
     "availability":"2012-08-17T12:00:00Z/2012-08-17T18:00:00Z",
     "billboard":{
       "color":{
@@ -23166,6 +24376,28 @@
       "show":true,
       "leadTime":0.0,
       "trailTime":0.0
+    },
+    "whenSelected":{
+      "czml":{
+        "content":[
+          {
+            "id":"25345",
+            "overlay":{
+              "content":"<div  style='width:200px; height:70px; background-color:gray;' ><form>Conjunction Analysis<br/>Max Range (km): <input type='number' id='maxRange' value='50'/><input id='go' type='button' value='Go' /></form></div>",
+              "origin":"OBJECT",
+              "horizontalOrigin":"LEFT",
+              "verticalOrigin":"BOTTOM",
+              "offset":{
+                "cartesian2":[
+                  24,-24
+                ]
+              },
+              "goButton":"go",
+              "goTemplate":"http://localhost/lovelacelos/conjunctions?ssc=`selectedObjectID`&start=`timelineStart`&stop=`timelineStop`&maxRange=`maxRange`&f=JSON"
+            }
+          }
+        ]
+      }
     },
     "position":{
       "interpolationAlgorithm":"LAGRANGE",
@@ -23537,7 +24769,7 @@
     }
   },
   {
-    "id":"/Application/STK/Scenario/Hackathon/Satellite/IRIDIUM_75_25346",
+    "id":"25346",
     "availability":"2012-08-17T12:00:00Z/2012-08-17T18:00:00Z",
     "billboard":{
       "color":{
@@ -23586,6 +24818,28 @@
       "show":true,
       "leadTime":0.0,
       "trailTime":0.0
+    },
+    "whenSelected":{
+      "czml":{
+        "content":[
+          {
+            "id":"25346",
+            "overlay":{
+              "content":"<div  style='width:200px; height:70px; background-color:gray;' ><form>Conjunction Analysis<br/>Max Range (km): <input type='number' id='maxRange' value='50'/><input id='go' type='button' value='Go' /></form></div>",
+              "origin":"OBJECT",
+              "horizontalOrigin":"LEFT",
+              "verticalOrigin":"BOTTOM",
+              "offset":{
+                "cartesian2":[
+                  24,-24
+                ]
+              },
+              "goButton":"go",
+              "goTemplate":"http://localhost/lovelacelos/conjunctions?ssc=`selectedObjectID`&start=`timelineStart`&stop=`timelineStop`&maxRange=`maxRange`&f=JSON"
+            }
+          }
+        ]
+      }
     },
     "position":{
       "interpolationAlgorithm":"LAGRANGE",
@@ -23957,7 +25211,7 @@
     }
   },
   {
-    "id":"/Application/STK/Scenario/Hackathon/Satellite/IRIDIUM_76_25432",
+    "id":"25432",
     "availability":"2012-08-17T12:00:00Z/2012-08-17T18:00:00Z",
     "billboard":{
       "color":{
@@ -24006,6 +25260,28 @@
       "show":true,
       "leadTime":0.0,
       "trailTime":0.0
+    },
+    "whenSelected":{
+      "czml":{
+        "content":[
+          {
+            "id":"25432",
+            "overlay":{
+              "content":"<div  style='width:200px; height:70px; background-color:gray;' ><form>Conjunction Analysis<br/>Max Range (km): <input type='number' id='maxRange' value='50'/><input id='go' type='button' value='Go' /></form></div>",
+              "origin":"OBJECT",
+              "horizontalOrigin":"LEFT",
+              "verticalOrigin":"BOTTOM",
+              "offset":{
+                "cartesian2":[
+                  24,-24
+                ]
+              },
+              "goButton":"go",
+              "goTemplate":"http://localhost/lovelacelos/conjunctions?ssc=`selectedObjectID`&start=`timelineStart`&stop=`timelineStop`&maxRange=`maxRange`&f=JSON"
+            }
+          }
+        ]
+      }
     },
     "position":{
       "interpolationAlgorithm":"LAGRANGE",
@@ -24377,7 +25653,7 @@
     }
   },
   {
-    "id":"/Application/STK/Scenario/Hackathon/Satellite/IRIDIUM_77_25471",
+    "id":"25471",
     "availability":"2012-08-17T12:00:00Z/2012-08-17T18:00:00Z",
     "billboard":{
       "color":{
@@ -24426,6 +25702,28 @@
       "show":true,
       "leadTime":0.0,
       "trailTime":0.0
+    },
+    "whenSelected":{
+      "czml":{
+        "content":[
+          {
+            "id":"25471",
+            "overlay":{
+              "content":"<div  style='width:200px; height:70px; background-color:gray;' ><form>Conjunction Analysis<br/>Max Range (km): <input type='number' id='maxRange' value='50'/><input id='go' type='button' value='Go' /></form></div>",
+              "origin":"OBJECT",
+              "horizontalOrigin":"LEFT",
+              "verticalOrigin":"BOTTOM",
+              "offset":{
+                "cartesian2":[
+                  24,-24
+                ]
+              },
+              "goButton":"go",
+              "goTemplate":"http://localhost/lovelacelos/conjunctions?ssc=`selectedObjectID`&start=`timelineStart`&stop=`timelineStop`&maxRange=`maxRange`&f=JSON"
+            }
+          }
+        ]
+      }
     },
     "position":{
       "interpolationAlgorithm":"LAGRANGE",
@@ -24797,7 +26095,7 @@
     }
   },
   {
-    "id":"/Application/STK/Scenario/Hackathon/Satellite/IRIDIUM_7_24793",
+    "id":"24793",
     "availability":"2012-08-17T12:00:00Z/2012-08-17T18:00:00Z",
     "billboard":{
       "color":{
@@ -24846,6 +26144,28 @@
       "show":true,
       "leadTime":0.0,
       "trailTime":0.0
+    },
+    "whenSelected":{
+      "czml":{
+        "content":[
+          {
+            "id":"24793",
+            "overlay":{
+              "content":"<div  style='width:200px; height:70px; background-color:gray;' ><form>Conjunction Analysis<br/>Max Range (km): <input type='number' id='maxRange' value='50'/><input id='go' type='button' value='Go' /></form></div>",
+              "origin":"OBJECT",
+              "horizontalOrigin":"LEFT",
+              "verticalOrigin":"BOTTOM",
+              "offset":{
+                "cartesian2":[
+                  24,-24
+                ]
+              },
+              "goButton":"go",
+              "goTemplate":"http://localhost/lovelacelos/conjunctions?ssc=`selectedObjectID`&start=`timelineStart`&stop=`timelineStop`&maxRange=`maxRange`&f=JSON"
+            }
+          }
+        ]
+      }
     },
     "position":{
       "interpolationAlgorithm":"LAGRANGE",
@@ -25217,7 +26537,7 @@
     }
   },
   {
-    "id":"/Application/STK/Scenario/Hackathon/Satellite/IRIDIUM_80_25469",
+    "id":"25469",
     "availability":"2012-08-17T12:00:00Z/2012-08-17T18:00:00Z",
     "billboard":{
       "color":{
@@ -25266,6 +26586,28 @@
       "show":true,
       "leadTime":0.0,
       "trailTime":0.0
+    },
+    "whenSelected":{
+      "czml":{
+        "content":[
+          {
+            "id":"25469",
+            "overlay":{
+              "content":"<div  style='width:200px; height:70px; background-color:gray;' ><form>Conjunction Analysis<br/>Max Range (km): <input type='number' id='maxRange' value='50'/><input id='go' type='button' value='Go' /></form></div>",
+              "origin":"OBJECT",
+              "horizontalOrigin":"LEFT",
+              "verticalOrigin":"BOTTOM",
+              "offset":{
+                "cartesian2":[
+                  24,-24
+                ]
+              },
+              "goButton":"go",
+              "goTemplate":"http://localhost/lovelacelos/conjunctions?ssc=`selectedObjectID`&start=`timelineStart`&stop=`timelineStop`&maxRange=`maxRange`&f=JSON"
+            }
+          }
+        ]
+      }
     },
     "position":{
       "interpolationAlgorithm":"LAGRANGE",
@@ -25637,7 +26979,7 @@
     }
   },
   {
-    "id":"/Application/STK/Scenario/Hackathon/Satellite/IRIDIUM_81_25468",
+    "id":"25468",
     "availability":"2012-08-17T12:00:00Z/2012-08-17T18:00:00Z",
     "billboard":{
       "color":{
@@ -25686,6 +27028,28 @@
       "show":true,
       "leadTime":0.0,
       "trailTime":0.0
+    },
+    "whenSelected":{
+      "czml":{
+        "content":[
+          {
+            "id":"25468",
+            "overlay":{
+              "content":"<div  style='width:200px; height:70px; background-color:gray;' ><form>Conjunction Analysis<br/>Max Range (km): <input type='number' id='maxRange' value='50'/><input id='go' type='button' value='Go' /></form></div>",
+              "origin":"OBJECT",
+              "horizontalOrigin":"LEFT",
+              "verticalOrigin":"BOTTOM",
+              "offset":{
+                "cartesian2":[
+                  24,-24
+                ]
+              },
+              "goButton":"go",
+              "goTemplate":"http://localhost/lovelacelos/conjunctions?ssc=`selectedObjectID`&start=`timelineStart`&stop=`timelineStop`&maxRange=`maxRange`&f=JSON"
+            }
+          }
+        ]
+      }
     },
     "position":{
       "interpolationAlgorithm":"LAGRANGE",
@@ -26057,7 +27421,7 @@
     }
   },
   {
-    "id":"/Application/STK/Scenario/Hackathon/Satellite/IRIDIUM_82_25467",
+    "id":"25467",
     "availability":"2012-08-17T12:00:00Z/2012-08-17T18:00:00Z",
     "billboard":{
       "color":{
@@ -26106,6 +27470,28 @@
       "show":true,
       "leadTime":0.0,
       "trailTime":0.0
+    },
+    "whenSelected":{
+      "czml":{
+        "content":[
+          {
+            "id":"25467",
+            "overlay":{
+              "content":"<div  style='width:200px; height:70px; background-color:gray;' ><form>Conjunction Analysis<br/>Max Range (km): <input type='number' id='maxRange' value='50'/><input id='go' type='button' value='Go' /></form></div>",
+              "origin":"OBJECT",
+              "horizontalOrigin":"LEFT",
+              "verticalOrigin":"BOTTOM",
+              "offset":{
+                "cartesian2":[
+                  24,-24
+                ]
+              },
+              "goButton":"go",
+              "goTemplate":"http://localhost/lovelacelos/conjunctions?ssc=`selectedObjectID`&start=`timelineStart`&stop=`timelineStop`&maxRange=`maxRange`&f=JSON"
+            }
+          }
+        ]
+      }
     },
     "position":{
       "interpolationAlgorithm":"LAGRANGE",
@@ -26477,7 +27863,7 @@
     }
   },
   {
-    "id":"/Application/STK/Scenario/Hackathon/Satellite/IRIDIUM_83_25531",
+    "id":"25531",
     "availability":"2012-08-17T12:00:00Z/2012-08-17T18:00:00Z",
     "billboard":{
       "color":{
@@ -26526,6 +27912,28 @@
       "show":true,
       "leadTime":0.0,
       "trailTime":0.0
+    },
+    "whenSelected":{
+      "czml":{
+        "content":[
+          {
+            "id":"25531",
+            "overlay":{
+              "content":"<div  style='width:200px; height:70px; background-color:gray;' ><form>Conjunction Analysis<br/>Max Range (km): <input type='number' id='maxRange' value='50'/><input id='go' type='button' value='Go' /></form></div>",
+              "origin":"OBJECT",
+              "horizontalOrigin":"LEFT",
+              "verticalOrigin":"BOTTOM",
+              "offset":{
+                "cartesian2":[
+                  24,-24
+                ]
+              },
+              "goButton":"go",
+              "goTemplate":"http://localhost/lovelacelos/conjunctions?ssc=`selectedObjectID`&start=`timelineStart`&stop=`timelineStop`&maxRange=`maxRange`&f=JSON"
+            }
+          }
+        ]
+      }
     },
     "position":{
       "interpolationAlgorithm":"LAGRANGE",
@@ -26897,7 +28305,7 @@
     }
   },
   {
-    "id":"/Application/STK/Scenario/Hackathon/Satellite/IRIDIUM_84_25530",
+    "id":"25530",
     "availability":"2012-08-17T12:00:00Z/2012-08-17T18:00:00Z",
     "billboard":{
       "color":{
@@ -26946,6 +28354,28 @@
       "show":true,
       "leadTime":0.0,
       "trailTime":0.0
+    },
+    "whenSelected":{
+      "czml":{
+        "content":[
+          {
+            "id":"25530",
+            "overlay":{
+              "content":"<div  style='width:200px; height:70px; background-color:gray;' ><form>Conjunction Analysis<br/>Max Range (km): <input type='number' id='maxRange' value='50'/><input id='go' type='button' value='Go' /></form></div>",
+              "origin":"OBJECT",
+              "horizontalOrigin":"LEFT",
+              "verticalOrigin":"BOTTOM",
+              "offset":{
+                "cartesian2":[
+                  24,-24
+                ]
+              },
+              "goButton":"go",
+              "goTemplate":"http://localhost/lovelacelos/conjunctions?ssc=`selectedObjectID`&start=`timelineStart`&stop=`timelineStop`&maxRange=`maxRange`&f=JSON"
+            }
+          }
+        ]
+      }
     },
     "position":{
       "interpolationAlgorithm":"LAGRANGE",
@@ -27317,7 +28747,7 @@
     }
   },
   {
-    "id":"/Application/STK/Scenario/Hackathon/Satellite/IRIDIUM_86_25528",
+    "id":"25528",
     "availability":"2012-08-17T12:00:00Z/2012-08-17T18:00:00Z",
     "billboard":{
       "color":{
@@ -27366,6 +28796,28 @@
       "show":true,
       "leadTime":0.0,
       "trailTime":0.0
+    },
+    "whenSelected":{
+      "czml":{
+        "content":[
+          {
+            "id":"25528",
+            "overlay":{
+              "content":"<div  style='width:200px; height:70px; background-color:gray;' ><form>Conjunction Analysis<br/>Max Range (km): <input type='number' id='maxRange' value='50'/><input id='go' type='button' value='Go' /></form></div>",
+              "origin":"OBJECT",
+              "horizontalOrigin":"LEFT",
+              "verticalOrigin":"BOTTOM",
+              "offset":{
+                "cartesian2":[
+                  24,-24
+                ]
+              },
+              "goButton":"go",
+              "goTemplate":"http://localhost/lovelacelos/conjunctions?ssc=`selectedObjectID`&start=`timelineStart`&stop=`timelineStop`&maxRange=`maxRange`&f=JSON"
+            }
+          }
+        ]
+      }
     },
     "position":{
       "interpolationAlgorithm":"LAGRANGE",
@@ -27737,7 +29189,7 @@
     }
   },
   {
-    "id":"/Application/STK/Scenario/Hackathon/Satellite/IRIDIUM_8_24792",
+    "id":"24792",
     "availability":"2012-08-17T12:00:00Z/2012-08-17T18:00:00Z",
     "billboard":{
       "color":{
@@ -27786,6 +29238,28 @@
       "show":true,
       "leadTime":0.0,
       "trailTime":0.0
+    },
+    "whenSelected":{
+      "czml":{
+        "content":[
+          {
+            "id":"24792",
+            "overlay":{
+              "content":"<div  style='width:200px; height:70px; background-color:gray;' ><form>Conjunction Analysis<br/>Max Range (km): <input type='number' id='maxRange' value='50'/><input id='go' type='button' value='Go' /></form></div>",
+              "origin":"OBJECT",
+              "horizontalOrigin":"LEFT",
+              "verticalOrigin":"BOTTOM",
+              "offset":{
+                "cartesian2":[
+                  24,-24
+                ]
+              },
+              "goButton":"go",
+              "goTemplate":"http://localhost/lovelacelos/conjunctions?ssc=`selectedObjectID`&start=`timelineStart`&stop=`timelineStop`&maxRange=`maxRange`&f=JSON"
+            }
+          }
+        ]
+      }
     },
     "position":{
       "interpolationAlgorithm":"LAGRANGE",
@@ -28157,7 +29631,7 @@
     }
   },
   {
-    "id":"/Application/STK/Scenario/Hackathon/Satellite/IRIDIUM_90_27373",
+    "id":"27373",
     "availability":"2012-08-17T12:00:00Z/2012-08-17T18:00:00Z",
     "billboard":{
       "color":{
@@ -28206,6 +29680,28 @@
       "show":true,
       "leadTime":0.0,
       "trailTime":0.0
+    },
+    "whenSelected":{
+      "czml":{
+        "content":[
+          {
+            "id":"27373",
+            "overlay":{
+              "content":"<div  style='width:200px; height:70px; background-color:gray;' ><form>Conjunction Analysis<br/>Max Range (km): <input type='number' id='maxRange' value='50'/><input id='go' type='button' value='Go' /></form></div>",
+              "origin":"OBJECT",
+              "horizontalOrigin":"LEFT",
+              "verticalOrigin":"BOTTOM",
+              "offset":{
+                "cartesian2":[
+                  24,-24
+                ]
+              },
+              "goButton":"go",
+              "goTemplate":"http://localhost/lovelacelos/conjunctions?ssc=`selectedObjectID`&start=`timelineStart`&stop=`timelineStop`&maxRange=`maxRange`&f=JSON"
+            }
+          }
+        ]
+      }
     },
     "position":{
       "interpolationAlgorithm":"LAGRANGE",
@@ -28577,7 +30073,7 @@
     }
   },
   {
-    "id":"/Application/STK/Scenario/Hackathon/Satellite/IRIDIUM_91_27372",
+    "id":"27372",
     "availability":"2012-08-17T12:00:00Z/2012-08-17T18:00:00Z",
     "billboard":{
       "color":{
@@ -28626,6 +30122,28 @@
       "show":true,
       "leadTime":0.0,
       "trailTime":0.0
+    },
+    "whenSelected":{
+      "czml":{
+        "content":[
+          {
+            "id":"27372",
+            "overlay":{
+              "content":"<div  style='width:200px; height:70px; background-color:gray;' ><form>Conjunction Analysis<br/>Max Range (km): <input type='number' id='maxRange' value='50'/><input id='go' type='button' value='Go' /></form></div>",
+              "origin":"OBJECT",
+              "horizontalOrigin":"LEFT",
+              "verticalOrigin":"BOTTOM",
+              "offset":{
+                "cartesian2":[
+                  24,-24
+                ]
+              },
+              "goButton":"go",
+              "goTemplate":"http://localhost/lovelacelos/conjunctions?ssc=`selectedObjectID`&start=`timelineStart`&stop=`timelineStop`&maxRange=`maxRange`&f=JSON"
+            }
+          }
+        ]
+      }
     },
     "position":{
       "interpolationAlgorithm":"LAGRANGE",
@@ -28997,7 +30515,7 @@
     }
   },
   {
-    "id":"/Application/STK/Scenario/Hackathon/Satellite/IRIDIUM_94_27374",
+    "id":"27374",
     "availability":"2012-08-17T12:00:00Z/2012-08-17T18:00:00Z",
     "billboard":{
       "color":{
@@ -29046,6 +30564,28 @@
       "show":true,
       "leadTime":0.0,
       "trailTime":0.0
+    },
+    "whenSelected":{
+      "czml":{
+        "content":[
+          {
+            "id":"27374",
+            "overlay":{
+              "content":"<div  style='width:200px; height:70px; background-color:gray;' ><form>Conjunction Analysis<br/>Max Range (km): <input type='number' id='maxRange' value='50'/><input id='go' type='button' value='Go' /></form></div>",
+              "origin":"OBJECT",
+              "horizontalOrigin":"LEFT",
+              "verticalOrigin":"BOTTOM",
+              "offset":{
+                "cartesian2":[
+                  24,-24
+                ]
+              },
+              "goButton":"go",
+              "goTemplate":"http://localhost/lovelacelos/conjunctions?ssc=`selectedObjectID`&start=`timelineStart`&stop=`timelineStop`&maxRange=`maxRange`&f=JSON"
+            }
+          }
+        ]
+      }
     },
     "position":{
       "interpolationAlgorithm":"LAGRANGE",
@@ -29417,7 +30957,7 @@
     }
   },
   {
-    "id":"/Application/STK/Scenario/Hackathon/Satellite/IRIDIUM_95_27375",
+    "id":"27375",
     "availability":"2012-08-17T12:00:00Z/2012-08-17T18:00:00Z",
     "billboard":{
       "color":{
@@ -29466,6 +31006,28 @@
       "show":true,
       "leadTime":0.0,
       "trailTime":0.0
+    },
+    "whenSelected":{
+      "czml":{
+        "content":[
+          {
+            "id":"27375",
+            "overlay":{
+              "content":"<div  style='width:200px; height:70px; background-color:gray;' ><form>Conjunction Analysis<br/>Max Range (km): <input type='number' id='maxRange' value='50'/><input id='go' type='button' value='Go' /></form></div>",
+              "origin":"OBJECT",
+              "horizontalOrigin":"LEFT",
+              "verticalOrigin":"BOTTOM",
+              "offset":{
+                "cartesian2":[
+                  24,-24
+                ]
+              },
+              "goButton":"go",
+              "goTemplate":"http://localhost/lovelacelos/conjunctions?ssc=`selectedObjectID`&start=`timelineStart`&stop=`timelineStop`&maxRange=`maxRange`&f=JSON"
+            }
+          }
+        ]
+      }
     },
     "position":{
       "interpolationAlgorithm":"LAGRANGE",
@@ -29837,7 +31399,7 @@
     }
   },
   {
-    "id":"/Application/STK/Scenario/Hackathon/Satellite/IRIDIUM_96_27376",
+    "id":"27376",
     "availability":"2012-08-17T12:00:00Z/2012-08-17T18:00:00Z",
     "billboard":{
       "color":{
@@ -29886,6 +31448,28 @@
       "show":true,
       "leadTime":0.0,
       "trailTime":0.0
+    },
+    "whenSelected":{
+      "czml":{
+        "content":[
+          {
+            "id":"27376",
+            "overlay":{
+              "content":"<div  style='width:200px; height:70px; background-color:gray;' ><form>Conjunction Analysis<br/>Max Range (km): <input type='number' id='maxRange' value='50'/><input id='go' type='button' value='Go' /></form></div>",
+              "origin":"OBJECT",
+              "horizontalOrigin":"LEFT",
+              "verticalOrigin":"BOTTOM",
+              "offset":{
+                "cartesian2":[
+                  24,-24
+                ]
+              },
+              "goButton":"go",
+              "goTemplate":"http://localhost/lovelacelos/conjunctions?ssc=`selectedObjectID`&start=`timelineStart`&stop=`timelineStop`&maxRange=`maxRange`&f=JSON"
+            }
+          }
+        ]
+      }
     },
     "position":{
       "interpolationAlgorithm":"LAGRANGE",
@@ -30257,7 +31841,7 @@
     }
   },
   {
-    "id":"/Application/STK/Scenario/Hackathon/Satellite/IRIDIUM_97_27450",
+    "id":"27450",
     "availability":"2012-08-17T12:00:00Z/2012-08-17T18:00:00Z",
     "billboard":{
       "color":{
@@ -30306,6 +31890,28 @@
       "show":true,
       "leadTime":0.0,
       "trailTime":0.0
+    },
+    "whenSelected":{
+      "czml":{
+        "content":[
+          {
+            "id":"27450",
+            "overlay":{
+              "content":"<div  style='width:200px; height:70px; background-color:gray;' ><form>Conjunction Analysis<br/>Max Range (km): <input type='number' id='maxRange' value='50'/><input id='go' type='button' value='Go' /></form></div>",
+              "origin":"OBJECT",
+              "horizontalOrigin":"LEFT",
+              "verticalOrigin":"BOTTOM",
+              "offset":{
+                "cartesian2":[
+                  24,-24
+                ]
+              },
+              "goButton":"go",
+              "goTemplate":"http://localhost/lovelacelos/conjunctions?ssc=`selectedObjectID`&start=`timelineStart`&stop=`timelineStop`&maxRange=`maxRange`&f=JSON"
+            }
+          }
+        ]
+      }
     },
     "position":{
       "interpolationAlgorithm":"LAGRANGE",
@@ -30677,7 +32283,7 @@
     }
   },
   {
-    "id":"/Application/STK/Scenario/Hackathon/Satellite/IRIDIUM_98_27451",
+    "id":"27451",
     "availability":"2012-08-17T12:00:00Z/2012-08-17T18:00:00Z",
     "billboard":{
       "color":{
@@ -30726,6 +32332,28 @@
       "show":true,
       "leadTime":0.0,
       "trailTime":0.0
+    },
+    "whenSelected":{
+      "czml":{
+        "content":[
+          {
+            "id":"27451",
+            "overlay":{
+              "content":"<div  style='width:200px; height:70px; background-color:gray;' ><form>Conjunction Analysis<br/>Max Range (km): <input type='number' id='maxRange' value='50'/><input id='go' type='button' value='Go' /></form></div>",
+              "origin":"OBJECT",
+              "horizontalOrigin":"LEFT",
+              "verticalOrigin":"BOTTOM",
+              "offset":{
+                "cartesian2":[
+                  24,-24
+                ]
+              },
+              "goButton":"go",
+              "goTemplate":"http://localhost/lovelacelos/conjunctions?ssc=`selectedObjectID`&start=`timelineStart`&stop=`timelineStop`&maxRange=`maxRange`&f=JSON"
+            }
+          }
+        ]
+      }
     },
     "position":{
       "interpolationAlgorithm":"LAGRANGE",
@@ -31099,24 +32727,6 @@
   {
     "id":"25544",
     "availability":"2012-08-17T12:00:00Z/2012-08-17T18:00:00Z",
-    "whenSelected":{
-        "czml" : {
-            "content" : [{
-                "id" : "25544",
-                "overlay" : {
-                    "content" : "<div  style='width:200px; height:70px; background-color:gray;' ><form>Conjunction Analysis<br/>Max Range (km): <input type='number' id='maxRange' value='50'/><input id='go' type='button' value='Go' /></form></div>",
-                    "origin" : "OBJECT",
-                    "horizontalOrigin" : "LEFT",
-                    "verticalOrigin" : "BOTTOM",
-                    "offset" : {
-                        "cartesian2" : [24, -24]
-                    },
-                    "goButton":"go",
-                    "goTemplate":"http://localhost/lovelacelos/conjunctions?ssc=`selectedObjectID`&start=`timelineStart`&stop=`timelineStop`&maxRange=`maxRange`&f=JSON"
-                }
-            }]
-        }
-    },
     "billboard":{
       "color":{
         "rgba":[
@@ -31164,6 +32774,28 @@
       "show":true,
       "leadTime":0.0,
       "trailTime":0.0
+    },
+    "whenSelected":{
+      "czml":{
+        "content":[
+          {
+            "id":"25544",
+            "overlay":{
+              "content":"<div  style='width:200px; height:70px; background-color:gray;' ><form>Conjunction Analysis<br/>Max Range (km): <input type='number' id='maxRange' value='50'/><input id='go' type='button' value='Go' /></form></div>",
+              "origin":"OBJECT",
+              "horizontalOrigin":"LEFT",
+              "verticalOrigin":"BOTTOM",
+              "offset":{
+                "cartesian2":[
+                  24,-24
+                ]
+              },
+              "goButton":"go",
+              "goTemplate":"http://localhost/lovelacelos/conjunctions?ssc=`selectedObjectID`&start=`timelineStart`&stop=`timelineStop`&maxRange=`maxRange`&f=JSON"
+            }
+          }
+        ]
+      }
     },
     "position":{
       "interpolationAlgorithm":"LAGRANGE",
@@ -31532,6 +33164,31 @@
         21540.0,4894493.75156091,-3000747.91857836,3605615.63983803,
         2.16e4,4905912.11259551,-2640950.76695496,3862264.73805881
       ]
+    }
+  },
+  {
+    "id":"/Application/STK/Scenario/Hackathon",
+    "whenSelected":{
+      "czml":{
+        "content":[
+          {
+            "id":"/Application/STK/Scenario/Hackathon",
+            "overlay":{
+              "content":"<div  style='width:200px; height:70px; background-color:gray;' ><form>Conjunction Analysis<br/>Max Range (km): <input type='number' id='maxRange' value='50'/><input id='go' type='button' value='Go' /></form></div>",
+              "origin":"OBJECT",
+              "horizontalOrigin":"LEFT",
+              "verticalOrigin":"BOTTOM",
+              "offset":{
+                "cartesian2":[
+                  24,-24
+                ]
+              },
+              "goButton":"go",
+              "goTemplate":"http://localhost/lovelacelos/conjunctions?ssc=`selectedObjectID`&start=`timelineStart`&stop=`timelineStop`&maxRange=`maxRange`&f=JSON"
+            }
+          }
+        ]
+      }
     }
   }
 ]
