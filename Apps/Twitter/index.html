@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Cesium - Twitter Tracker</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le styles -->
+    <link href="../../ThirdParty/twitter-bootstrap/docs/assets/css/bootstrap.css" rel="stylesheet">
+    
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le fav icons -->
+    <link rel="shortcut icon" href="../../Images/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="style.css" media="screen">
+    
+    <script type="text/javascript" src="../../ThirdParty/requirejs-1.0.8/require.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
+  </head>
+
+  <body>
+   <div class="header">
+        <img src="../../Images/Cesium_Logo_forLightBackground.png" alt=""/>  
+        <a href="https://github.com/AnalyticalGraphicsInc/cesium"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
+    </div>
+  
+    <div id="mainContent" class="container">
+        <div class="navbar">
+            <div class="navbar-inner">
+                <div class="container">
+                    <ul class="nav">
+                        <li><a href="http://cesium.agi.com" target="_blank">Home</a></li>
+                        <li><a href="https://github.com/AnalyticalGraphicsInc/cesium" target="_blank">Source</a></li>
+                        <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Demos <b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="http://cesium.agi.com/CesiumViewer/index.html?source=Gallery/LotsOfSensors.czml&play=1&loop=1" target="_blank">Lots of Sensors</a>
+                                </li>
+                                <li>
+                                    <a href="http://cesium.agi.com/LotsOfSatellites/" target="_blank">Lots of Satellites</a>
+                                </li>
+                                <li>
+                                    <a href="http://cesium.agi.com/CesiumViewer/index.html?source=Gallery/BAMS_C4ISR.czml&play=1&loop=1" target="_blank">BAMS C4ISR</a>
+                                </li>                                    
+                            </ul>
+                        </li>
+                        <li><a href="https://github.com/AnalyticalGraphicsInc/cesium/wiki" target="_blank">Wiki</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+                
+        <div class="main">   
+            <div class="row">
+                <div class="span4" id="twitterContainer">
+                    <div id="twitterContent">
+                        <img id="twitterLogo" src="../../Images/twitter-bird.png"> <h1>Tweets Around The World</h1>
+                        <div class="center">
+		                    <form id="twitterSearch">
+		                        <input class="btn btn-info" type="submit" value="Load Tweets"/>
+		                    </form>
+		                 </div>   
+	                     <div id="tweetDetails">
+	                       <table>
+	                           <tr>
+	                               <td><div id="tweetAvatar"></div></td>
+	                               <td id="personalInfo">
+	                                   <div id="tweetName"></div>
+                                       <div id="tweetUsername"></div>
+                                       <div id="tweetLocation"></div>
+                                   </td>
+	                           </tr>
+	                       </table>
+	                         <div id="tweetText">Hover over any Larry the Bird icon to view that tweet's details.</div>
+	                         <div id="tweetTime"></div>
+	                     </div>
+                    </div>
+                </div>
+                <div class="span8" id="cesiumContainer">
+                    <canvas id="glCanvas" tabindex="1"></canvas>
+                    <script type="text/javascript" src="Cesium.js"></script>
+                </div>
+            </div>
+        </div>
+    </div>
+        
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="../../ThirdParty/twitter-bootstrap/docs/assets/js/jquery.js"></script>
+    <script src="../../ThirdParty/twitter-bootstrap/docs/assets/js/bootstrap-transition.js"></script>
+    <script src="../../ThirdParty/twitter-bootstrap/docs/assets/js/bootstrap-alert.js"></script>
+    <script src="../../ThirdParty/twitter-bootstrap/docs/assets/js/bootstrap-modal.js"></script>
+    <script src="../../ThirdParty/twitter-bootstrap/docs/assets/js/bootstrap-dropdown.js"></script>
+    <script src="../../ThirdParty/twitter-bootstrap/docs/assets/js/bootstrap-scrollspy.js"></script>
+    <script src="../../ThirdParty/twitter-bootstrap/docs/assets/js/bootstrap-tab.js"></script>
+    <script src="../../ThirdParty/twitter-bootstrap/docs/assets/js/bootstrap-tooltip.js"></script>
+    <script src="../../ThirdParty/twitter-bootstrap/docs/assets/js/bootstrap-popover.js"></script>
+    <script src="../../ThirdParty/twitter-bootstrap/docs/assets/js/bootstrap-button.js"></script>
+    <script src="../../ThirdParty/twitter-bootstrap/docs/assets/js/bootstrap-collapse.js"></script>
+    <script src="../../ThirdParty/twitter-bootstrap/docs/assets/js/bootstrap-carousel.js"></script>
+    <script src="../../ThirdParty/twitter-bootstrap/docs/assets/js/bootstrap-typeahead.js"></script>
+    
+    <script type="text/javascript">
+        $('.dropdown-toggle').dropdown();
+    </script>
+  </body>
+</html>

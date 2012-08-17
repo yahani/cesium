@@ -1,0 +1,140 @@
+html {
+	min-width: 980px;
+	min-height: 900px;
+}
+
+body {
+	background-position: 0px 500px;
+    background-attachment: fixed !important;
+    background-repeat: no-repeat;
+	background-attachment: fixed !important;
+	background-repeat: no-repeat;
+	background: #FFFFFF; /* Old browsers */
+	background: -moz-linear-gradient(top,  #6caddf 5%, #ffffff 50%, #ffffff 69%, #5c8727 95%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(5%,#6caddf), color-stop(50%,#ffffff), color-stop(69%,#ffffff), color-stop(95%,#5c8727)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  #6caddf 5%,#ffffff 50%,#ffffff 69%,#5c8727 95%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  #6caddf 5%,#ffffff 50%,#ffffff 69%,#5c8727 95%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  #6caddf 5%,#ffffff 50%,#ffffff 69%,#5c8727 95%); /* IE10+ */
+	background: linear-gradient(to bottom,  #6caddf 5%,#ffffff 50%,#ffffff 69%,#5c8727 95%) fixed; /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#6caddf', endColorstr='#5c8727',GradientType=0 ); /* IE6-9 */
+}
+
+.header {
+    background: #FFF;
+    padding-bottom: 20px;
+    z-index: -1;
+    width: 100%;
+    text-align: center;
+}
+
+.header img {
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.navbar {
+    margin-top: -20px;
+}
+
+.center {
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+#githubRibbon {
+	position: absolute;
+	top: 0;
+	right: 0;
+}
+
+.navbar {
+	z-index: 999;
+}
+
+#twitterContent {
+	padding: 20px;
+	line-height: 20px;
+}
+
+#twitterContent h1 {
+	color: #00aced;
+	font-size: 16px;
+	display: inline;
+	margin: 0 auto;
+}
+
+#twitterContainer {
+	background: #FFFFFF;
+	height: 600px;
+}
+
+#twitterLogo {
+
+}
+
+#tweetDetails {
+	background-color: whiteSmoke;
+	border: 1px solid #E3E3E3;
+	margin-top: 10px;
+	padding: 10px;
+}
+
+#tweetText {
+	background-color: white;
+    border: 1px solid #E3E3E3;
+    margin-top: 10px;
+    padding: 10px;
+}
+
+#tweetAvatar {
+    width: 48px;
+    height: 48px;
+}
+
+#tweetName {
+	float: left;
+	display: inline;
+}
+
+#tweetText {
+	font-weight: bold;
+}
+
+#tweetTime {
+    font-family: Arial, Monaco, monospace;
+    padding-top: 10px;
+}
+
+#personalInfo {
+	padding-left: 10px;
+}
+
+#cesiumContainer {
+	height: 600px;
+}
+
+#glCanvas {
+    width: 100%;
+    height: 100%;	
+}
+
+.navbar-inner {
+background-image: -moz-linear-gradient(top, #000, #000);
+background-image: -ms-linear-gradient(top, #333, #000);
+background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#000), to(#000));
+background-image: -webkit-linear-gradient(top, #333, #000);
+background-image: -o-linear-gradient(top, #333, #000);
+background-image: linear-gradient(top, #333, #000);
+font-weight: bold;
+font-family: inherit;
+}
+
+.nav :hover{
+background: #6CADDF;
+color: #ffffff;
+}
+
+.caret {
+	color: #FFFFFF;
+}
