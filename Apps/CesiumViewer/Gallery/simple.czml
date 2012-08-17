@@ -58,11 +58,24 @@
   {
     "id":"/Application/STK/Scenario/simple/Satellite/Geoeye1",
     "availability":"2012-03-15T10:00:00Z/2012-03-16T10:00:00Z",
-    "overlay":{
-      "content":"<div style='color:red'>boom</div><img src='../../Images/Explosion.gif' />",
-      "origin":"OBJECT",
-      "horizontalOrigin":"CENTER",
-      "verticalOrigin":"CENTER"
+    "whenSelected":{
+        "czml" : {
+            "content" : [{
+                "id" : "/Application/STK/Scenario/simple/Satellite/Geoeye1",
+                "overlay" : {
+                    "content" : "<div style='color:red'>boom</div><img src='../../Images/Explosion.gif' />",
+                    "origin" : "OBJECT",
+                    "horizontalOrigin" : "CENTER",
+                    "verticalOrigin" : "CENTER",
+                    "offset" : {
+                        "cartesian2" : [0, 0]
+                    }
+                },
+                "billboard" : {
+                  "show" : false
+                }
+            }]
+        }
     },
     "billboard":{
       "horizontalOrigin":"CENTER",

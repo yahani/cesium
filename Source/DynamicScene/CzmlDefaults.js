@@ -1,6 +1,7 @@
 /*global define*/
 define([
         './DynamicObject',
+        './WhenSelected',
         './DynamicBillboard',
         './DynamicCone',
         './DynamicLabel',
@@ -19,6 +20,7 @@ define([
         './DynamicPyramidVisualizer'
        ], function(
         DynamicObject,
+        WhenSelected,
         DynamicBillboard,
         DynamicCone,
         DynamicLabel,
@@ -59,6 +61,7 @@ define([
          */
         updaters : [DynamicBillboard.processCzmlPacket,
                     DynamicCone.processCzmlPacket,
+                    WhenSelected.processCzmlPacket,
                     DynamicLabel.processCzmlPacket,
                     DynamicOverlay.processCzmlPacket,
                     DynamicPoint.processCzmlPacket,
@@ -79,6 +82,7 @@ define([
         mergers : [DynamicBillboard.mergeProperties,
                    DynamicCone.mergeProperties,
                    DynamicOverlay.mergeProperties,
+                   WhenSelected.mergeProperties,
                    DynamicLabel.mergeProperties,
                    DynamicPoint.mergeProperties,
                    DynamicPolygon.mergeProperties,
@@ -94,6 +98,7 @@ define([
         */
         cleaners : [DynamicBillboard.undefineProperties,
                     DynamicCone.undefineProperties,
+                    WhenSelected.undefineProperties,
                     DynamicLabel.undefineProperties,
                     DynamicOverlay.undefineProperties,
                     DynamicPoint.undefineProperties,

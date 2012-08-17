@@ -157,10 +157,16 @@ define([
         onCameraToggled : undefined,
 
         _handleLeftClick : function(e) {
+            // If the user left-clicks, we re-send the selection event, regardless if it's a duplicate,
+            // because the client may want to react to re-selection in some way.
+            this.selectedObject = this.scene.pick(e.position);
+
+            var obj = this.selectedObject.dynamicObject;
+            if (typeof obj.whenSelected !== 'undefined') {
+                processCzml(obj.whenSelected.czml.getValue(this.clock.currentTime), this.dynamicObjectCollection);
+            }
+
             if (typeof this.onObjectSelected !== 'undefined') {
-                // If the user left-clicks, we re-send the selection event, regardless if it's a duplicate,
-                // because the client may want to react to re-selection in some way.
-                this.selectedObject = this.scene.pick(e.position);
                 this.onObjectSelected(this.selectedObject);
             }
         },

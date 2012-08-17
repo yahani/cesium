@@ -262,6 +262,7 @@ define([
         targetObject.position = targetObject.position || objectToMerge.position;
         targetObject.orientation = targetObject.orientation || objectToMerge.orientation;
         targetObject.vertexPositions = targetObject.vertexPositions || objectToMerge.vertexPositions;
+
         targetObject._setAvailability(targetObject.availability || objectToMerge.availability);
     };
 
