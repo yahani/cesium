@@ -1,6 +1,22 @@
 
 [
   {
+    "id":"logo",
+    "overlay":{
+      "content":"<img src='../../Images/baby.gif' />",
+      "origin":"LOWER_RIGHT",
+      "offset":{
+        "interpolationAlgorithm":"LAGRANGE",
+        "interpolationDegree":2,
+        "epoch":"2012-03-15T10:00:00Z",
+        "cartesian2":[
+          0.0, 0.0, 0.0,
+          6000, 200, 200,
+          9000, 100, 500]
+      }
+    }
+  },
+  {
     "id":"/Application/STK/Scenario/simple/Facility/AGI",
     "billboard":{
       "horizontalOrigin":"CENTER",
@@ -42,6 +58,12 @@
   {
     "id":"/Application/STK/Scenario/simple/Satellite/Geoeye1",
     "availability":"2012-03-15T10:00:00Z/2012-03-16T10:00:00Z",
+    "overlay":{
+      "content":"<div style='color:red'>boom</div><img src='../../Images/Explosion.gif' />",
+      "origin":"OBJECT",
+      "horizontalOrigin":"CENTER",
+      "verticalOrigin":"CENTER"
+    },
     "billboard":{
       "horizontalOrigin":"CENTER",
       "image":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADGSURBVDhPnVPbDcMgDGQ0RmGUjsIojNIR+p8Piq+5xvGDSo2EEgH3yNku5Y9nrucnLLt07ssrJsHJ59Bdko1aB1Z0DkRrDxy2Wm6XNLj1MWU5F1R+jjJ7cyRQJli+bwRf28drCgFJxI2yCwIHZqKWRICRk20VSALV5WZ0T8KgQyJdBVHXJAh3hcygwxBNifALQsIctLoLkTW2JASLcmpbg1kqC8waDA1EAt0ktKuVVUbXOJA56rBU1U7Trv9D1Wgctw2SzO8bB7GiztrZSh0AAAAASUVORK5CYII=",
