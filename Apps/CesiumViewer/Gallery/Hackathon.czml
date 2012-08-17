@@ -4,7 +4,7 @@
     "id":"logo",
     "overlay":{
       "content":"<img src='../../Images/baby.gif' />",
-      "origin":"LOWER_RIGHT",
+      "origin":"TOP_LEFT",
       "offset":{
        "interpolationAlgorithm":"LAGRANGE",
        "interpolationDegree":2,
