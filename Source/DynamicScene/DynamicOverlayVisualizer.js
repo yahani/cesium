@@ -306,6 +306,14 @@ define([
     };
 
     DynamicOverlayVisualizer.prototype._onObjectsRemoved = function(dynamicObjectCollection, dynamicObjects) {
+        for ( var i = dynamicObjects.length - 1; i > -1; i--) {
+            var dynamicObject = dynamicObjects[i];
+            var div = dynamicObject._overlayDiv;
+            if (typeof div !== 'undefined') {
+                div.parentNode.removeChild(div);
+                dynamicObject._overlayDiv = undefined;
+            }
+        }
     };
 
     return DynamicOverlayVisualizer;

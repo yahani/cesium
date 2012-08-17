@@ -443,7 +443,7 @@
                         "cartesian2" : [0, 0]
                     },
                     "goButton":"go",
-                    "goTemplate":"Gallery/LotsOfSensors.czml"
+                    "goTemplate":"Gallery/test.czml"
                 }
             }]
         }

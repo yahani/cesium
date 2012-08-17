@@ -1,0 +1,42 @@
+
+[
+  {
+    "id":"/Application/STK/Scenario/simple/Facility/Foo",
+    "billboard":{
+      "horizontalOrigin":"CENTER",
+      "image":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAC/SURBVDhPrZPRDYQgEEQpjVKuFEvhw0IoxU6QgQwMK+vdx5FsooT3GHdjCM4qZnnnHvvkYoxFi/uvIhwiRCClXFC6v5UQ1uQAsbrkHCLsbaPjFgIzQQc1yUOwu33ePGE3BQUaee2BpjhbP5YUmkAlbNzsAURfBDqJnMIyyv4JjsCCgCnIR32uZUfcJuGBOwEk6bOKhoAADh31EIq3MgFg1mgkE1BA2AoUZoo2iZ3gyqGgmMDC/xWwkfb3/eUd7A1v3kxjNW9taQAAAABJRU5ErkJggg==",
+      "scale":1.5,
+      "show":true,
+      "verticalOrigin":"CENTER"
+    },
+    "label":{
+      "fillColor":{
+        "rgba":[
+          0,255,255,255
+        ]
+      },
+      "font":"10pt Lucida Console",
+      "horizontalOrigin":"LEFT",
+      "outlineColor":{
+        "rgba":[
+          0,0,0,255
+        ]
+      },
+      "pixelOffset":{
+        "cartesian2":[
+          12.0,0.0
+        ]
+      },
+      "scale":1.0,
+      "show":true,
+      "style":"FILL",
+      "text":"Foo",
+      "verticalOrigin":"CENTER"
+    },
+    "position":{
+      "cartographicRadians":[
+        0.0,0.0,0.0
+      ]
+    }
+  }
+]
