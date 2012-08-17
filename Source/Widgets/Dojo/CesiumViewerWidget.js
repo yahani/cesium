@@ -158,12 +158,9 @@ define([
         onZoom : undefined,
         onCameraToggled : undefined,
 
-        _handleLeftClick : function(e) {
-            // If the user left-clicks, we re-send the selection event, regardless if it's a duplicate,
-            // because the client may want to react to re-selection in some way.
-
+        setSelectedObject : function(dynamicObject) {
             var oldObject = this.selectedObject;
-            this.selectedObject = this.scene.pick(e.position);
+            this.selectedObject = dynamicObject;
 
             if (oldObject !== this.selectedObject) {
                 this.selectionCollection.clear();
@@ -177,6 +174,12 @@ define([
             if (typeof this.onObjectSelected !== 'undefined') {
                 this.onObjectSelected(this.selectedObject);
             }
+        },
+
+        _handleLeftClick : function(e) {
+            // If the user left-clicks, we re-send the selection event, regardless if it's a duplicate,
+            // because the client may want to react to re-selection in some way.
+            this.setSelectedObject(this.scene.pick(e.position));
         },
 
         _handleRightClick : function(e) {
@@ -399,6 +402,9 @@ define([
             var clock = this.clock;
             var transitioner = this.sceneTransitioner = new SceneTransitioner(scene);
             this.visualizers = VisualizerCollection.createCzmlStandardCollection(scene, compositeDynamicObjectCollection);
+            for ( var qq = 0; qq < this.visualizers._visualizers.length; qq++) {
+                this.visualizers._visualizers[qq].widget = this;
+            }
 
             if (typeof widget.endUserOptions.source !== 'undefined') {
                 getJson(widget.endUserOptions.source).then(function(czmlData) {

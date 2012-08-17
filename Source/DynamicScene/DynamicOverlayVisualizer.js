@@ -227,6 +227,9 @@ define([
                         collections.push(newGuy);
                         that._dynamicObjectCollection.setCollections(collections);
                         processCzml(JSON.parse(request.response), newGuy);
+                        if (that.widget.selectedObject.dynamicObject === dynamicObject) {
+                            that.widget.setSelectedObject(undefined);
+                        }
                     };
                     request.send();
                 };
