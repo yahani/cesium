@@ -6,6 +6,7 @@ define([
         './DynamicCone',
         './DynamicLabel',
         './DynamicOverlay',
+        './DynamicPath',
         './DynamicPoint',
         './DynamicPolygon',
         './DynamicPolyline',
@@ -14,6 +15,7 @@ define([
         './DynamicConeVisualizerUsingCustomSensor', //CZML_TODO Replace with './DynamicConeVisualizer', once ComplexConicSensor works.
         './DynamicLabelVisualizer',
         './DynamicOverlayVisualizer',
+        './DynamicPathVisualizer',
         './DynamicPointVisualizer',
         './DynamicPolygonVisualizer',
         './DynamicPolylineVisualizer',
@@ -25,6 +27,7 @@ define([
         DynamicCone,
         DynamicLabel,
         DynamicOverlay,
+        DynamicPath,
         DynamicPoint,
         DynamicPolygon,
         DynamicPolyline,
@@ -33,6 +36,7 @@ define([
         DynamicConeVisualizer,
         DynamicLabelVisualizer,
         DynamicOverlayVisualizer,
+        DynamicPathVisualizer,
         DynamicPointVisualizer,
         DynamicPolygonVisualizer,
         DynamicPolylineVisualizer,
@@ -64,6 +68,7 @@ define([
                     WhenSelected.processCzmlPacket,
                     DynamicLabel.processCzmlPacket,
                     DynamicOverlay.processCzmlPacket,
+                    DynamicPath.processCzmlPacket,
                     DynamicPoint.processCzmlPacket,
                     DynamicPolygon.processCzmlPacket,
                     DynamicPolyline.processCzmlPacket,
@@ -84,6 +89,7 @@ define([
                    DynamicOverlay.mergeProperties,
                    WhenSelected.mergeProperties,
                    DynamicLabel.mergeProperties,
+                   DynamicPath.mergeProperties,
                    DynamicPoint.mergeProperties,
                    DynamicPolygon.mergeProperties,
                    DynamicPolyline.mergeProperties,
@@ -123,7 +129,8 @@ define([
                     new DynamicPointVisualizer(scene),
                     new DynamicPolygonVisualizer(scene),
                     new DynamicPolylineVisualizer(scene),
-                    new DynamicPyramidVisualizer(scene)];
+                    new DynamicPyramidVisualizer(scene),
+                    new DynamicPathVisualizer(scene)];
         }
     };
 
