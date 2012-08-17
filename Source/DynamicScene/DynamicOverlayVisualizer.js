@@ -167,6 +167,8 @@ define([
         return destroyObject(this);
     };
 
+    var urlTemplatePlaceHolderPattern = /`[^`]*`/;
+
     DynamicOverlayVisualizer.prototype._updateObject = function(time, dynamicObject) {
         var overlayDiv = dynamicObject._overlayDiv;
         var dynamicOverlay = dynamicObject.overlay;
@@ -217,6 +219,28 @@ define([
             if (typeof goButtonProperty !== 'undefined' && typeof goTemplateProperty !== 'undefined') {
                 var goButton = document.getElementById(goButtonProperty.getValue(time));
                 var goTemplate = goTemplateProperty.getValue(time);
+                var nextPlaceholder = urlTemplatePlaceHolderPattern.exec(goTemplate);
+                while (nextPlaceholder !== null) {
+                    nextPlaceholder = nextPlaceholder[0];
+                    var placeholderName = nextPlaceholder.substring(1, nextPlaceholder.length - 1);
+                    var substitute = placeholderName;
+                    switch (placeholderName) {
+                    case 'selectedObjectID':
+                        substitute = '25544';
+                        break;
+                    case 'timelineStart':
+                        substitute = '2456156.5';
+                        break;
+                    case 'timelineStop':
+                        substitute = '2456157.0';
+                        break;
+                    case 'maxRange':
+                        substitute = '500000';
+                        break;
+                    }
+                    goTemplate = goTemplate.replace(nextPlaceholder, substitute);
+                    nextPlaceholder = urlTemplatePlaceHolderPattern.exec(goTemplate);
+                }
                 var that = this;
                 goButton.onclick = function() {
                     var request = new XMLHttpRequest();

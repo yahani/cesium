@@ -1921,7 +1921,7 @@
             "content" : [{
                 "id" : "/Application/STK/Scenario/simple/Satellite/ISS",
                 "overlay" : {
-                    "content" : "<div  style='width:200px; height:70px; background-color:gray;' ><form>Conjunction Analysis<br/>Radius (km): <input type='number' name='radius' value='50'/><input id='go' type='button' value='Go' /></form></div>",
+                    "content" : "<div  style='width:200px; height:70px; background-color:gray;' ><form>Conjunction Analysis<br/>Max Range (km): <input type='number' id='maxRange' value='50'/><input id='go' type='button' value='Go' /></form></div>",
                     "origin" : "OBJECT",
                     "horizontalOrigin" : "LEFT",
                     "verticalOrigin" : "BOTTOM",
@@ -1929,7 +1929,7 @@
                         "cartesian2" : [24, -24]
                     },
                     "goButton":"go",
-                    "goTemplate":"http://localhost/lovelacelos/conjunctions?ssc=25544&start=2456156.5&stop=2456157.0&maxRange=500000&f=JSON"
+                    "goTemplate":"http://localhost/lovelacelos/conjunctions?ssc=`selectedObjectID`&start=`timelineStart`&stop=`timelineStop`&maxRange=`maxRange`&f=JSON"
                 }
             }]
         }
