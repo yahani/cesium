@@ -1914,12 +1914,12 @@
     }
   },
   {
-    "id":"/Application/STK/Scenario/simple/Satellite/ISS",
+    "id":"25544",
     "availability":"20120817T000000.0Z/20120817T120000.0Z",
     "whenSelected":{
         "czml" : {
             "content" : [{
-                "id" : "/Application/STK/Scenario/simple/Satellite/ISS",
+                "id" : "25544",
                 "overlay" : {
                     "content" : "<div  style='width:200px; height:70px; background-color:gray;' ><form>Conjunction Analysis<br/>Max Range (km): <input type='number' id='maxRange' value='50'/><input id='go' type='button' value='Go' /></form></div>",
                     "origin" : "OBJECT",
@@ -7279,7 +7279,7 @@
     "vertexPositions":{
       "references":[
         "/Application/STK/Scenario/simple/Facility/AGI.position",
-        "/Application/STK/Scenario/simple/Satellite/ISS.position"
+        "25544.position"
       ]
     }
   },
@@ -7383,7 +7383,7 @@
     "vertexPositions":{
       "references":[
         "/Application/STK/Scenario/simple/Satellite/Geoeye1.position",
-        "/Application/STK/Scenario/simple/Satellite/ISS.position"
+        "25544.position"
       ]
     }
   },
@@ -7494,7 +7494,7 @@
     },
     "vertexPositions":{
       "references":[
-        "/Application/STK/Scenario/simple/Satellite/ISS.position",
+        "25544.position",
         "/Application/STK/Scenario/simple/Satellite/Landsat7.position"
       ]
     }

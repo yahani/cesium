@@ -1,0 +1,5 @@
+Sync simple.czml times
+Get rid of extra paths
+Make server go faster by using Conjunction DLL
+Add on hover and balloons to conjunction segments
+Send down path for calculated conjunction object
