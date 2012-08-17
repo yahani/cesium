@@ -8,7 +8,7 @@
       "offset":{
         "interpolationAlgorithm":"LAGRANGE",
         "interpolationDegree":2,
-        "epoch":"2012-03-15T10:00:00Z",
+        "epoch":"20120817T000000.0Z",
         "cartesian2":[
           0.0, 0.0, 0.0,
           6000, 200, 200,
@@ -57,7 +57,7 @@
   },
   {
     "id":"/Application/STK/Scenario/simple/Satellite/Geoeye1",
-    "availability":"2012-03-15T10:00:00Z/2012-03-16T10:00:00Z",
+    "availability":"20120817T000000.0Z/20120817T120000.0Z",
     "whenSelected":{
         "czml" : {
             "content" : [{
@@ -461,7 +461,7 @@
     "position":{
       "interpolationAlgorithm":"LAGRANGE",
       "interpolationDegree":5,
-      "epoch":"2012-03-15T10:00:00Z",
+      "epoch":"20120817T000000.0Z",
       "cartesian":[
         0.0,5758814.86335812,68448.0918072779,-4082012.64698081,
         60.0,5491825.89961442,-36646.1482569654,-4436012.6589284,
@@ -1915,7 +1915,7 @@
   },
   {
     "id":"/Application/STK/Scenario/simple/Satellite/ISS",
-    "availability":"2012-03-15T10:00:00Z/2012-03-16T10:00:00Z",
+    "availability":"20120817T000000.0Z/20120817T120000.0Z",
     "whenSelected":{
         "czml" : {
             "content" : [{
@@ -1929,7 +1929,7 @@
                         "cartesian2" : [24, -24]
                     },
                     "goButton":"go",
-                    "goTemplate":"Gallery/test.czml"
+                    "goTemplate":"http://localhost/lovelacelos/conjunctions?ssc=25544&start=2456156.5&stop=2456157.0&maxRange=500000&f=JSON"
                 }
             }]
         }
@@ -2322,7 +2322,7 @@
     "position":{
       "interpolationAlgorithm":"LAGRANGE",
       "interpolationDegree":5,
-      "epoch":"2012-03-15T10:00:00Z",
+      "epoch":"20120817T000000.0Z",
       "cartesian":[
         0.0,-227096.255236515,6739137.85075933,-465005.864291599,
         60.0,-482928.305160193,6691899.68122798,-824110.28233573,
@@ -3782,7 +3782,7 @@
   },
   {
     "id":"/Application/STK/Scenario/simple/Satellite/Landsat7",
-    "availability":"2012-03-15T10:00:00Z/2012-03-16T10:00:00Z",
+    "availability":"20120817T000000.0Z/20120817T120000.0Z",
     "billboard":{
       "horizontalOrigin":"CENTER",
       "image":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADCSURBVDhPnVPbDQMhDMtojMIoHYVRGKUj9L8f6RnVp0AelXoS0imJnWAHkT8+vb6fsKyI8ZQEiawI8dbmOpjAkSDQ+2Mle5OtyIL7mIoTEgD8nKKji54k6Eww/jeCe+z3S0FAEorFPAgc+CzSLwni0SSlCzYJojn8dSh0SGRdQHdLssS9RKbQoYinRSShbba7E5EeRz7T4nRsC6ZV7IqRqwVbG0UCuyQEkcBeY3sL1uNzw7K1do+p2n87fvkKywVJkB99VYHvubc6fQAAAABJRU5ErkJggg==",
@@ -4131,7 +4131,7 @@
     "position":{
       "interpolationAlgorithm":"LAGRANGE",
       "interpolationDegree":5,
-      "epoch":"2012-03-15T10:00:00Z",
+      "epoch":"20120817T000000.0Z",
       "cartesian":[
         0.0,3061832.14551168,995056.111514035,6298327.48582499,
         60.0,3465577.66891434,961277.777182326,6091427.07375969,
@@ -5584,8 +5584,8 @@
     }
   },
   {
-    "id":"/Application/STK/Scenario/simple/Satellite/MOLNIYA_1-92_27707",
-    "availability":"2012-03-15T10:00:00Z/2012-03-16T10:00:00Z",
+    "id":"/Application/STK/Scenario/simple/Satellite/MOLNIYA-27707",
+    "availability":"20120817T000000.0Z/20120817T120000.0Z",
     "billboard":{
       "horizontalOrigin":"CENTER",
       "image":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADCSURBVDhPnVPbDQMhDMtojMIoHYVRGKUj9L8f6RnVp0AelXoS0imJnWAHkT8+vb6fsKyI8ZQEiawI8dbmOpjAkSDQ+2Mle5OtyIL7mIoTEgD8nKKji54k6Eww/jeCe+z3S0FAEorFPAgc+CzSLwni0SSlCzYJojn8dSh0SGRdQHdLssS9RKbQoYinRSShbba7E5EeRz7T4nRsC6ZV7IqRqwVbG0UCuyQEkcBeY3sL1uNzw7K1do+p2n87fvkKywVJkB99VYHvubc6fQAAAABJRU5ErkJggg==",
@@ -5694,7 +5694,7 @@
     "position":{
       "interpolationAlgorithm":"LAGRANGE",
       "interpolationDegree":5,
-      "epoch":"2012-03-15T10:00:00Z",
+      "epoch":"20120817T000000.0Z",
       "cartesian":[
         0.0,-9646608.8282615,-11406009.9439828,30209144.0359202,
         60.0,-9586387.943257,-11419790.8778522,30082610.7629233,
@@ -7501,7 +7501,7 @@
   },
   {
     "id":"/Application/STK/Scenario/simple/Satellite/Geoeye1/Sensor/Geoeye1_Gis_Vis_Ir_BodyPt_FieldOfView",
-    "availability":"2012-03-15T10:00:00Z/2012-03-16T10:00:00Z",
+    "availability":"20120817T000000.0Z/20120817T120000.0Z",
     "pyramid":{
       "show":true,
       "intersectionColor":{
@@ -7527,7 +7527,7 @@
     "position":{
       "interpolationAlgorithm":"LAGRANGE",
       "interpolationDegree":5,
-      "epoch":"2012-03-15T10:00:00Z",
+      "epoch":"20120817T000000.0Z",
       "cartesian":[
         0.0,5758814.86335812,68448.0918072779,-4082012.64698081,
         60.0,5491825.89961442,-36646.1482569654,-4436012.6589284,
@@ -8975,7 +8975,7 @@
     "orientation":{
       "interpolationAlgorithm":"LINEAR",
       "interpolationDegree":1,
-      "epoch":"2012-03-15T10:00:00Z",
+      "epoch":"20120817T000000.0Z",
       "unitQuaternion":[
         0.0,-0.45652188368372604,0.04958003599524363,0.8819344359461565,0.10640131785324766,
         60.0,-0.427948046696404,0.051797534505975656,0.8964836601777822,0.10244282201346008,
@@ -10423,7 +10423,7 @@
   },
   {
     "id":"/Application/STK/Scenario/simple/Satellite/Landsat7/Sensor/Landsat7_Etmp_Vis_Ir_FixedPt_FieldOfView",
-    "availability":"2012-03-15T10:00:00Z/2012-03-16T10:00:00Z",
+    "availability":"20120817T000000.0Z/20120817T120000.0Z",
     "pyramid":{
       "show":true,
       "intersectionColor":{
@@ -10449,7 +10449,7 @@
     "position":{
       "interpolationAlgorithm":"LAGRANGE",
       "interpolationDegree":5,
-      "epoch":"2012-03-15T10:00:00Z",
+      "epoch":"20120817T000000.0Z",
       "cartesian":[
         0.0,3061832.14551168,995056.111514035,6298327.48582499,
         60.0,3465577.66891434,961277.777182326,6091427.07375969,
@@ -11897,7 +11897,7 @@
     "orientation":{
       "interpolationAlgorithm":"LINEAR",
       "interpolationDegree":1,
-      "epoch":"2012-03-15T10:00:00Z",
+      "epoch":"20120817T000000.0Z",
       "unitQuaternion":[
         0.0,-0.972075346539868,0.01666459921777913,0.22134278037627292,0.07615238248149221,
         60.0,-0.9643847111671425,0.022800891063179618,0.2521955853635956,0.07641750425724274,

@@ -196,7 +196,7 @@ define([
         result[r] = this.getValueCartesian(start, result[r++]);
 
         var scratchCartographic;
-        var steppedOnNow = typeof currentTime === 'undefined';
+        var steppedOnNow = typeof currentTime === 'undefined' || currentTime.lessThan(start) || currentTime.greaterThan(stop);
         for ( var i = startIndex; i < stopIndex + 1; i++) {
             var current;
             var interval = propertyIntervals.get(i);
