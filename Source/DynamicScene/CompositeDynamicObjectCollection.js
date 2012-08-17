@@ -83,10 +83,10 @@ define([
         for (i = 0, len = collections.length; i < len; i++) {
             collection = collections[i];
             var availability = collection.computeAvailability();
-            if (availability.start.lessThan(startTime)) {
+            if (!availability.start.equals(Iso8601.MINIMUM_VALUE) && availability.start.lessThan(startTime)) {
                 startTime = availability.start;
             }
-            if (availability.stop.greaterThan(stopTime)) {
+            if (!availability.stop.equals(Iso8601.MAXIMUM_VALUE) && availability.stop.greaterThan(stopTime)) {
                 stopTime = availability.stop;
             }
         }
@@ -126,7 +126,8 @@ define([
             for (iCollection = thisCollections.length - 1; iCollection > -1; iCollection--) {
                 collection = thisCollections[iCollection];
                 collection.compositeCollection = undefined;
-                collection.objectPropertiesChanged.removeEventListener(CompositeDynamicObjectCollection.prototype._onObjectPropertiesChanged);
+                collection.objectPropertiesChanged.removeEventListener(CompositeDynamicObjectCollection.prototype._onObjectPropertiesChanged, this);
+                collection.objectsRemoved.removeEventListener(CompositeDynamicObjectCollection.prototype._onObjectPropertiesChanged, this);
             }
 
             //Make a copy of the new collections.
@@ -141,6 +142,7 @@ define([
                 //Subscribe to the new collection.
                 collection.compositeCollection = this;
                 collection.objectPropertiesChanged.addEventListener(CompositeDynamicObjectCollection.prototype._onObjectPropertiesChanged, this);
+                collection.objectsRemoved.addEventListener(CompositeDynamicObjectCollection.prototype._onObjectPropertiesChanged, this);
 
                 //Merge all of the existing objects.
                 var objects = collection.getObjects();

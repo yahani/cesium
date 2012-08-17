@@ -42,6 +42,7 @@ define([
         '../../Scene/SingleTileProvider',
         '../../Scene/PerformanceDisplay',
         '../../DynamicScene/processCzml',
+        '../../DynamicScene/CompositeDynamicObjectCollection',
         '../../DynamicScene/DynamicObjectCollection',
         '../../DynamicScene/VisualizerCollection',
         'dojo/text!./CesiumViewerWidget.html'
@@ -88,6 +89,7 @@ define([
         SingleTileProvider,
         PerformanceDisplay,
         processCzml,
+        CompositeDynamicObjectCollection,
         DynamicObjectCollection,
         VisualizerCollection,
         template) {
@@ -159,13 +161,19 @@ define([
         _handleLeftClick : function(e) {
             // If the user left-clicks, we re-send the selection event, regardless if it's a duplicate,
             // because the client may want to react to re-selection in some way.
+
+            var oldObject = this.selectedObject;
             this.selectedObject = this.scene.pick(e.position);
 
-            var obj = this.selectedObject.dynamicObject;
-            if (typeof obj.whenSelected !== 'undefined') {
-                processCzml(obj.whenSelected.czml.getValue(this.clock.currentTime), this.dynamicObjectCollection);
+            if (oldObject !== this.selectedObject) {
+                this.selectionCollection.clear();
+                if (typeof this.selectedObject !== 'undefined') {
+                    var obj = this.selectedObject.dynamicObject;
+                    if (typeof obj.whenSelected !== 'undefined') {
+                        processCzml(obj.whenSelected.czml.getValue(this.clock.currentTime), this.selectionCollection);
+                    }
+                }
             }
-
             if (typeof this.onObjectSelected !== 'undefined') {
                 this.onObjectSelected(this.selectedObject);
             }
@@ -245,7 +253,7 @@ define([
             this.animPause.set('checked', true);
             this.animPlay.set('checked', false);
 
-            var availability = this.dynamicObjectCollection.computeAvailability();
+            var availability = this.compositeDynamicObjectCollection.computeAvailability();
             if (availability.start.equals(Iso8601.MINIMUM_VALUE)) {
                 clock.startTime = new JulianDate();
                 clock.stopTime = clock.startTime.addDays(1);
@@ -276,6 +284,8 @@ define([
                 //while there are no visual differences, removeAll cleans the cache and improves performance
                 widget.visualizers.removeAllPrimitives();
                 widget.dynamicObjectCollection.clear();
+                widget.selectionCollection.clear();
+                widget.selectedObject = undefined;
                 processCzml(JSON.parse(evt.target.result), widget.dynamicObjectCollection, f.name);
                 widget.setTimeFromBuffer();
             };
@@ -381,10 +391,14 @@ define([
             }
 
             var animationController = this.animationController;
+            var compositeDynamicObjectCollection = this.compositeDynamicObjectCollection = new CompositeDynamicObjectCollection();
             var dynamicObjectCollection = this.dynamicObjectCollection = new DynamicObjectCollection();
+            var selectionCollection = this.selectionCollection = new DynamicObjectCollection();
+            compositeDynamicObjectCollection.setCollections([dynamicObjectCollection, selectionCollection]);
+
             var clock = this.clock;
             var transitioner = this.sceneTransitioner = new SceneTransitioner(scene);
-            this.visualizers = VisualizerCollection.createCzmlStandardCollection(scene, dynamicObjectCollection);
+            this.visualizers = VisualizerCollection.createCzmlStandardCollection(scene, compositeDynamicObjectCollection);
 
             if (typeof widget.endUserOptions.source !== 'undefined') {
                 getJson(widget.endUserOptions.source).then(function(czmlData) {
@@ -683,7 +697,7 @@ define([
 
             // Update the camera to stay centered on the selected object, if any.
             if (cameraCenteredObjectID) {
-                var dynamicObject = this.dynamicObjectCollection.getObject(cameraCenteredObjectID);
+                var dynamicObject = this.compositeDynamicObjectCollection.getObject(cameraCenteredObjectID);
                 if (dynamicObject && dynamicObject.position) {
                     cameraCenteredObjectIDPosition = dynamicObject.position.getValueCartesian(currentTime, cameraCenteredObjectIDPosition);
                     if (typeof cameraCenteredObjectIDPosition !== 'undefined') {

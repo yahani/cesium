@@ -63,7 +63,7 @@
             "content" : [{
                 "id" : "/Application/STK/Scenario/simple/Satellite/Geoeye1",
                 "overlay" : {
-                    "content" : "<div style='color:red'>boom</div><img src='../../Images/Explosion.gif' />",
+                    "content" : "<img src='../../Images/Explosion.gif' />",
                     "origin" : "OBJECT",
                     "horizontalOrigin" : "CENTER",
                     "verticalOrigin" : "CENTER",
@@ -71,10 +71,26 @@
                         "cartesian2" : [0, 0]
                     }
                 },
-                "billboard" : {
-                  "show" : false
+                "billboard":{
+                  "show":false
+                },
+                "label":{
+                  "show":false
                 }
-            }]
+            },
+            {
+              "id":"/Application/STK/Scenario/simple/Satellite/Geoeye1/Application/STK/Scenario/simple/Satellite/ISS",
+              "polyline":{
+                "show":false
+              }
+            },
+            {
+              "id":"/Application/STK/Scenario/simple/Satellite/Geoeye1/Sensor/Geoeye1_Gis_Vis_Ir_BodyPt_FieldOfView",
+              "pyramid":{
+                "show":false
+              }
+            }
+            ]
         }
     },
     "billboard":{
