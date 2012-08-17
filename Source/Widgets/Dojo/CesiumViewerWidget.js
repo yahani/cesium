@@ -192,14 +192,24 @@ define([
         },
 
         _handleMouseMove : function(movement) {
-            if (typeof this.onObjectMousedOver !== 'undefined') {
-                // Don't fire multiple times for the same object as the mouse travels around the screen.
-                var mousedOverObject = this.scene.pick(movement.endPosition);
-                if (this.mousedOverObject !== mousedOverObject) {
-                    this.mousedOverObject = mousedOverObject;
+            var mousedOverObject = this.scene.pick(movement.endPosition);
+
+            // Don't fire multiple times for the same object as the mouse travels around the screen.
+            if (this.mousedOverObject !== mousedOverObject) {
+                this.mousedOverObject = mousedOverObject;
+                if (typeof this.onObjectMousedOver !== 'undefined') {
                     this.onObjectMousedOver(mousedOverObject);
                 }
+
+                this.hoverCollection.clear();
+                if (typeof mousedOverObject !== 'undefined') {
+                    var obj = mousedOverObject.dynamicObject;
+                    if (typeof obj.whenSelected !== 'undefined') {
+                        processCzml(obj.whenSelected.czml.getValue(this.clock.currentTime), this.hoverCollection);
+                    }
+                }
             }
+
             if (typeof this.leftDown !== 'undefined' && this.leftDown && typeof this.onLeftDrag !== 'undefined') {
                 this.onLeftDrag(movement);
             } else if (typeof this.rightDown !== 'undefined' && this.rightDown && typeof this.onZoom !== 'undefined') {
@@ -288,6 +298,7 @@ define([
                 widget.visualizers.removeAllPrimitives();
                 widget.dynamicObjectCollection.clear();
                 widget.selectionCollection.clear();
+                widget.hoverCollection.clear();
                 widget.selectedObject = undefined;
                 processCzml(JSON.parse(evt.target.result), widget.dynamicObjectCollection, f.name);
                 widget.setTimeFromBuffer();
@@ -397,7 +408,8 @@ define([
             var compositeDynamicObjectCollection = this.compositeDynamicObjectCollection = new CompositeDynamicObjectCollection();
             var dynamicObjectCollection = this.dynamicObjectCollection = new DynamicObjectCollection();
             var selectionCollection = this.selectionCollection = new DynamicObjectCollection();
-            compositeDynamicObjectCollection.setCollections([dynamicObjectCollection, selectionCollection]);
+            var hoverCollection = this.hoverCollection = new DynamicObjectCollection();
+            compositeDynamicObjectCollection.setCollections([dynamicObjectCollection, selectionCollection, hoverCollection]);
 
             var clock = this.clock;
             var transitioner = this.sceneTransitioner = new SceneTransitioner(scene);
