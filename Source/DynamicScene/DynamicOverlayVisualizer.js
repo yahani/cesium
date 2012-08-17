@@ -1,5 +1,6 @@
 /*global define*/
 define([
+        'require',
         '../Core/DeveloperError',
         '../Core/destroyObject',
         '../Core/Color',
@@ -8,8 +9,10 @@ define([
         '../Scene/HorizontalOrigin',
         '../Scene/OverlayOrigin',
         '../Scene/PolylineCollection',
-        '../Scene/VerticalOrigin'
+        '../Scene/VerticalOrigin',
+        './DynamicObjectCollection'
        ], function(
+         require,
          DeveloperError,
          destroyObject,
          Color,
@@ -18,8 +21,16 @@ define([
          HorizontalOrigin,
          OverlayOrigin,
          PolylineCollection,
-         VerticalOrigin) {
+         VerticalOrigin,
+         DynamicObjectCollection) {
     "use strict";
+
+    var processCzml = function(arg1, arg2)
+    {
+        var func = require('./processCzml');
+        processCzml = func;
+        processCzml(arg1, arg2);
+    };
 
     /**
      * A DynamicObject visualizer which maps the DynamicOverlay instance
@@ -195,6 +206,26 @@ define([
         if (dynamicObject._overlayContent !== content) {
             overlayDiv.innerHTML = content;
             dynamicObject._overlayContent = content;
+
+            var goButtonProperty = dynamicOverlay.goButton;
+            var goTemplateProperty = dynamicOverlay.goTemplate;
+            if (typeof goButtonProperty !== 'undefined' && typeof goTemplateProperty !== 'undefined') {
+                var goButton = document.getElementById(goButtonProperty.getValue(time));
+                var goTemplate = goTemplateProperty.getValue(time);
+                var that = this;
+                goButton.onclick = function() {
+                    var request = new XMLHttpRequest();
+                    request.open('GET', goTemplate, true);
+                    request.onload = function(e) {
+                        var collections = that._dynamicObjectCollection.getCollections();
+                        var newGuy = new DynamicObjectCollection();
+                        collections.push(newGuy);
+                        that._dynamicObjectCollection.setCollections(collections);
+                        processCzml(JSON.parse(request.response), newGuy);
+                    };
+                    request.send();
+                };
+            }
         }
 
         var origin;
@@ -275,18 +306,6 @@ define([
     };
 
     DynamicOverlayVisualizer.prototype._onObjectsRemoved = function(dynamicObjectCollection, dynamicObjects) {
-        var thisPolylineCollection = this._polylineCollection;
-        var thisUnusedIndexes = this._unusedIndexes;
-        for ( var i = dynamicObjects.length - 1; i > -1; i--) {
-            var dynamicObject = dynamicObjects[i];
-            var polylineVisualizerIndex = dynamicObject._polylineVisualizerIndex;
-            if (typeof polylineVisualizerIndex !== 'undefined') {
-                var polyline = thisPolylineCollection.get(polylineVisualizerIndex);
-                polyline.setShow(false);
-                thisUnusedIndexes.push(polylineVisualizerIndex);
-                dynamicObject._polylineVisualizerIndex = undefined;
-            }
-        }
     };
 
     return DynamicOverlayVisualizer;

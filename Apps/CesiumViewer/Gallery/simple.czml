@@ -430,6 +430,24 @@
   {
     "id":"/Application/STK/Scenario/simple/Satellite/ISS",
     "availability":"2012-03-15T10:00:00Z/2012-03-16T10:00:00Z",
+    "whenSelected":{
+        "czml" : {
+            "content" : [{
+                "id" : "/Application/STK/Scenario/simple/Satellite/ISS",
+                "overlay" : {
+                    "content" : "<div><form><input id='go' type='button' value='Go' /></form></div>",
+                    "origin" : "OBJECT",
+                    "horizontalOrigin" : "CENTER",
+                    "verticalOrigin" : "CENTER",
+                    "offset" : {
+                        "cartesian2" : [0, 0]
+                    },
+                    "goButton":"go",
+                    "goTemplate":"Gallery/LotsOfSensors.czml"
+                }
+            }]
+        }
+    },
     "billboard":{
       "horizontalOrigin":"CENTER",
       "image":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADCSURBVDhPnVPbDQMhDMtojMIoHYVRGKUj9L8f6RnVp0AelXoS0imJnWAHkT8+vb6fsKyI8ZQEiawI8dbmOpjAkSDQ+2Mle5OtyIL7mIoTEgD8nKKji54k6Eww/jeCe+z3S0FAEorFPAgc+CzSLwni0SSlCzYJojn8dSh0SGRdQHdLssS9RKbQoYinRSShbba7E5EeRz7T4nRsC6ZV7IqRqwVbG0UCuyQEkcBeY3sL1uNzw7K1do+p2n87fvkKywVJkB99VYHvubc6fQAAAABJRU5ErkJggg==",

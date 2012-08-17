@@ -119,6 +119,24 @@ define([
             verticalOrigin.processCzmlIntervals(overlayData.verticalOrigin, interval);
         }
 
+        if (typeof overlayData.goButton !== 'undefined') {
+            var goButton = overlay.goButton;
+            if (typeof goButton === 'undefined') {
+                overlay.goButton = goButton = new DynamicProperty(CzmlString);
+                overlayUpdated = true;
+            }
+            goButton.processCzmlIntervals(overlayData.goButton, interval);
+        }
+
+        if (typeof overlayData.goTemplate !== 'undefined') {
+            var goTemplate = overlay.goTemplate;
+            if (typeof goTemplate === 'undefined') {
+                overlay.goTemplate = goTemplate = new DynamicProperty(CzmlString);
+                overlayUpdated = true;
+            }
+            goTemplate.processCzmlIntervals(overlayData.goTemplate, interval);
+        }
+
         return overlayUpdated;
     };
 
@@ -144,7 +162,11 @@ define([
 
             targetOverlay.content = targetOverlay.content || overlayToMerge.content;
             targetOverlay.origin = targetOverlay.origin || overlayToMerge.origin;
+            targetOverlay.horizontalOrigin = targetOverlay.horizontalOrigin || overlayToMerge.horizontalOrigin;
+            targetOverlay.verticalOrigin = targetOverlay.verticalOrigin || overlayToMerge.verticalOrigin;
             targetOverlay.offset = targetOverlay.offset || overlayToMerge.offset;
+            targetOverlay.goButton = targetOverlay.goButton || overlayToMerge.goButton;
+            targetOverlay.goTemplate = targetOverlay.goTemplate || overlayToMerge.goTemplate;
         }
     };
 
