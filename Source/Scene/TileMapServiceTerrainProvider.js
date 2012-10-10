@@ -76,7 +76,7 @@ define([
             numberOfLevelZeroTilesY : 1
         });
         this.maxLevel = 11;
-        this.heightmapWidth = 64;
+        this.heightmapWidth = 32;
         this.levelZeroMaximumGeometricError = TerrainProvider.getEstimatedLevelZeroGeometricErrorForAHeightmap(this.tilingScheme.getEllipsoid(), this.heightmapWidth, this.tilingScheme.getNumberOfXTilesAtLevel(0));
 
         this._proxy = description.proxy;

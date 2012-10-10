@@ -150,17 +150,25 @@ public final class TerrainTranscodingHandler extends AbstractHandler {
 		BufferedImage resultImage = new BufferedImage(sourceImage.getWidth(), sourceImage.getHeight(), BufferedImage.TYPE_INT_RGB);
 		DataBuffer resultBuffer = resultImage.getRaster().getDataBuffer();
 
-		final float bias = 1000.0f;
+		final int bias = 1000;
 
 		for (int i = 0; i < sourceBuffer.getSize(); ++i) {
 			// Offset the height by 1000.0 meters to avoid negative heights.
-			float heightFloat = sourceBuffer.getElemFloat(i) + bias;
+			int heightFloat = sourceBuffer.getElem(i) + bias;
 
 			// Convert the height to integer millimeters.
-			int height = (int) (heightFloat * 1000.0);
+			int height = heightFloat * 1000;
 
-			if (height < 0 || height >= (1 << 24))
-				throw new RuntimeException("Invalid height.");
+			if(height < 0)
+			{
+				height = 0;
+			}
+			
+			if (height >= (1 << 24))
+			{
+				System.out.println("Invalid height: greater than 24 bits");
+				throw new RuntimeException("Invalid height: greater than 24 bits");
+			}
 
 			// Encode the high byte in red, low byte in blue.
 			resultBuffer.setElem(i, height);

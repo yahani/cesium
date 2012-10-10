@@ -41,7 +41,8 @@ define([
         '../../Scene/Material',
         '../../Scene/Scene',
         '../../Scene/CentralBody',
-        '../../Scene/BingMapsImageryProvider',
+        '../../Scene/WebMapServiceImageryProvider',
+        '../../Scene/TileMapServiceTerrainProvider',
         '../../Scene/BingMapsStyle',
         '../../Scene/SceneTransitioner',
         '../../Scene/SingleTileImageryProvider',
@@ -94,7 +95,8 @@ define([
         Material,
         Scene,
         CentralBody,
-        BingMapsImageryProvider,
+        WebMapServiceImageryProvider,
+        TileMapServiceTerrainProvider,
         BingMapsStyle,
         SceneTransitioner,
         SingleTileImageryProvider,
@@ -1103,38 +1105,27 @@ define([
         _configureCentralBodyImagery : function() {
             var centralBody = this.centralBody;
 
+            var terrainProvider = new TileMapServiceTerrainProvider({
+                url : 'http://www.vr-theworld.com/vr-theworld/tiles1.0.0/9/',
+                proxy : new DefaultProxy('/terrain/')
+            });
+            centralBody._surface._terrainProvider = terrainProvider;
+
             var imageLayers = centralBody.getImageryLayers();
 
-            var existingImagery;
-            if (imageLayers.getLength() !== 0) {
-                existingImagery = imageLayers.get(0).imageryProvider;
+            while (imageLayers.getLength() > 1) {
+                imageLayers.remove(imageLayers.get(0));
             }
 
-            if (this.useStreamingImagery) {
-                if (!(existingImagery instanceof BingMapsImageryProvider) ||
-                    existingImagery.getMapStyle() !== this.mapStyle) {
+//            imageLayers.addImageryProvider(new SingleTileImageryProvider({
+//                url : this.dayImageUrl
+//            }));
 
-                    imageLayers.addImageryProvider(new BingMapsImageryProvider({
-                        server : 'dev.virtualearth.net',
-                        mapStyle : this.mapStyle,
-                        // Some versions of Safari support WebGL, but don't correctly implement
-                        // cross-origin image loading, so we need to load Bing imagery using a proxy.
-                        proxy : FeatureDetection.supportsCrossOriginImagery() ? undefined : new DefaultProxy('/proxy/')
-                    }));
-                    if (imageLayers.getLength() > 1) {
-                        imageLayers.remove(imageLayers.get(0));
-                    }
-                }
-            } else {
-                if (!(existingImagery instanceof SingleTileImageryProvider) ||
-                    existingImagery.getUrl() !== this.dayImageUrl) {
-
-                    imageLayers.addImageryProvider(new SingleTileImageryProvider({url : this.dayImageUrl}));
-                    if (imageLayers.getLength() > 1) {
-                        imageLayers.remove(imageLayers.get(0));
-                    }
-                }
-            }
+            imageLayers.addImageryProvider(new WebMapServiceImageryProvider({
+                url : 'http://www.vr-theworld.com/vr-theworld/tiles',
+                layers : 22,
+                proxy : new DefaultProxy('/proxy/')
+            }));
 
             centralBody.nightImageSource = this.nightImageUrl;
             centralBody.specularMapSource = this.specularMapUrl;
