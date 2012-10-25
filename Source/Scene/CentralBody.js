@@ -3,98 +3,92 @@ define([
         '../Core/combine',
         '../Core/defaultValue',
         '../Core/destroyObject',
-        '../Core/DeveloperError',
-        '../Core/RuntimeError',
-        '../Core/Color',
-        '../Core/Math',
-        '../Core/Intersect',
-        '../Core/Occluder',
-        '../Core/Ellipsoid',
-        '../Core/Extent',
-        '../Core/BoundingSphere',
         '../Core/BoundingRectangle',
+        '../Core/BoundingSphere',
         '../Core/Cartesian2',
         '../Core/Cartesian3',
         '../Core/Cartesian4',
         '../Core/Cartographic',
-        '../Core/GeographicProjection',
-        '../Core/Matrix3',
-        '../Core/Matrix4',
         '../Core/ComponentDatatype',
-        '../Core/MeshFilters',
-        '../Core/PrimitiveType',
         '../Core/CubeMapEllipsoidTessellator',
+        '../Core/Ellipsoid',
+        '../Core/Extent',
+        '../Core/GeographicProjection',
+        '../Core/Intersect',
+        '../Core/Math',
+        '../Core/Matrix4',
+        '../Core/MeshFilters',
+        '../Core/Occluder',
+        '../Core/PrimitiveType',
+        '../Core/RuntimeError',
         '../Core/Transforms',
         '../Renderer/BufferUsage',
-        '../Renderer/Command',
+        '../Renderer/ClearCommand',
         '../Renderer/CommandLists',
         '../Renderer/CullFace',
         '../Renderer/DepthFunction',
+        '../Renderer/DrawCommand',
         '../Renderer/PixelFormat',
-        '../Renderer/RenderbufferFormat',
         './CentralBodySurface',
         './CentralBodySurfaceShaderSet',
+        './EllipsoidTerrainProvider',
         './ImageryLayerCollection',
         './SceneMode',
-        './EllipsoidTerrainProvider',
         './ViewportQuad',
-        '../Shaders/CentralBodyVS',
+        '../Shaders/GroundAtmosphere',
         '../Shaders/CentralBodyFS',
         '../Shaders/CentralBodyFSCommon',
-        '../Shaders/CentralBodyVSDepth',
         '../Shaders/CentralBodyFSDepth',
-        '../Shaders/CentralBodyVSPole',
         '../Shaders/CentralBodyFSPole',
-        '../Shaders/GroundAtmosphere',
+        '../Shaders/CentralBodyVS',
+        '../Shaders/CentralBodyVSDepth',
+        '../Shaders/CentralBodyVSPole',
         '../Shaders/SkyAtmosphereFS',
         '../Shaders/SkyAtmosphereVS'
     ], function(
         combine,
         defaultValue,
         destroyObject,
-        DeveloperError,
-        RuntimeError,
-        Color,
-        CesiumMath,
-        Intersect,
-        Occluder,
-        Ellipsoid,
-        Extent,
-        BoundingSphere,
         BoundingRectangle,
+        BoundingSphere,
         Cartesian2,
         Cartesian3,
         Cartesian4,
         Cartographic,
-        GeographicProjection,
-        Matrix3,
-        Matrix4,
         ComponentDatatype,
-        MeshFilters,
-        PrimitiveType,
         CubeMapEllipsoidTessellator,
+        Ellipsoid,
+        Extent,
+        GeographicProjection,
+        Intersect,
+        CesiumMath,
+        Matrix4,
+        MeshFilters,
+        Occluder,
+        PrimitiveType,
+        RuntimeError,
         Transforms,
         BufferUsage,
-        Command,
+        ClearCommand,
         CommandLists,
         CullFace,
         DepthFunction,
+        DrawCommand,
         PixelFormat,
-        RenderbufferFormat,
         CentralBodySurface,
         CentralBodySurfaceShaderSet,
+        EllipsoidTerrainProvider,
         ImageryLayerCollection,
         SceneMode,
-        EllipsoidTerrainProvider,
         ViewportQuad,
-        CentralBodyVS,
+        GroundAtmosphere,
         CentralBodyFS,
         CentralBodyFSCommon,
-        CentralBodyVSDepth,
         CentralBodyFSDepth,
-        CentralBodyVSPole,
         CentralBodyFSPole,
-        GroundAtmosphere,
+        CentralBodyVS,
+        CentralBodyVSDepth,
+        CentralBodyVSPole,
         SkyAtmosphereFS,
         SkyAtmosphereVS) {
     "use strict";
@@ -107,15 +101,11 @@ define([
      *
      * @param {Ellipsoid} [ellipsoid=Ellipsoid.WGS84] Determines the size and shape of the
      * central body.
-     * @param {TerrainProvider} [terrainProvider=new EllipsoidTerrainProvider()] The terrain
-     * provider that will provide geometry for the surface of the central body.
-     * @param {ImageryLayerCollection} [imageryLayerCollection=new ImageryLayerCollection()] The
-     * collection of imagery layers that will be rendered on the surface of the central body.
      */
-    var CentralBody = function(ellipsoid, terrainProvider, imageryLayerCollection) {
+    var CentralBody = function(ellipsoid) {
         ellipsoid = defaultValue(ellipsoid, Ellipsoid.WGS84);
-        terrainProvider = typeof terrainProvider !== 'undefined' ? terrainProvider : new EllipsoidTerrainProvider({ellipsoid : ellipsoid});
-        imageryLayerCollection = typeof imageryLayerCollection !== 'undefined' ? imageryLayerCollection : new ImageryLayerCollection();
+        var terrainProvider = new EllipsoidTerrainProvider({ellipsoid : ellipsoid});
+        var imageryLayerCollection = new ImageryLayerCollection();
 
         this._ellipsoid = ellipsoid;
         this._imageryLayerCollection = imageryLayerCollection;
@@ -138,17 +128,19 @@ define([
         this._spSkyFromSpace = undefined;
         this._spSkyFromAtmosphere = undefined;
 
-        this._skyCommand = new Command();
+        this._skyCommand = new DrawCommand();
         this._skyCommand.primitiveType = PrimitiveType.TRIANGLES;
         // this._skyCommand.shaderProgram references sky-from-space or sky-from-atmosphere
 
-        this._depthCommand = new Command();
+        this._clearDepthCommand = new ClearCommand();
+
+        this._depthCommand = new DrawCommand();
         this._depthCommand.primitiveType = PrimitiveType.TRIANGLES;
         this._depthCommand.boundingVolume = new BoundingSphere(Cartesian3.ZERO, ellipsoid.getMaximumRadius());
 
-        this._northPoleCommand = new Command();
+        this._northPoleCommand = new DrawCommand();
         this._northPoleCommand.primitiveType = PrimitiveType.TRIANGLE_FAN;
-        this._southPoleCommand = new Command();
+        this._southPoleCommand = new DrawCommand();
         this._southPoleCommand.primitiveType = PrimitiveType.TRIANGLE_FAN;
 
         // this._northPoleCommand.shaderProgram and this.southPoleCommand.shaderProgram reference
@@ -751,8 +743,8 @@ define([
     var viewportScratch = new BoundingRectangle();
     var vpTransformScratch = new Matrix4();
     CentralBody.prototype._fillPoles = function(context, frameState) {
-        var terrainProvider = this._surface.terrainProvider;
-        if (typeof terrainProvider === 'undefined' || frameState.mode !== SceneMode.SCENE3D) {
+        var terrainProvider = this._surface._terrainProvider;
+        if (frameState.mode !== SceneMode.SCENE3D) {
             return;
         }
 
@@ -877,8 +869,8 @@ define([
 
         var poleIntensity = 0.0;
         var baseLayer = this._imageryLayerCollection.getLength() > 0 ? this._imageryLayerCollection.get(0) : undefined;
-        if (typeof baseLayer !== 'undefined' && typeof baseLayer.imageryProvider !== 'undefined' && typeof baseLayer.imageryProvider.getPoleIntensity !== 'undefined') {
-            poleIntensity = baseLayer.imageryProvider.getPoleIntensity();
+        if (typeof baseLayer !== 'undefined' && typeof baseLayer.getImageryProvider() !== 'undefined' && typeof baseLayer.getImageryProvider().getPoleIntensity !== 'undefined') {
+            poleIntensity = baseLayer.getImageryProvider().getPoleIntensity();
         }
 
         var drawUniforms = {
@@ -997,6 +989,10 @@ define([
                         blue : false,
                         alpha : false
                     }
+                });
+                this._clearDepthCommand.clearState = context.createClearState({ // Clear depth only
+                    depth : 1.0,
+                    stencil : 0.0
                 });
             } else {
                 this._rsColor = context.createRenderState();
@@ -1330,6 +1326,9 @@ define([
 
             // render depth plane
             if (mode === SceneMode.SCENE3D) {
+                // TODO: clearing depth here will not be acceptable for actual terrain.
+                colorCommandList.push(this._clearDepthCommand);
+
                 colorCommandList.push(this._depthCommand);
             }
 
@@ -1412,6 +1411,8 @@ define([
         this._cloudsTexture = this._cloudsTexture && this._cloudsTexture.destroy();
         this._bumpTexture = this._bumpTexture && this._bumpTexture.destroy();
 
+        this._surface = this._surface && this._surface.destroy();
+
         return destroyObject(this);
     };
 
@@ -1435,7 +1436,14 @@ define([
         var imageryLayerCollection = centralBody._imageryLayerCollection;
         for ( var i = 0, len = imageryLayerCollection.getLength(); i < len; ++i) {
             var layer = imageryLayerCollection.get(i);
-            checkLogo(logoData, layer.imageryProvider);
+            if (layer.show) {
+                checkLogo(logoData, layer.getImageryProvider());
+            }
+        }
+
+        if (logoData.logos.length !== logoData.logoIndex) {
+            logoData.rebuildLogo = true;
+            logoData.logos.length = logoData.logoIndex;
         }
 
         if (logoData.rebuildLogo) {
@@ -1481,6 +1489,10 @@ define([
     }
 
     function checkLogo(logoData, logoSource) {
+        if (typeof logoSource.isReady === 'function' && !logoSource.isReady()) {
+            return;
+        }
+
         var logo;
         if (typeof logoSource.getLogo === 'function') {
             logo = logoSource.getLogo();

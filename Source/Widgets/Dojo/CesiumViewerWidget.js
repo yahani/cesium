@@ -1004,9 +1004,8 @@ define([
          * @see CesiumViewerWidget#mapStyle
          */
         setStreamingImageryMapStyle : function(value) {
-            this.useStreamingImagery = true;
-
-            if (this.mapStyle !== value) {
+            if (!this.useStreamingImagery || this.mapStyle !== value) {
+                this.useStreamingImagery = true;
                 this.mapStyle = value;
                 this._configureCentralBodyImagery();
             }
@@ -1127,6 +1126,7 @@ define([
                 proxy : new DefaultProxy('/proxy/')
             }));
 
+
             centralBody.nightImageSource = this.nightImageUrl;
             centralBody.specularMapSource = this.specularMapUrl;
             centralBody.cloudsMapSource = this.cloudsMapUrl;
@@ -1170,11 +1170,11 @@ define([
          * // These widgets can animate at different rates and pause individually.
          *
          * function updateAndRender() {
-         *     var currentTime = widget1.animationController.update();
-         *     widget1.update(currentTime);
+         *     var time1 = widget1.animationController.update();
+         *     var time2 = widget2.animationController.update();
+         *     widget1.update(time1);
+         *     widget2.update(time2);
          *     widget1.render();
-         *     currentTime = widget2.animationController.update();
-         *     widget2.update(currentTime);
          *     widget2.render();
          *     requestAnimationFrame(updateAndRender);
          * }

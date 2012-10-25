@@ -9,6 +9,7 @@ define([
         '../Core/Cartographic',
         '../Core/Ellipsoid',
         '../Core/ExtentTessellator',
+        '../Core/Occluder',
         '../Core/PlaneTessellator',
         '../Core/TaskProcessor',
         './TerrainProvider',
@@ -25,6 +26,7 @@ define([
         Cartographic,
         Ellipsoid,
         ExtentTessellator,
+        Occluder,
         PlaneTessellator,
         TaskProcessor,
         TerrainProvider,
@@ -39,6 +41,7 @@ define([
      *
      * @alias EllipsoidTerrainProvider
      * @constructor
+     * @private
      *
      * @param {TilingScheme} [description.tilingScheme] The tiling scheme specifying how the ellipsoidal
      * surface is broken into tiles.  If this parameter is not provided, a {@link GeographicTilingScheme}
@@ -109,7 +112,7 @@ define([
 
         var verticesPromise = taskProcessor.scheduleTask({
             extent : extent,
-            altitude : 0,
+            surfaceHeight : 0,
             width : width,
             height : height,
             relativeToCenter : tile.center,
@@ -123,8 +126,7 @@ define([
         }
 
         when(verticesPromise, function(result) {
-            tile.geometry = undefined;
-            tile.transformedGeometry = {
+            tile.transientData = {
                 vertices : result,
                 indices : TerrainProvider.getRegularGridIndices(width, height)
             };
@@ -148,12 +150,12 @@ define([
      * @param {Tile} tile The tile to create resources for.
      */
     EllipsoidTerrainProvider.prototype.createResources = function(context, tile) {
-        var buffers = tile.transformedGeometry;
-        tile.transformedGeometry = undefined;
+        var buffers = tile.transientData;
+        tile.transientData = undefined;
 
         TerrainProvider.createTileEllipsoidGeometryFromBuffers(context, tile, buffers);
         tile.maxHeight = 0;
-        tile.boundingSphere3D = BoundingSphere.fromPointsAsFlatArray(buffers.vertices, tile.center, 5);
+        tile.boundingSphere3D = BoundingSphere.fromVertices(buffers.vertices, tile.center, 5);
 
         var ellipsoid = this.tilingScheme.getEllipsoid();
         var extent = tile.extent;
@@ -166,6 +168,12 @@ define([
         tile.eastNormal = tile.northeastCornerCartesian.negate(scratch).cross(Cartesian3.UNIT_Z, scratch).normalize();
         tile.southNormal = ellipsoid.geodeticSurfaceNormal(tile.southeastCornerCartesian).cross(tile.southwestCornerCartesian.subtract(tile.southeastCornerCartesian, scratch)).normalize();
         tile.northNormal = ellipsoid.geodeticSurfaceNormal(tile.northwestCornerCartesian).cross(tile.northeastCornerCartesian.subtract(tile.northwestCornerCartesian, scratch)).normalize();
+
+        var occludeePoint = Occluder.computeOccludeePointFromExtent(tile.extent, ellipsoid);
+        if (typeof occludeePoint !== 'undefined') {
+            Cartesian3.multiplyComponents(occludeePoint, ellipsoid.getOneOverRadii(), occludeePoint);
+        }
+        tile.occludeePointInScaledSpace = occludeePoint;
 
         tile.state = TileState.READY;
     };

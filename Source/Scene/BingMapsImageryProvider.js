@@ -72,21 +72,25 @@
 define([
         '../Core/defaultValue',
         '../Core/jsonp',
-        '../Core/DeveloperError',
         '../Core/Cartesian2',
+        '../Core/DeveloperError',
+        '../Core/Event',
         './BingMapsStyle',
         './DiscardMissingTileImagePolicy',
         './ImageryProvider',
+        './ImageryProviderError',
         './WebMercatorTilingScheme',
         '../ThirdParty/when'
     ], function(
         defaultValue,
         jsonp,
-        DeveloperError,
         Cartesian2,
+        DeveloperError,
+        Event,
         BingMapsStyle,
         DiscardMissingTileImagePolicy,
         ImageryProvider,
+        ImageryProviderError,
         WebMercatorTilingScheme,
         when) {
     "use strict";
@@ -155,14 +159,15 @@ define([
         this._imageUrlTemplate = undefined;
         this._imageUrlSubdomains = undefined;
 
+        this._errorEvent = new Event();
+
         this._ready = false;
 
         var metadataUrl = 'http://' + this._server + '/REST/v1/Imagery/Metadata/' + this._mapStyle.imagerySetName + '?key=' + this._key;
         var that = this;
-        when(jsonp(metadataUrl, {
-            callbackParameterName : 'jsonp',
-            proxy : this._proxy
-        }), function(data) {
+        var metadataError;
+
+        function metadataSuccess(data) {
             var resource = data.resourceSets[0].resources[0];
 
             that._tileWidth = resource.imageWidth;
@@ -181,7 +186,23 @@ define([
             }
 
             that._ready = true;
-        });
+            ImageryProviderError.handleSuccess(metadataError);
+        }
+
+        function metadataFailure(e) {
+            var message = 'An error occurred while accessing ' + metadataUrl + '.';
+            metadataError = ImageryProviderError.handleError(metadataError, that, that._errorEvent, message, undefined, undefined, undefined, requestMetadata);
+        }
+
+        function requestMetadata() {
+            var metadata = jsonp(metadataUrl, {
+                callbackParameterName : 'jsonp',
+                proxy : that._proxy
+            });
+            when(metadata, metadataSuccess, metadataFailure);
+        }
+
+        requestMetadata();
     };
 
     function buildImageUrl(imageryProvider, x, y, level) {
@@ -242,8 +263,13 @@ define([
      * @memberof BingMapsImageryProvider
      *
      * @returns {Number} The width.
+     *
+     * @exception {DeveloperError} <code>getTileWidth</code> must not be called before the imagery provider is ready.
      */
     BingMapsImageryProvider.prototype.getTileWidth = function() {
+        if (!this._ready) {
+            throw new DeveloperError('getTileWidth must not be called before the imagery provider is ready.');
+        }
         return this._tileWidth;
     };
 
@@ -254,8 +280,13 @@ define([
      * @memberof BingMapsImageryProvider
      *
      * @returns {Number} The height.
+     *
+     * @exception {DeveloperError} <code>getTileHeight</code> must not be called before the imagery provider is ready.
      */
     BingMapsImageryProvider.prototype.getTileHeight = function() {
+        if (!this._ready) {
+            throw new DeveloperError('getTileHeight must not be called before the imagery provider is ready.');
+        }
         return this._tileHeight;
     };
 
@@ -266,8 +297,13 @@ define([
      * @memberof BingMapsImageryProvider
      *
      * @returns {Number} The maximum level.
+     *
+     * @exception {DeveloperError} <code>getMaximumLevel</code> must not be called before the imagery provider is ready.
      */
     BingMapsImageryProvider.prototype.getMaximumLevel = function() {
+        if (!this._ready) {
+            throw new DeveloperError('getMaximumLevel must not be called before the imagery provider is ready.');
+        }
         return this._maximumLevel;
     };
 
@@ -280,8 +316,13 @@ define([
      * @returns {TilingScheme} The tiling scheme.
      * @see WebMercatorTilingScheme
      * @see GeographicTilingScheme
+     *
+     * @exception {DeveloperError} <code>getTilingScheme</code> must not be called before the imagery provider is ready.
      */
     BingMapsImageryProvider.prototype.getTilingScheme = function() {
+        if (!this._ready) {
+            throw new DeveloperError('getTilingScheme must not be called before the imagery provider is ready.');
+        }
         return this._tilingScheme;
     };
 
@@ -292,8 +333,13 @@ define([
      * @memberof BingMapsImageryProvider
      *
      * @returns {Extent} The extent.
+     *
+     * @exception {DeveloperError} <code>getExtent</code> must not be called before the imagery provider is ready.
      */
     BingMapsImageryProvider.prototype.getExtent = function() {
+        if (!this._ready) {
+            throw new DeveloperError('getExtent must not be called before the imagery provider is ready.');
+        }
         return this._tilingScheme.getExtent();
     };
 
@@ -309,9 +355,27 @@ define([
      *
      * @see DiscardMissingTileImagePolicy
      * @see NeverTileDiscardPolicy
+     *
+     * @exception {DeveloperError} <code>getTileDiscardPolicy</code> must not be called before the imagery provider is ready.
      */
     BingMapsImageryProvider.prototype.getTileDiscardPolicy = function() {
+        if (!this._ready) {
+            throw new DeveloperError('getTileDiscardPolicy must not be called before the imagery provider is ready.');
+        }
         return this._tileDiscardPolicy;
+    };
+
+    /**
+     * Gets an event that is raised when the imagery provider encounters an asynchronous error.  By subscribing
+     * to the event, you will be notified of the error and can potentially recover from it.  Event listeners
+     * are passed an instance of {@link ImageryProviderError}.
+     *
+     * @memberof BingMapsImageryProvider
+     *
+     * @returns {Event} The event.
+     */
+    BingMapsImageryProvider.prototype.getErrorEvent = function() {
+        return this._errorEvent;
     };
 
     /**
@@ -339,8 +403,13 @@ define([
      *          undefined if there are too many active requests to the server, and the request
      *          should be retried later.  The resolved image may be either an
      *          Image or a Canvas DOM object.
+     *
+     * @exception {DeveloperError} <code>getTileDiscardPolicy</code> must not be called before the imagery provider is ready.
      */
     BingMapsImageryProvider.prototype.requestImage = function(x, y, level) {
+        if (!this._ready) {
+            throw new DeveloperError('requestImage must not be called before the imagery provider is ready.');
+        }
         var url = buildImageUrl(this, x, y, level);
         return ImageryProvider.loadImage(url);
     };
@@ -352,8 +421,13 @@ define([
      * @memberof BingMapsImageryProvider
      *
      * @returns {Image|Canvas} A canvas or image containing the log to display, or undefined if there is no logo.
+     *
+     * @exception {DeveloperError} <code>getLogo</code> must not be called before the imagery provider is ready.
      */
     BingMapsImageryProvider.prototype.getLogo = function() {
+        if (!this._ready) {
+            throw new DeveloperError('getLogo must not be called before the imagery provider is ready.');
+        }
         if (typeof BingMapsImageryProvider._logo === 'undefined') {
             var image = new Image();
             image.loaded = false;
@@ -383,7 +457,7 @@ define([
         if ((this._mapStyle === BingMapsStyle.AERIAL || this._mapStyle === BingMapsStyle.AERIAL_WITH_LABELS) && level <= 7.0) {
             return 1.0;
         }
-        return 0.1;
+        return 0.2;
     };
 
     /**

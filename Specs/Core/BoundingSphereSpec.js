@@ -52,6 +52,19 @@ defineSuite([
         return result;
     }
 
+    function getPositionsAsFlatArrayWithStride5() {
+        var positions = getPositions();
+        var result = [];
+        for (var i = 0; i < positions.length; ++i) {
+            result.push(positions[i].x);
+            result.push(positions[i].y);
+            result.push(positions[i].z);
+            result.push(1.23);
+            result.push(4.56);
+        }
+        return result;
+    }
+
     it('default constructing produces expected values', function() {
         var sphere = new BoundingSphere();
         expect(sphere.center).toEqual(Cartesian3.ZERO);
@@ -160,27 +173,27 @@ defineSuite([
         }
     });
 
-    it('fromPointsAsFlatArray without positions returns an empty sphere', function() {
-        var sphere = BoundingSphere.fromPointsAsFlatArray();
+    it('fromVertices without positions returns an empty sphere', function() {
+        var sphere = BoundingSphere.fromVertices();
         expect(sphere.center).toEqual(Cartesian3.ZERO);
         expect(sphere.radius).toEqual(0.0);
     });
 
-    it('fromPointsAsFlatArray works with one point', function() {
+    it('fromVertices works with one point', function() {
         var expectedCenter = new Cartesian3(1.0, 2.0, 3.0);
-        var sphere = BoundingSphere.fromPointsAsFlatArray([expectedCenter.x, expectedCenter.y, expectedCenter.z]);
+        var sphere = BoundingSphere.fromVertices([expectedCenter.x, expectedCenter.y, expectedCenter.z]);
         expect(sphere.center).toEqual(expectedCenter);
         expect(sphere.radius).toEqual(0.0);
     });
 
-    it('fromPointsAsFlatArray computes a center from points', function() {
-        var sphere = BoundingSphere.fromPointsAsFlatArray(getPositionsAsFlatArray());
+    it('fromVertices computes a center from points', function() {
+        var sphere = BoundingSphere.fromVertices(getPositionsAsFlatArray());
         expect(sphere.center).toEqual(positionsCenter);
         expect(sphere.radius).toEqual(positionsRadius);
     });
 
-    it('fromPointsAsFlatArray contains all points (naive)', function() {
-        var sphere = BoundingSphere.fromPointsAsFlatArray(getPositionsAsFlatArray());
+    it('fromVertices contains all points (naive)', function() {
+        var sphere = BoundingSphere.fromVertices(getPositionsAsFlatArray());
         var radius = sphere.radius;
         var center = sphere.center;
 
@@ -198,10 +211,10 @@ defineSuite([
         }
     });
 
-    it('fromPointsAsFlatArray contains all points (ritter)', function() {
+    it('fromVertices contains all points (ritter)', function() {
         var positions = getPositionsAsFlatArray();
         positions.push(1, 1, 1,  2, 2, 2,  3, 3, 3);
-        var sphere = BoundingSphere.fromPointsAsFlatArray(positions);
+        var sphere = BoundingSphere.fromVertices(positions);
         var radius = sphere.radius;
         var center = sphere.center;
 
@@ -215,6 +228,35 @@ defineSuite([
             expect(positions[i + 1] <= max.y && positions[i + 1] >= min.y).toEqual(true);
             expect(positions[i + 2] <= max.z && positions[i + 2] >= min.z).toEqual(true);
         }
+    });
+
+    it('fromVertices works with a stride of 5', function() {
+        var sphere = BoundingSphere.fromVertices(getPositionsAsFlatArrayWithStride5(), undefined, 5);
+        expect(sphere.center).toEqual(positionsCenter);
+        expect(sphere.radius).toEqual(positionsRadius);
+    });
+
+    it('fromVertices works with defined center', function() {
+        var center = new Cartesian3(1.0, 2.0, 3.0);
+        var sphere = BoundingSphere.fromVertices(getPositionsAsFlatArrayWithStride5(), center, 5);
+        expect(sphere.center).toEqual(positionsCenter.add(center));
+        expect(sphere.radius).toEqual(positionsRadius);
+    });
+
+    it('fromVertices requires a stride of at least 3', function() {
+        function callWithStrideOf2() {
+            BoundingSphere.fromVertices(getPositionsAsFlatArray(), undefined, 2);
+        }
+        expect(callWithStrideOf2).toThrow();
+    });
+
+    it('fromVertices fills result parameter if specified', function() {
+        var center = new Cartesian3(1.0, 2.0, 3.0);
+        var result = new BoundingSphere();
+        var sphere = BoundingSphere.fromVertices(getPositionsAsFlatArrayWithStride5(), center, 5, result);
+        expect(sphere).toEqual(result);
+        expect(result.center).toEqual(positionsCenter.add(center));
+        expect(result.radius).toEqual(positionsRadius);
     });
 
     it('fromExtent2D creates an empty sphere if no extent provided', function() {
