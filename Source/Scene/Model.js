@@ -1031,6 +1031,12 @@ define([
         }
     }
 
+    //Hack to make zUp models work for Mak
+    var zUprotation = new Matrix4(0, 1,  0, 0,
+            1, 0,  0, 0,
+            0, 0, -1, 0,
+            0, 0,  0, 1);
+
     /**
      * @private
      *
@@ -1066,12 +1072,7 @@ define([
                 this._scale = this.scale;
                 this._transformsDirty = false;
 
-                var rotation = new Matrix4(0, 1,  0, 0,
-                        1, 0,  0, 0,
-                        0, 0, -1, 0,
-                        0, 0,  0, 1);
-
-                Matrix4.multiply(this.modelMatrix, rotation, this._computedModelMatrix);
+                Matrix4.multiply(this.modelMatrix, zUprotation, this._computedModelMatrix);
                 Matrix4.multiplyByUniformScale(this._computedModelMatrix, this.scale, this._computedModelMatrix);
 
                 var i;
