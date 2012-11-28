@@ -1066,7 +1066,13 @@ define([
                 this._scale = this.scale;
                 this._transformsDirty = false;
 
-                Matrix4.multiplyByUniformScale(this.modelMatrix, this.scale, this._computedModelMatrix);
+                var rotation = new Matrix4(0, 1,  0, 0,
+                        1, 0,  0, 0,
+                        0, 0, -1, 0,
+                        0, 0,  0, 1);
+
+                Matrix4.multiply(this.modelMatrix, rotation, this._computedModelMatrix);
+                Matrix4.multiplyByUniformScale(this._computedModelMatrix, this.scale, this._computedModelMatrix);
 
                 var i;
                 var len;

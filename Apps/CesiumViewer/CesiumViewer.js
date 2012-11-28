@@ -5,19 +5,24 @@ define([
     'dojo/ready',
     'dojo/io-query',
     'Widgets/Dojo/CesiumViewerWidget',
+    'Core/Matrix3',
     'Core/Matrix4',
     'Core/Cartesian3',
-    'Scene/Model'
-
+    'Core/Quaternion',
+    'Scene/Model',
+    'Scene/RectangularPyramidSensorVolume'
 ], function(
     dom,
     on,
     ready,
     ioQuery,
     CesiumViewerWidget,
+    Matrix3,
     Matrix4,
     Cartesian3,
-    Model
+    Quaternion,
+    Model,
+    RectangularPyramidSensorVolume
 ) {
     "use strict";
     /*global console*/
@@ -36,6 +41,55 @@ define([
 
         widget.startup();
 
+//        var model = new Model('../../../Apps/CesiumViewer/Gallery/Models/_RQ-1_Predator/model0.json');
+//        //var model = new Model('../../../Apps/CesiumViewer/Gallery/Models/duck/duck.json');                     // OK
+//
+//        var position = {
+//            x : 1536104.718843187,
+//            y : -4463497.632960353,
+//            z : 4274941.639393189
+//        };
+//
+//        var orientation = new Quaternion(
+//                -0.525425180643139, -0.742614525249509, -0.234795236519538, 0.342524806900618
+//                //0.742614525249509, -0.525425180643139, 0.342524806900618, 0.234795236519538
+//                //-0.234795236519538, 0.342524806900618, 0.525425180643139, 0.742614525249509
+//        ).conjugate();
+//
+//        //Matrix4.fromRotationTranslation(Matrix3.fromQuaternion(orientation), position, model.modelMatrix);
+//        model.scale = 1.0;
+//        model.modelMatrix = Matrix4.fromRotationTranslation(Matrix3.fromQuaternion(orientation), position);
+//
+//        var scene = widget.scene;
+//        scene.getPrimitives().add(model);
+
+//        var rotate = new Matrix4(
+//                1.0, 0.0, 0.0, 0.0,
+//                0.0, Math.cos(-Math.PI / 2.0), -Math.sin(-Math.PI / 2.0), 0.0,
+//                0.0, Math.sin(-Math.PI / 2.0), Math.cos(-Math.PI / 2.0), 0.0,
+//                0.0, 0.0, 0.0, 1.0);
+//        model.modelMatrix = Matrix4.multiply(model.modelMatrix,  rotate);
+//         rotate = new Matrix4(
+//                Math.cos(-Math.PI / 2.0), 0.0, Math.sin(-Math.PI / 2.0), 0.0,
+//                0.0, 1.0, 0.0, 0.0,
+//                -Math.sin(-Math.PI / 2.0), 0.0, Math.cos(-Math.PI / 2.0), 0.0,
+//                0.0, 0.0, 0.0, 1.0);
+//      model.modelMatrix = Matrix4.multiply(model.modelMatrix,  rotate);
+//      rotate = new Matrix4(
+//              1.0, 0.0, 0.0, 0.0,
+//              0.0, Math.cos(-Math.PI / 2.0), -Math.sin(-Math.PI / 2.0), 0.0,
+//              0.0, Math.sin(-Math.PI / 2.0), Math.cos(-Math.PI / 2.0), 0.0,
+//              0.0, 0.0, 0.0, 1.0);
+//      model.modelMatrix = Matrix4.multiply(model.modelMatrix,  rotate);
+
+//      var rotation = new Matrix4(0, 1,  0, 0,
+//                                 1, 0,  0, 0,
+//                                 0, 0, -1, 0,
+//                                 0, 0,  0, 1);
+
+      //Matrix4.multiply(Matrix4.fromRotationTranslation(Matrix3.fromQuaternion(orientation), position), rotation, model.modelMatrix);
+
+        //scene.getPrimitives().add(f);
 //        var scene = widget.scene;
 ////        scene.getContext().setValidateShaderProgram(true);
 ////        scene.getContext().setValidateFramebuffer(true);

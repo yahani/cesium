@@ -246,8 +246,11 @@ define([
         position = defaultValue(positionProperty.getValueCartesian(time, position), model._visualizerPosition);
         orientation = defaultValue(orientationProperty.getValue(time, orientation), model._visualizerOrientation);
 
-        if (typeof position !== 'undefined' && typeof orientation !== 'undefined' && (!position.equals(model._visualizerPosition) || !orientation.equals(model._visualizerOrientation))) {
-            Matrix4.fromRotationTranslation(Matrix3.fromQuaternion(orientation.conjugate(orientation), matrix3Scratch), position, model.modelMatrix);
+        if (typeof position !== 'undefined' &&
+            typeof orientation !== 'undefined' &&
+            (!position.equals(model._visualizerPosition) ||
+             !orientation.equals(model._visualizerOrientation))) {
+            Matrix4.fromRotationTranslation(Matrix3.fromQuaternion(orientation, matrix3Scratch), position, model.modelMatrix);
             position.clone(model._visualizerPosition);
             orientation.clone(model._visualizerOrientation);
         }
