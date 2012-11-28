@@ -386,6 +386,29 @@ defineSuite([
         verifyDraw(fs);
     });
 
+    it('has czm_inverseViewProjection', function() {
+        var us = context.getUniformState();
+        us.setView(new Matrix4(1.0, 0.0, 0.0, 0.0,
+                               0.0, 1.0, 0.0, 8.0,
+                               0.0, 0.0, 1.0, 0.0,
+                               0.0, 0.0, 0.0, 1.0));
+        us.setProjection(new Matrix4(1.0, 0.0, 0.0, 0.0,
+                                     0.0, 1.0, 0.0, 0.0,
+                                     0.0, 0.0, 1.0, 9.0,
+                                     0.0, 0.0, 0.0, 1.0));
+
+        var fs =
+            'void main() { ' +
+            '  bool b0 = (czm_inverseViewProjection[0][0] == 1.0) && (czm_inverseViewProjection[1][0] == 0.0) && (czm_inverseViewProjection[2][0] == 0.0) && (czm_inverseViewProjection[3][0] ==  0.0); ' +
+            '  bool b1 = (czm_inverseViewProjection[0][1] == 0.0) && (czm_inverseViewProjection[1][1] == 1.0) && (czm_inverseViewProjection[2][1] == 0.0) && (czm_inverseViewProjection[3][1] == -8.0); ' +
+            '  bool b2 = (czm_inverseViewProjection[0][2] == 0.0) && (czm_inverseViewProjection[1][2] == 0.0) && (czm_inverseViewProjection[2][2] == 1.0) && (czm_inverseViewProjection[3][2] == -9.0); ' +
+            '  bool b3 = (czm_inverseViewProjection[0][3] == 0.0) && (czm_inverseViewProjection[1][3] == 0.0) && (czm_inverseViewProjection[2][3] == 0.0) && (czm_inverseViewProjection[3][3] ==  1.0); ' +
+            '  gl_FragColor = vec4(b0 && b1 && b2 && b3); ' +
+            '}';
+
+        verifyDraw(fs);
+    });
+
     it('has czm_modelViewProjection', function() {
         var us = context.getUniformState();
         us.update(createFrameState(createMockCamera(
@@ -413,6 +436,24 @@ defineSuite([
                 0.0, 0.0, 1.0, 0.0,
                 0.0, 0.0, 0.0, 1.0));
     });
+
+    it('has czm_inverseModelViewProjection', function() {
+        var us = context.getUniformState();
+        us.setView(new Matrix4(1.0, 0.0, 0.0, 0.0,
+                               0.0, 1.0, 0.0, 8.0,
+                               0.0, 0.0, 1.0, 0.0,
+                               0.0, 0.0, 0.0, 1.0));
+        us.setProjection(new Matrix4(1.0, 0.0, 0.0, 0.0,
+                                     0.0, 1.0, 0.0, 0.0,
+                                     0.0, 0.0, 1.0, 9.0,
+                                     0.0, 0.0, 0.0, 1.0));
+
+        var fs =
+            'void main() { ' +
+            '  bool b0 = (czm_inverseModelViewProjection[0][0] == 1.0) && (czm_inverseModelViewProjection[1][0] == 0.0) && (czm_inverseModelViewProjection[2][0] == 0.0) && (czm_inverseModelViewProjection[3][0] == -7.0); ' +
+            '  bool b1 = (czm_inverseModelViewProjection[0][1] == 0.0) && (czm_inverseModelViewProjection[1][1] == 1.0) && (czm_inverseModelViewProjection[2][1] == 0.0) && (czm_inverseModelViewProjection[3][1] == -8.0); ' +
+            '  bool b2 = (czm_inverseModelViewProjection[0][2] == 0.0) && (czm_inverseModelViewProjection[1][2] == 0.0) && (czm_inverseModelViewProjection[2][2] == 1.0) && (czm_inverseModelViewProjection[3][2] == -9.0); ' +
+            '  bool b3 = (czm_inverseModelViewProjection[0][3] == 0.0) && (czm_inverseModelViewProjection[1][3] == 0.0) && (czm_inverseModelViewProjection[2][3] == 0.0) && (czm_inverseModelViewProjection[3][3] ==  1.0); ' +
 
     it('has czm_modelViewProjectionRelativeToEye', function() {
         var us = context.getUniformState();
