@@ -10,6 +10,7 @@ define([
         '../Core/BoundingSphere',
         '../Core/Cartesian2',
         '../Core/Cartesian3',
+        '../Core/Cartesian4',
         '../Core/Cartographic',
         '../Core/Extent',
         '../Core/Occluder',
@@ -31,6 +32,7 @@ define([
         BoundingSphere,
         Cartesian2,
         Cartesian3,
+        Cartesian4,
         Cartographic,
         Extent,
         Occluder,
@@ -77,7 +79,7 @@ define([
             numberOfLevelZeroTilesX : 2,
             numberOfLevelZeroTilesY : 1
         });
-        this.maxLevel = 11;
+        this.maxFileLevel = 11;
         this.heightmapWidth = 32;
         this.levelZeroMaximumGeometricError = TerrainProvider.getEstimatedLevelZeroGeometricErrorForAHeightmap(this.tilingScheme.getEllipsoid(), this.heightmapWidth, this.tilingScheme.getNumberOfXTilesAtLevel(0));
 
@@ -120,31 +122,131 @@ define([
      * @param {Tile} The tile to request geometry for.
      */
     TileMapServiceTerrainProvider.prototype.requestTileGeometry = function(tile) {
-        if (requestsInFlight > 6) {
-            tile.state = TileState.UNLOADED;
-            return;
-        }
-
-        ++requestsInFlight;
-
-        var yTiles = this.tilingScheme.getNumberOfYTilesAtLevel(tile.level);
-
-        var url = this.url + '/' + tile.level + '/' + tile.x + '/' + (yTiles - tile.y - 1) + '.png';
-
-        if (typeof this._proxy !== 'undefined') {
-            url = this._proxy.getURL(url);
-        }
-
-        when(loadImage(url, true), function(image) {
-            tile.geometry = image;
+        var that = this;
+        function success(image) {
+            --requestsInFlight;
+            tile.geometry = getImagePixels(image);
+            tile.hasRealData = true;
             tile.state = TileState.RECEIVED;
+        }
+
+        function failure(e) {
+            // Tile failed to load, so upsample from the parent tile.
             --requestsInFlight;
-        }, function(e) {
-            /*global console*/
-            console.error('failed to load tile geometry: ' + e);
-            tile.state = TileState.FAILED;
-            --requestsInFlight;
-        });
+
+            // Find the nearest ancestor with data.
+            var levelDifference = 1;
+            var sourceTile = tile.parent;
+            while (typeof sourceTile !== 'undefined' && !sourceTile.hasRealData) {
+                sourceTile = sourceTile.parent;
+                ++levelDifference;
+            }
+
+            if (typeof sourceTile === 'undefined') {
+                tile.state = TileState.FAILED;
+                return;
+            }
+
+            var width = that.heightmapWidth;
+            var height = width;
+            var stride = 4;
+            var destinationExtent = tile.extent;
+            var sourceExtent = sourceTile.extent;
+
+            var buffer = new ArrayBuffer(width * height * stride);
+            var heights = new Uint8Array(buffer, 0, width * height * stride);
+            var sourceHeights = sourceTile.geometry;
+
+            function triangleInterpolateHeight(dX, dY, southwestHeight, southeastHeight, northwestHeight, northeastHeight) {
+                // The HeightmapTessellator bisects the quad from southwest to northeast.
+                if (dY < dX) {
+                    // Lower right triangle
+                    return southwestHeight + (dX * (southeastHeight - southwestHeight)) + (dY * (northeastHeight - southeastHeight));
+                }
+
+                // Upper left triangle
+                return southwestHeight + (dX * (northeastHeight - northwestHeight)) + (dY * (northwestHeight - southwestHeight));
+            }
+
+            function getHeight(heights, index) {
+                index *= 4;
+                return (heights[index] << 16) |
+                       (heights[index + 1] << 8) |
+                       heights[index + 1];
+            }
+
+            function setHeight(heights, index, height) {
+                index *= 4;
+                heights[index] = height >> 16;
+                heights[index + 1] = (height >> 8) & 0xFF;
+                heights[index + 2] = height & 0xFF;
+            }
+
+            function interpolateHeight(sourceHeights, sourceExtent, longitude, latitude) {
+                var fromWest = (longitude - sourceExtent.west) * 31 / (sourceExtent.east - sourceExtent.west);
+                var fromSouth = (latitude - sourceExtent.south) * 31 / (sourceExtent.north - sourceExtent.south);
+
+                var westInteger = fromWest | 0;
+                var eastInteger = westInteger + 1;
+                if (eastInteger >= 32) {
+                    eastInteger = 31;
+                    westInteger = 30;
+                }
+
+                var southInteger = fromSouth | 0;
+                var northInteger = southInteger + 1;
+                if (northInteger >= 32) {
+                    northInteger = 31;
+                    southInteger = 30;
+                }
+
+                var dx = fromWest - westInteger;
+                var dy = fromSouth - southInteger;
+
+                southInteger = 31 - southInteger;
+                northInteger = 31 - northInteger;
+
+                var southwestHeight = getHeight(sourceHeights, southInteger * 32 + westInteger);
+                var southeastHeight = getHeight(sourceHeights, southInteger * 32 + eastInteger);
+                var northwestHeight = getHeight(sourceHeights, northInteger * 32 + westInteger);
+                var northeastHeight = getHeight(sourceHeights, northInteger * 32 + eastInteger);
+
+                return triangleInterpolateHeight(dx, dy, southwestHeight, southeastHeight, northwestHeight, northeastHeight);
+            }
+
+            for (var j = 0; j < height; ++j) {
+                var latitude = CesiumMath.lerp(destinationExtent.north, destinationExtent.south, j / (height - 1));
+                for (var i = 0; i < width; ++i) {
+                    var longitude = CesiumMath.lerp(destinationExtent.west, destinationExtent.east, i / (width - 1));
+                    setHeight(heights, j * width + i, interpolateHeight(sourceHeights, sourceExtent, longitude, latitude));
+                }
+            }
+
+            tile.geometry = heights;
+
+            tile.state = TileState.RECEIVED;
+        }
+
+        if (tile.level > this.maxFileLevel) {
+            failure();
+        } else {
+            if (requestsInFlight > 6) {
+                tile.state = TileState.UNLOADED;
+                return;
+            }
+
+            ++requestsInFlight;
+
+            var yTiles = this.tilingScheme.getNumberOfYTilesAtLevel(tile.level);
+
+            var url = this.url + '/' + tile.level + '/' + tile.x + '/' + (yTiles - tile.y - 1) + '.png';
+
+            if (typeof this._proxy !== 'undefined') {
+                url = this._proxy.getURL(url);
+            }
+
+            when(loadImage(url, true), success, failure);
+        }
     };
 
     var taskProcessor = new TaskProcessor('createVerticesFromHeightmap');
@@ -161,10 +263,9 @@ define([
      */
     TileMapServiceTerrainProvider.prototype.transformGeometry = function(context, tile) {
         // Get the height data from the image by copying it to a canvas.
-        var image = tile.geometry;
-        var width = image.width;
-        var height = image.height;
-        var pixels = getImagePixels(image);
+        var width = 32;
+        var height = 32;
+        var pixels = tile.geometry;
 
         var tilingScheme = this.tilingScheme;
         var ellipsoid = tilingScheme.getEllipsoid();
@@ -186,7 +287,7 @@ define([
             oneOverCentralBodySemimajorAxis : ellipsoid.getOneOverRadii().x,
             skirtHeight : Math.min(this.getLevelMaximumGeometricError(tile.level) * 10.0, 1000.0),
             isGeographic : true
-        }, [pixels.buffer]);
+        });
 
         if (typeof verticesPromise === 'undefined') {
             //postponed
@@ -195,7 +296,6 @@ define([
         }
 
         when(verticesPromise, function(result) {
-            tile.geometry = undefined;
             tile.transformedGeometry = {
                 vertices : result.vertices,
                 statistics : result.statistics,
