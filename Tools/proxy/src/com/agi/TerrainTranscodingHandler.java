@@ -87,13 +87,16 @@ public final class TerrainTranscodingHandler extends AbstractHandler {
 		HttpExchange exchange = new HttpExchange() {
 			int bufferSize = 4096;
 			ByteArrayOutputStream responseContent;
+			int responseStatus = 200;
 
 			protected void onResponseComplete() throws IOException {
-				ByteArrayInputStream tiffInputStream = new ByteArrayInputStream(responseContent.toByteArray());
-				BufferedImage resultImage = encodeHeightFloatsAsIntegers(tiffInputStream);
-
-				response.setContentType("image/png");
-				ImageIO.write(resultImage, "PNG", response.getOutputStream());
+				if (responseStatus == 200) {
+					ByteArrayInputStream tiffInputStream = new ByteArrayInputStream(responseContent.toByteArray());
+					BufferedImage resultImage = encodeHeightFloatsAsIntegers(tiffInputStream);
+	
+					response.setContentType("image/png");
+					ImageIO.write(resultImage, "PNG", response.getOutputStream());
+				}
 
 				continuation.complete();
 			}
@@ -105,6 +108,7 @@ public final class TerrainTranscodingHandler extends AbstractHandler {
 			}
 
 			protected void onResponseStatus(Buffer version, int status, Buffer reason) throws IOException {
+				responseStatus = status;
 				response.setStatus(status);
 			}
 
