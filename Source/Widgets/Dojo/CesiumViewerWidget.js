@@ -164,6 +164,15 @@ define([
          */
         showSkyBox : true,
         /**
+         * The URL of a webservice which takes a posted KML or KMZ file and
+         * returns it as CZML.
+         *
+         * @type {String}
+         * @memberof CesiumViewerWidget.prototype
+         * @default 'http://cesium.agi.com/kml2Czml
+         */
+        kmlConversionService : 'http://cesium.agi.com/kml2Czml',
+        /**
          * An object containing settings supplied by the end user, typically from the query string
          * of the URL of the page with the widget.
          *
@@ -586,12 +595,28 @@ define([
 
             var files = event.dataTransfer.files;
             var f = files[0];
-            var reader = new FileReader();
-            reader.onload = function(evt) {
-                widget.addCzml(JSON.parse(evt.target.result), f.name);
-                widget._setLoading(false);
-            };
-            reader.readAsText(f);
+            var isKml = f.type === 'application/vnd.google-earth.kml+xml' || f.name.match(/\.kml$/) || f.name.match(/\.kmz$/);
+            if (isKml && widget.kmlConversionService !== 'undefined') {
+                var formData = new FormData();
+                formData.append(f.name, f);
+
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', widget.kmlConversionService, true);
+                xhr.onload = (function(xhr) {
+                    return function() {
+                        widget.addCzml(JSON.parse(xhr.responseText), f.name);
+                        widget._setLoading(false);
+                    };
+                })(xhr);
+                xhr.send(formData);
+            } else {
+                var reader = new FileReader();
+                reader.onload = function(evt) {
+                    widget.addCzml(JSON.parse(evt.target.result), f.name);
+                    widget._setLoading(false);
+                };
+                reader.readAsText(f);
+            }
         },
 
         _started : false,
