@@ -301,6 +301,36 @@ define([
     };
 
     /**
+     * Saves the current camera view so that it can be restored later by calling loadSnapshot.
+     *
+     * @returns {Object} An object which can be passed to loadSnapshot to restore the camera view.
+     */
+    Camera.prototype.snapshotView = function() {
+        return {
+            position : this.position.clone(),
+            direction : this.direction.clone(),
+            up : this.up.clone(),
+            right : this.right.clone(),
+            transform : this.transform.clone(),
+            frustum : this.frustum.clone()
+        };
+    };
+
+    /**
+     * Loads a view previously created by a call to snapshotView.
+     *
+     * @param {Object} view The return value from a previous call to snapshotView.
+     */
+    Camera.prototype.loadSnapshot = function(view) {
+        Cartesian3.clone(view.position, this.position);
+        Cartesian3.clone(view.direction, this.direction);
+        Cartesian3.clone(view.up, this.up);
+        Cartesian3.clone(view.right, this.right);
+        Matrix4.clone(view.transform, this.transform);
+        this.frustum = view.frustum.clone();
+    };
+
+    /**
      * Returns a duplicate of a Camera instance.
      *
      * @memberof Camera

@@ -108,4 +108,34 @@ defineSuite([
         expect(camera.cameraToWorldCoordinates(Cartesian4.UNIT_Z)).toEqual(Cartesian4.UNIT_X);
     });
 
+    it('can save and restore a view', function() {
+        var view = camera.snapshotView();
+        expect(view).toBeDefined();
+
+        camera.position = Cartesian3.UNIT_X.clone();
+        camera.direction = Cartesian3.UNIT_X.clone();
+        camera.up = Cartesian3.UNIT_X.clone();
+        camera.right = Cartesian3.UNIT_X.clone();
+        camera.transform = new Matrix4();
+        camera.frustum.near = 4.0;
+        camera.frustum.far = 6.0;
+        camera.frustum.fovy = (Math.PI) / 2;
+        camera.frustum.aspectRatio = 12.0;
+
+        expect(view.position).toNotEqual(camera.position);
+        expect(view.direction).toNotEqual(camera.direction);
+        expect(view.up).toNotEqual(camera.up);
+        expect(view.right).toNotEqual(camera.right);
+        expect(view.transform).toNotEqual(camera.transform);
+        expect(view.frustum).toNotEqual(camera.frustum);
+
+        camera.loadSnapshot(view);
+
+        expect(view.position).toEqual(camera.position);
+        expect(view.direction).toEqual(camera.direction);
+        expect(view.up).toEqual(camera.up);
+        expect(view.right).toEqual(camera.right);
+        expect(view.transform).toEqual(camera.transform);
+        expect(view.frustum).toEqual(camera.frustum);
+    });
 });

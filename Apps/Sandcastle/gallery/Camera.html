@@ -197,6 +197,15 @@ require([
         controller.enableTilt = true;
     }
 
+    var view;    
+    function snapshotView(scene) {
+        view = scene.getCamera().snapshotView();
+    }
+
+    function loadView(scene) {
+        scene.getCamera().loadSnapshot(view);
+    }
+    
     function createButtons(scene) {
         new Button({
             label : "Fly to San Diego",
@@ -233,6 +242,22 @@ require([
                 Sandcastle.highlight(eastNorthUp);
             }
         }).placeAt('toolbar');
+
+        new Button({
+            label : "Store current view",
+            onClick : function() {
+                snapshotView(scene);
+                Sandcastle.highlight(snapshotView);
+            }
+        }).placeAt('toolbar');
+
+        new Button({
+            label : "Load last stored view",
+            onClick : function() {
+                loadView(scene);
+                Sandcastle.highlight(loadView);
+            }
+        }).placeAt('toolbar');
     }
 
     var widget = new CesiumWidget();
@@ -240,6 +265,9 @@ require([
     widget.startup();
 
     createButtons(widget.scene);
+    
+    //store the default view
+    view = widget.scene.getCamera().snapshotView();
 
     Sandcastle.finishedLoading();
 });
