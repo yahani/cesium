@@ -6,6 +6,7 @@ attribute vec4 prev;
 attribute vec4 next;
 attribute vec4 color;
 attribute vec4 misc;
+attribute vec2 misc2;
 
 
 #ifndef RENDER_FOR_PICK
@@ -26,6 +27,9 @@ void main()
     float expandDir = misc.y;
     float width = misc.z;
     float show = misc.w;
+    
+    float sLengthTexCoords = misc.x;
+    float sLengthMeters = misc.y;
     
     vec4 p;
     vec4 prevDir;
@@ -95,6 +99,7 @@ void main()
 	    prevWC = normalize(p0.xy - endPointWC.xy);
 	    nextWC = normalize(p1.xy - endPointWC.xy);
 	    vec2 normal = -normalize(vec2(nextWC.y, -nextWC.x));
+	    //direction = -normalize(vec2(nextWC.y, -nextWC.x));
 	    
 	    direction = normalize((nextWC + prevWC) * 0.5);
 	    if (dot(direction, normal) < 0.0)
@@ -110,7 +115,12 @@ void main()
 	    }
     }
 
-    vec4 positionWC = vec4(endPointWC.xy + direction * expandWidth * expandDir, -endPointWC.z, 1.0);
+    direction *= expandDir * expandWidth;
+    //vec2 proj = dot(direction, nextWC) * nextWC * czm_pixelSize;
+    //texCoord += length(proj) * sLengthTexCoords / sLengthMeters;
+    texCoord += (width * czm_pixelSize) * (sLengthTexCoords / sLengthMeters) * expandDir;
+    
+    vec4 positionWC = vec4(endPointWC.xy + direction, -endPointWC.z, 1.0);
     gl_Position = czm_viewportOrthographic * positionWC * show;
     
 #ifndef RENDER_FOR_PICK

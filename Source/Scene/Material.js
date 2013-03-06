@@ -37,7 +37,8 @@ define([
         '../Shaders/Materials/FadeMaterial',
         '../Shaders/Materials/PolylineArrowMaterial',
         '../Shaders/Materials/PolylineGlowMaterial',
-        '../Shaders/Materials/PolylineOutlineMaterial'
+        '../Shaders/Materials/PolylineOutlineMaterial',
+        '../Shaders/Materials/PolylineStippleMaterial'
     ], function(
         when,
         loadImage,
@@ -76,7 +77,8 @@ define([
         FadeMaterial,
         PolylineArrowMaterial,
         PolylineGlowMaterial,
-        PolylineOutlineMaterial) {
+        PolylineOutlineMaterial,
+        PolylineStippleMaterial) {
     "use strict";
 
     /**
@@ -1217,6 +1219,16 @@ define([
             outlineWidth : 0.0
         },
         source : PolylineOutlineMaterial
+    });
+
+    Material.PolylineStippleType = 'PolylineStipple';
+    Material._materialCache.addMaterial(Material.PolylineStippleType, {
+        type : Material.PolylineStippleType,
+        uniforms : {
+            stippleWidth : 30.0,
+            gapWidth : 20.0
+        },
+        source : PolylineStippleMaterial
     });
 
     return Material;
