@@ -13,6 +13,7 @@ attribute vec2 misc2;
 varying vec4 v_color;
 varying vec4 v_outlineColor;
 varying vec2 v_textureCoordinates;
+varying vec2 v_segmentTextureCoordinates;
 varying float v_width;
 varying vec3 v_positionEC;
 #else
@@ -28,8 +29,11 @@ void main()
     float width = misc.z;
     float show = misc.w;
     
-    float sLengthTexCoords = misc.x;
-    float sLengthMeters = misc.y;
+    //float sLengthTexCoords = misc.x;
+    //float sLengthMeters = misc.y;
+    
+    float segmentTexCoord = misc2.x;
+    float lengthMeters = misc2.y;
     
     vec4 p;
     vec4 prevDir;
@@ -118,7 +122,7 @@ void main()
     direction *= expandDir * expandWidth;
     //vec2 proj = dot(direction, nextWC) * nextWC * czm_pixelSize;
     //texCoord += length(proj) * sLengthTexCoords / sLengthMeters;
-    texCoord += (width * czm_pixelSize) * (sLengthTexCoords / sLengthMeters) * expandDir;
+    //texCoord += (width * czm_pixelSize) * (sLengthTexCoords / sLengthMeters) * expandDir;
     
     vec4 positionWC = vec4(endPointWC.xy + direction, -endPointWC.z, 1.0);
     gl_Position = czm_viewportOrthographic * positionWC * show;
@@ -128,6 +132,7 @@ void main()
     v_color = vec4(czm_decodeColor(color.r), alphas.r);
     v_outlineColor = vec4(czm_decodeColor(color.g), alphas.g);
     v_textureCoordinates = vec2(texCoord, clamp(expandDir, 0.0, 1.0));
+    v_segmentTextureCoordinates = vec2(segmentTexCoord, clamp(expandDir, 0.0, 1.0));
     v_width = width;
     v_positionEC = positionEC.xyz;
 #else

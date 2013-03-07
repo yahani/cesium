@@ -1122,6 +1122,12 @@ define([
             var vertexColorIndex = 0;
             var vertexOutlineColorIndex = 0;
 
+            var lengthMeters = 0;
+            for (var n = 1; n < positionsLength; ++n) {
+                lengthMeters += Cartesian3.subtract(positions[n], positions[n - 1]).magnitude();
+            }
+
+            var segmentLength = 0.0;
             for ( var j = 0; j < positionsLength; ++j) {
                 var position = positions[j];
                 scratchWritePosition.x = position.x;
@@ -1130,11 +1136,17 @@ define([
 
                 var adjacencyAngles = computeAdjacencyAngles(position, j, positions, scratchWriteAdjacency);
 
+                /*
                 var segmentLength;
                 if (j !== positionsLength - 1) {
                     segmentLength = Cartesian3.subtract(position, positions[j + 1]).magnitude();
                 } else {
                     segmentLength = Cartesian3.subtract(position, positions[j - 1]).magnitude();
+                }
+                */
+
+                if (j > 0) {
+                    segmentLength += Cartesian3.subtract(position, positions[j - 1]).magnitude();
                 }
 
                 for (var k = 0; k < 2; ++k) {
@@ -1172,8 +1184,11 @@ define([
                     miscArray[miscIndex + 2] = width;
                     miscArray[miscIndex + 3] = show;
 
-                    misc2Array[misc2Index] = 1.0 / (positionsLength - 1);
-                    misc2Array[misc2Index + 1] = segmentLength;
+                    //misc2Array[misc2Index] = 1.0 / (positionsLength - 1);
+                    //misc2Array[misc2Index + 1] = segmentLength;
+
+                    misc2Array[misc2Index] = segmentLength;
+                    misc2Array[misc2Index + 1] = lengthMeters;
 
                     positionIndex += 6;
                     adjacencyIndex += 8;
