@@ -8,7 +8,6 @@ attribute vec4 color;
 attribute vec4 misc;
 attribute vec2 misc2;
 
-
 #ifndef RENDER_FOR_PICK
 varying vec4 v_color;
 varying vec4 v_outlineColor;
@@ -83,7 +82,7 @@ void main()
         nextEC = czm_modelView * nextDir;
         p1 = czm_eyeToWindowCoordinates(vec4(positionEC.xyz + nextEC.xyz * pixelSize, 1.0));
         nextWC = normalize(p1.xy - endPointWC.xy);
-        direction = -normalize(vec2(nextWC.y, -nextWC.x));
+        direction = normalize(vec2(-nextWC.y, nextWC.x));
     }
     else if (czm_equalsEpsilon(nextDir, vec4(0.0), czm_epsilon7))
     {
@@ -102,8 +101,7 @@ void main()
 	    
 	    prevWC = normalize(p0.xy - endPointWC.xy);
 	    nextWC = normalize(p1.xy - endPointWC.xy);
-	    vec2 normal = -normalize(vec2(nextWC.y, -nextWC.x));
-	    //direction = -normalize(vec2(nextWC.y, -nextWC.x));
+	    vec2 normal = normalize(vec2(-nextWC.y, nextWC.x));
 	    
 	    direction = normalize((nextWC + prevWC) * 0.5);
 	    if (dot(direction, normal) < 0.0)
@@ -119,13 +117,8 @@ void main()
 	    }
     }
 
-    direction *= expandDir * expandWidth;
-    //vec2 proj = dot(direction, nextWC) * nextWC * czm_pixelSize;
-    //texCoord += length(proj) * sLengthTexCoords / sLengthMeters;
-    //texCoord += (width * czm_pixelSize) * (sLengthTexCoords / sLengthMeters) * expandDir;
-    
-    vec4 positionWC = vec4(endPointWC.xy + direction, -endPointWC.z, 1.0);
-    gl_Position = czm_viewportOrthographic * positionWC * show;
+    vec4 positionWC = vec4(endPointWC.xy + direction * expandWidth * expandDir, endPointWC.zw);
+    gl_Position = czm_projection * czm_windowToEyeCoordinates(positionWC) * show;
     
 #ifndef RENDER_FOR_PICK
     vec3 alphas = czm_decodeColor(color.b);
