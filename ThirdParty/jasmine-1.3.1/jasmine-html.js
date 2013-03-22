@@ -44,12 +44,33 @@ jasmine.HtmlReporterHelpers.appendToSummary = function(child, childElement) {
   if (parent) {
     if (typeof this.views.suites[parent.id] == 'undefined') {
       this.views.suites[parent.id] = new jasmine.HtmlReporter.SuiteView(parent, this.dom, this.views);
+    } else if (typeof this.views.suites[parent.id].appendedToSkipped !== 'undefined') {
+      // parent was placed in skipped view, remove it and add to non-skipped view.
+      var parentView = this.views.suites[parent.id];
+      parentView.appendedToSkipped = undefined;
+      parentView.element.parentNode.removeChild(parentView.element);
+      parentView.appendToSummary(parentView.suite, parentView.element);
     }
     parentDiv = this.views.suites[parent.id].element;
   }
 
   parentDiv.appendChild(childElement);
 };
+
+jasmine.HtmlReporterHelpers.appendToSkipped = function(child, childElement) {
+    var parentDiv = this.dom.skipped;
+    var parentSuite = (typeof child.parentSuite == 'undefined') ? 'suite' : 'parentSuite';
+    var parent = child[parentSuite];
+
+    if (parent) {
+      if (typeof this.views.suites[parent.id] == 'undefined') {
+        this.views.suites[parent.id] = new jasmine.HtmlReporter.SuiteView(parent, this.dom, this.views, 'skipped');
+      }
+      parentDiv = this.views.suites[parent.id].element;
+    }
+
+    parentDiv.appendChild(childElement);
+  };
 
 
 jasmine.HtmlReporterHelpers.addHelpers = function(ctor) {
@@ -66,15 +87,36 @@ jasmine.HtmlReporterHelpers.isSuiteFocused = function(suite) {
       var p = params[i].split('=');
       paramMap[decodeURIComponent(p[0])] = decodeURIComponent(p[1]);
     }
-  
+
     if (suite.getFullName() === paramMap.spec) {
 	  return true;
+    }
+
+    var categories;
+    if (typeof paramMap.category !== 'undefined') {
+      categories = paramMap.category.split(',');
+    }
+
+    if (typeof categories !== 'undefined' && typeof suite.categories !== 'undefined') {
+      for (var i = 0; i < categories.length; i++) {
+        if (suite.categories.indexOf(categories[i]) !== -1) {
+          return true;
+        }
+      }
     }
 
     var parentSuite = suite.parentSuite;
     while (parentSuite) {
       if (parentSuite.getFullName() === paramMap.spec) {
         return true;
+      }
+
+      if (typeof categories !== 'undefined' && typeof parentSuite.categories !== 'undefined') {
+        for (var i = 0; i < categories.length; i++) {
+          if (parentSuite.categories.indexOf(categories[i]) !== -1) {
+            return true;
+          }
+        }
       }
       parentSuite = parentSuite.parentSuite;
     }
@@ -84,6 +126,21 @@ jasmine.HtmlReporterHelpers.isSuiteFocused = function(suite) {
       if (childSpecs[i].getFullName() === paramMap.spec) {
 	    return true;
 	  }
+      if (typeof categories !== 'undefined' && typeof childSpecs[i].suite.categories !== 'undefined') {
+        for (var j = 0; j < categories.length; j++) {
+    	  if (childSpecs[i].suite.categories.indexOf(categories[j]) !== -1) {
+	    return true;
+	  }
+        }
+      }
+
+      if (typeof categories !== 'undefined' && typeof childSpecs[i].categories !== 'undefined') {
+        for (var j = 0; j < categories.length; j++) {
+	  if (childSpecs[i].categories.indexOf(categories[j]) !== -1) {
+	    return true;
+	  }
+        }
+      }
     }
 
     var childSuites = suite.suites();
@@ -117,6 +174,36 @@ jasmine.HtmlReporter = function(_doc) {
     createReporterDom(runner.env.versionString());
     doc.body.appendChild(dom.reporter);
     setExceptionHandling();
+
+    var runButton = document.getElementById('runButton');
+    runButton.onclick = function() {
+      if (document.getElementById('no_try_catch').checked) {
+        window.location.search = searchWithCatch();
+    	return false;
+      }
+
+	  var select = document.getElementById('categorySelect');
+      if (document.getElementById('categoryException').checked) {
+        top.location.href = '?category=All&not=' + encodeURIComponent(select.options[select.selectedIndex].value);
+        return false;
+      }
+      top.location.href = '?category=' + encodeURIComponent(select.options[select.selectedIndex].value);
+      return false;
+    }
+
+    var runCoverageButton = document.getElementById('runCoverageButton');
+    runCoverageButton.onclick = function() {
+	  var baseInstrumentUrl = '../Instrumented/jscoverage.html?../Specs/SpecRunner.html' +
+            window.encodeURIComponent('?baseUrl=../Instrumented');
+
+      var select = document.getElementById('categorySelect');
+	  if (document.getElementById('categoryException').checked) {
+        top.location.href = baseInstrumentUrl + window.encodeURIComponent('&category=All&not=' + select.options[select.selectedIndex].value);
+        return false;
+      }
+      top.location.href = baseInstrumentUrl + window.encodeURIComponent('&category=' + select.options[select.selectedIndex].value);
+	  return false;
+    }
 
     reporterView = new jasmine.HtmlReporter.ReporterView(dom);
     reporterView.addSpecs(specs, self.specFilter);
@@ -155,7 +242,7 @@ jasmine.HtmlReporter = function(_doc) {
       }
     }
   };
-  
+
   function wrapWithDebugger(originalFunction) {
     return function() {
         var stepIntoThisFunction = originalFunction.bind(this);
@@ -165,29 +252,105 @@ jasmine.HtmlReporter = function(_doc) {
 }
 
   self.specFilter = function(spec) {
-    var paramMap = [];
+	var paramMap = [];
     var params = jasmine.HtmlReporter.parameters(doc);
 
     for (var i = 0; i < params.length; i++) {
       var p = params[i].split('=');
       paramMap[decodeURIComponent(p[0])] = decodeURIComponent(p[1]);
     }
-  
+
     if (paramMap.debug && spec.getFullName() === paramMap.debug) {
       var block = spec.queue.blocks[0];
       block.func = wrapWithDebugger(block.func);
     }
-  
-    if (!focusedSpecName()) {
+
+    var focusedSpecName = getFocusedSpecName();
+    var focusedCategories = getFocusedCategories();
+
+    if (!focusedSpecName && !focusedCategories) {
       return true;
     }
 
-    return spec.getFullName().indexOf(focusedSpecName()) === 0;
+    if (focusedSpecName && focusedCategories && !spec.categories) {
+      return false;
+    }
+
+    var i, matchedCategory = false;
+
+    if (focusedCategories && focusedCategories.indexOf('All') !== -1) {
+
+      if (typeof spec.categories !== 'undefined') {
+        if (paramMap.not && spec.categories.indexOf(paramMap.not) !== -1) {
+          return false;
+        }
+      }
+
+      if (typeof spec.suite.categories !== 'undefined') {
+        if (paramMap.not && spec.suite.categories.indexOf(paramMap.not) !== -1) {
+          return false;
+        }
+      }
+
+      return true;
+    }
+
+    if (focusedCategories && typeof spec.categories !== 'undefined') {
+	  for (i = 0 ; i < focusedCategories.length; i++) {
+        if (spec.categories.indexOf(focusedCategories[i]) !== -1) {
+          matchedCategory = true;
+          break;
+        }
+      }
+
+      if (focusedSpecName) {
+        return (spec.getFullName().indexOf(focusedSpecName) === 0) && matchedCategory;
+      }
+
+      return matchedCategory;
+    }
+
+    if (focusedCategories && typeof spec.suite.categories !== 'undefined') {
+      for (i = 0 ; i < focusedCategories.length; i++) {
+	    if (spec.suite.categories.indexOf(focusedCategories[i]) !== -1) {
+	      matchedCategory = true;
+	      break;
+	    }
+      }
+      return matchedCategory;
+    }
+
+    return spec.getFullName().indexOf(focusedSpecName) === 0;
   };
-  
+
   return self;
 
-  function focusedSpecName() {
+  function getFocusedCategories() {
+    var categoryNames;
+
+    (function memoizeFocusedSpec() {
+      if (categoryNames) {
+        return;
+      }
+
+      var paramMap = [];
+      var params = jasmine.HtmlReporter.parameters(doc);
+
+      for (var i = 0; i < params.length; i++) {
+        var p = params[i].split('=');
+        paramMap[decodeURIComponent(p[0])] = decodeURIComponent(p[1]);
+      }
+
+      categoryNames = paramMap.category;
+    })();
+
+    if (typeof categoryNames !== 'undefined') {
+      return categoryNames.split(',');
+    }
+    return categoryNames;
+  }
+
+  function getFocusedSpecName() {
     var specName;
 
     (function memoizeFocusedSpec() {
@@ -219,15 +382,15 @@ jasmine.HtmlReporter = function(_doc) {
       dom.alert = self.createDom('div', {className: 'alert'},
         self.createDom('div', {className: 'progressContainer'},
         dom.progress = self.createDom('div', {className: 'progressBar', style: 'width: 0%'})),
-        self.createDom('span', { className: 'exceptions' },
-          self.createDom('a',  {className: 'run_all', href: '../Instrumented/jscoverage.html?../Specs/SpecRunner.html' +
-            window.encodeURIComponent('?baseUrl=../Instrumented'), target: '_top' }, 'coverage'),
-          self.createDom('a', { className: 'run_all', href: '?' }, 'run all'),
+        dom.exceptions = self.createDom('span', { className: 'exceptions' },
           self.createDom('label', { className: 'label', 'for': 'no_try_catch' }, 'No try/catch'),
-          self.createDom('input', { id: 'no_try_catch', type: 'checkbox' }))),
+          self.createDom('input', { id: 'no_try_catch', type: 'checkbox' }),
+          self.createDom('input', { type: 'button', value: 'run', id: 'runButton'}, 'run'),
+          self.createDom('input',  { type: 'button', value: 'run with coverage', id: 'runCoverageButton' }, 'run with coverage'))),
       dom.results = self.createDom('div', {className: 'results'},
         dom.summary = self.createDom('div', { className: 'summary' }),
-        dom.details = self.createDom('div', { id: 'details' }))
+        dom.details = self.createDom('div', { id: 'details' }),
+        dom.skipped = self.createDom('div', { id: 'skipped', className: 'summary' }))
     );
   }
 
@@ -261,9 +424,6 @@ jasmine.HtmlReporter = function(_doc) {
       chxCatch.setAttribute('checked', true);
       jasmine.CATCH_EXCEPTIONS = false;
     }
-    chxCatch.onclick = function() {
-      window.location.search = searchWithCatch();
-    };
   }
 };
 jasmine.HtmlReporter.parameters = function(doc) {
@@ -302,18 +462,76 @@ jasmine.HtmlReporter.ReporterView = function(dom) {
 
   this.createResultsMenu = function() {
     this.resultsMenu = this.createDom('span', {className: 'resultsMenu bar'},
+      'View: ',
       this.summaryMenuItem = this.createDom('a', {className: 'summaryMenuItem', href: "#"}, '0 specs'),
       ' | ',
-      this.detailsMenuItem = this.createDom('a', {className: 'detailsMenuItem', href: "#"}, '0 failing'));
+      this.detailsMenuItem = this.createDom('a', {className: 'detailsMenuItem', href: "#"}, '0 failing'),
+      ' | ',
+      this.skippedMenuItem = this.createDom('a', {className: 'skippedMenuItem', href: "#"}, '0 skipped'));
 
     this.summaryMenuItem.onclick = function() {
-      dom.reporter.className = dom.reporter.className.replace(/ showDetails/g, '');
+      showSpecs();
+      return false;  // Don't append a # to the URL in the address bar.
     };
 
     this.detailsMenuItem.onclick = function() {
       showDetails();
+      return false;  // Don't append a # to the URL in the address bar.
+    };
+
+    this.skippedMenuItem.onclick = function() {
+      showSkipped();
+      return false;  // Don't append a # to the URL in the address bar.
     };
   };
+
+  this.categories = [];
+
+  function getCurrentCategoryName() {
+    var paramMap = [];
+    var params = jasmine.HtmlReporter.parameters(window.document);
+
+    for (var i = 0; i < params.length; i++) {
+      var p = params[i].split('=');
+      paramMap[decodeURIComponent(p[0])] = decodeURIComponent(p[1]);
+    }
+
+    var categoryNames = paramMap.category;
+
+    if (typeof categoryNames === 'undefined') {
+      return 'All';
+    }
+
+	if (typeof paramMap.not !== 'undefined') {
+      return paramMap.not;
+    }
+
+    return categoryNames.split(',')[0];
+  }
+
+  this.createCategoryMenu = function() {
+    this.categoryMenu = this.createDom('span', {className: 'categoryMenu'}, 'Category: ',
+      this.categorySelect = this.createDom('select', {id: 'categorySelect'},
+      this.createDom('option', {value: 'All'}, 'All')), 'Run all but selected:',
+      this.categoryException = this.createDom('input', {type: 'checkbox', id: 'categoryException'}))
+
+    for (var i = 0; i < this.categories.length; i++) {
+      this.categorySelect.appendChild(this.createDom('option', {value: this.categories[i]}, this.categories[i]));
+    }
+
+    var currentCategoryName = getCurrentCategoryName();
+
+    for (var i = 0; i < this.categorySelect.options.length; i++) {
+      if (this.categorySelect.options[i].value === currentCategoryName) {
+        this.categorySelect.selectedIndex = i;
+    	if (window.location.search.match(/not=/)) {
+    	  this.categoryException.checked = true;
+    	}
+    	break;
+      }
+    }
+    dom.exceptions.insertBefore(this.categoryMenu, dom.exceptions.getElementsByTagName('input')[0].nextSibling);
+  }
 
   this.addSpecs = function(specs, specFilter) {
     this.totalSpecCount = specs.length;
@@ -329,12 +547,28 @@ jasmine.HtmlReporter.ReporterView = function(dom) {
       if (specFilter(spec)) {
         this.runningSpecCount++;
       }
+
+      if (typeof spec.categories !== 'undefined') {
+        for (var j = 0; j < spec.categories.length; j++) {
+          if (this.categories.indexOf(spec.categories[j]) === -1) {
+            this.categories.push(spec.categories[j]);
+          }
+        }
+      }
+
+      if (typeof spec.suite.categories !== 'undefined') {
+        for (var j = 0; j < spec.suite.categories.length; j++) {
+          if (this.categories.indexOf(spec.suite.categories[j]) === -1) {
+            this.categories.push(spec.suite.categories[j]);
+          }
+        }
+      }
     }
   };
 
   this.specComplete = function(spec) {
     this.completeSpecCount++;
-	
+
 	if (typeof spec.startTime !== 'undefined') {
 	  spec.stopTime = Date.now();
 	  spec.runTime = spec.stopTime - spec.startTime;
@@ -345,16 +579,25 @@ jasmine.HtmlReporter.ReporterView = function(dom) {
     }
 
     var specView = this.views.specs[spec.id];
-	var name = encodeURIComponent(spec.getFullName());
-	
-	specView.summary.appendChild(this.createDom('span', {className: 'specTime'}, 
-		this.createDom('a', {className: 'run_spec', href: '?spec=' + name}, 'run'),
-		this.createDom('a', {className: 'run_spec', href: '../Instrumented/jscoverage.html?../Specs/SpecRunner.html' +
+    var name = encodeURIComponent(spec.getFullName());
+
+    var runTime = '', status = specView.status();
+    if (isDefined(spec.runTime)) {
+      runTime = ' (' + (spec.runTime / 1000) + 's)';
+    }
+    if (status === 'skipped') {
+      runTime += ' (skipped)';
+      specView.summary.className += " specSkipped";
+    }
+
+    specView.summary.appendChild(this.createDom('span', {className: 'specTime'},
+        this.createDom('a', {className: 'run_spec', href: '?spec=' + name, target: '_top'}, 'run'),
+        this.createDom('a', {className: 'run_spec', href: '../Instrumented/jscoverage.html?../Specs/SpecRunner.html' +
             window.encodeURIComponent('?baseUrl=../Instrumented&spec=' + name), target: '_top' }, "coverage"),
-		this.createDom('a', {className: 'run_spec', href: '?spec=' + name + '&debug=' + name}, 'debug'),
-	' (' + (spec.runTime / 1000) + 's)'));
-	
-    switch (specView.status()) {
+        this.createDom('a', {className: 'run_spec', href: '?spec=' + name + '&debug=' + name, target: '_top'}, 'debug'),
+        runTime));
+
+    switch (status) {
       case 'passed':
         this.passedCount++;
         break;
@@ -374,24 +617,29 @@ jasmine.HtmlReporter.ReporterView = function(dom) {
 
   this.suiteComplete = function(suite) {
     var suiteView = this.views.suites[suite.id];
-	
+
 	if (typeof suite.startTime !== 'undefined') {
 	  suite.stopTime = Date.now();
 	  suite.runTime = suite.stopTime - suite.startTime;
 	}
-	
+
     if (isUndefined(suiteView)) {
       return;
     }
-	
+
+    var runTime = '';
+    if (isDefined(suite.runTime)) {
+      runTime = ' (' + (suite.runTime / 1000) + 's)';
+    }
+
 	var name = encodeURIComponent(suite.getFullName());
 	suiteView.element.insertBefore(this.createDom('span', {className: 'suiteTime'},
       this.createDom('a', {className: 'run_spec', href: '?spec=' + name, target: '_top'}, 'run'),
 	  this.createDom('a', {className: 'run_spec', href: '../Instrumented/jscoverage.html?../Specs/SpecRunner.html' +
                 window.encodeURIComponent('?baseUrl=../Instrumented&spec=' + name), target: '_top' }, "coverage"),
-	' (' + (suite.runTime / 1000) + 's)'), suiteView.element.getElementsByTagName('a')[2].nextSibling);
-	
-	
+	runTime), suiteView.element.getElementsByTagName('a')[2].nextSibling);
+
+
     suiteView.refresh();
   };
 
@@ -399,7 +647,12 @@ jasmine.HtmlReporter.ReporterView = function(dom) {
 
     if (isUndefined(this.resultsMenu)) {
       this.createResultsMenu();
+      dom.reporter.insertBefore(this.resultsMenu, dom.results);
     }
+
+	if (isUndefined(this.categoryMenu)) {
+	  this.createCategoryMenu();
+	}
 
     // currently running UI
     if (isUndefined(this.runningAlert)) {
@@ -411,7 +664,7 @@ jasmine.HtmlReporter.ReporterView = function(dom) {
 	if (this.completeSpecCount === this.totalSpecCount) {
 		dom.progress.style.display = 'none';
 	}
-	
+
     // skipped specs UI
     if (isUndefined(this.skippedAlert)) {
       this.skippedAlert = this.createDom('a', { href: jasmine.HtmlReporter.sectionLink(), className: "skippedAlert bar" });
@@ -437,12 +690,12 @@ jasmine.HtmlReporter.ReporterView = function(dom) {
 
     if (this.failedCount === 1 && isDefined(dom.alert)) {
       dom.alert.appendChild(this.failedAlert);
-      dom.alert.appendChild(this.resultsMenu);
     }
 
     // summary info
-    this.summaryMenuItem.innerHTML = "" + specPluralizedFor(this.runningSpecCount);
-    this.detailsMenuItem.innerHTML = "" + this.failedCount + " failing";
+    this.summaryMenuItem.innerHTML = "" + specPluralizedFor(this.runningSpecCount) + ' summary';
+    this.detailsMenuItem.innerHTML = "" + this.failedCount + ' failing';
+    this.skippedMenuItem.innerHTML = "" + this.skippedCount + ' skipped';
   };
 
   this.complete = function() {
@@ -450,7 +703,9 @@ jasmine.HtmlReporter.ReporterView = function(dom) {
 
     this.skippedAlert.innerHTML = "Ran " + this.runningSpecCount + " of " + specPluralizedFor(this.totalSpecCount) + " - run all";
 
-    if (this.failedCount === 0) {
+    if (this.failedCount === 0 && this.passedCount === 0) {
+      showSkipped();
+    } else if (this.failedCount === 0) {
       dom.alert.appendChild(this.createDom('span', {className: 'passingAlert bar'}, "Passing " + specPluralizedFor(this.passedCount)));
     } else {
       showDetails();
@@ -461,11 +716,23 @@ jasmine.HtmlReporter.ReporterView = function(dom) {
 
   return this;
 
-  function showDetails() {
-    if (dom.reporter.className.search(/showDetails/) === -1) {
-      dom.reporter.className += " showDetails";
-    }
+  function showSpecs() {
+    dom.reporter.className = dom.reporter.className.replace(/ showDetails/g, '').replace(/ showSkipped/g, '');
   }
+
+  function showDetails() {
+      if (dom.reporter.className.search(/showDetails/) === -1) {
+        dom.reporter.className = dom.reporter.className.replace(/ showSkipped/g, '');
+        dom.reporter.className += " showDetails";
+      }
+    }
+
+  function showSkipped() {
+      if (dom.reporter.className.search(/showSkipped/) === -1) {
+        dom.reporter.className = dom.reporter.className.replace(/ showDetails/g, '');
+        dom.reporter.className += " showSkipped";
+      }
+    }
 
   function isUndefined(obj) {
     return typeof obj === 'undefined';
@@ -503,14 +770,25 @@ jasmine.HtmlReporter.SpecView = function(spec, dom, views) {
       title: this.spec.getFullName()
     }, this.spec.description)
   );
-  
+
   this.detail = this.createDom('div', { className: 'specDetail' },
-      this.createDom('a', {
+      this.detailLink = this.createDom('a', {
         className: 'description',
-        href: '?spec=' + encodeURIComponent(this.spec.getFullName()),
-        title: this.spec.getFullName()
-      }, this.spec.getFullName())
+        //href: '?spec=' + encodeURIComponent(this.spec.getFullName()),
+        href: '#',
+        title: 'Show summary'
+      }, this.spec.getFullName() + ' (show summary)')
   );
+
+  var summary = this.summary;
+  this.detailLink.onclick = function () {
+      //from showSpecs()
+      dom.reporter.className = dom.reporter.className.replace(/ showDetails/g, '').replace(/ showSkipped/g, '');
+
+      var rect = summary.getBoundingClientRect();
+      window.scrollTo(rect.left, rect.top);
+      return false;
+  };
 };
 
 jasmine.HtmlReporter.SpecView.prototype.status = function() {
@@ -519,9 +797,10 @@ jasmine.HtmlReporter.SpecView.prototype.status = function() {
 
 jasmine.HtmlReporter.SpecView.prototype.refresh = function() {
   this.symbol.className = this.status();
-  
+
   switch (this.status()) {
     case 'skipped':
+      this.appendToSkipped(this.spec, this.summary);
       break;
 
     case 'passed':
@@ -568,19 +847,19 @@ jasmine.HtmlReporter.SpecView.prototype.appendFailureDetail = function() {
 
 jasmine.HtmlReporterHelpers.addHelpers(jasmine.HtmlReporter.SpecView);
 
-jasmine.HtmlReporter.SuiteView = function(suite, dom, views) {
+jasmine.HtmlReporter.SuiteView = function(suite, dom, views, skipped) {
   this.suite = suite;
   this.dom = dom;
   this.views = views;
 
   var collapser, expander;
-  
+
   this.element = this.createDom('div', { className: 'suite' + (jasmine.HtmlReporterHelpers.isSuiteFocused(suite) ? '' : ' collapse') },
     expander = this.createDom('a', {className: 'expander'}, '[+]'),
 	collapser = this.createDom('a', {className: 'collapser'}, '[-]'),
     this.createDom('a', { className: 'description', href: jasmine.HtmlReporter.sectionLink(this.suite.getFullName()) }, this.suite.description)
   );
-  
+
 	expander.onclick = (function(suiteDiv) {
 		return function() {
 			var classes = suiteDiv.className.split(' ');
@@ -592,14 +871,19 @@ jasmine.HtmlReporter.SuiteView = function(suite, dom, views) {
 			suiteDiv.className = classes.join(' ');
 		};
 	}(this.element));
-	
+
 	collapser.onclick = (function(suiteDiv) {
 		return function() {
 			suiteDiv.className += ' collapse';
 		};
 	}(this.element));
 
-  this.appendToSummary(this.suite, this.element);
+  if (typeof skipped !== 'undefined') {
+    this.appendedToSkipped = true;
+    this.appendToSkipped(this.suite, this.element);
+  } else {
+    this.appendToSummary(this.suite, this.element);
+  }
 };
 
 jasmine.HtmlReporter.SuiteView.prototype.status = function() {

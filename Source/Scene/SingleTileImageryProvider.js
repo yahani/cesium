@@ -7,7 +7,7 @@ define([
         '../Core/Event',
         '../Core/Extent',
         './GeographicTilingScheme',
-        './ImageryProviderError',
+        './TileProviderError',
         '../ThirdParty/when'
     ], function(
         defaultValue,
@@ -17,7 +17,7 @@ define([
         Event,
         Extent,
         GeographicTilingScheme,
-        ImageryProviderError,
+        TileProviderError,
         when) {
     "use strict";
 
@@ -76,9 +76,7 @@ define([
             imageUrl = proxy.getURL(imageUrl);
         }
 
-        // Create the credit message.
         if (typeof description.credit !== 'undefined') {
-            // Create the copyright message.
             this._logo = writeTextToCanvas(description.credit, {
                 font : '12px sans-serif'
             });
@@ -92,12 +90,12 @@ define([
             that._tileWidth = image.width;
             that._tileHeight = image.height;
             that._ready = true;
-            ImageryProviderError.handleSuccess(that._errorEvent);
+            TileProviderError.handleSuccess(that._errorEvent);
         }
 
         function failure(e) {
             var message = 'Failed to load image ' + imageUrl + '.';
-            error = ImageryProviderError.handleError(
+            error = TileProviderError.handleError(
                     error,
                     that,
                     that._errorEvent,
@@ -122,6 +120,19 @@ define([
      */
     SingleTileImageryProvider.prototype.getUrl = function() {
         return this._url;
+    };
+
+    /**
+     * Gets the proxy used by this provider.
+     *
+     * @memberof SingleTileImageryProvider
+     *
+     * @returns {Proxy} The proxy.
+     *
+     * @see DefaultProxy
+     */
+    SingleTileImageryProvider.prototype.getProxy = function() {
+        return this._proxy;
     };
 
     /**
@@ -231,7 +242,7 @@ define([
     /**
      * Gets an event that is raised when the imagery provider encounters an asynchronous error.  By subscribing
      * to the event, you will be notified of the error and can potentially recover from it.  Event listeners
-     * are passed an instance of {@link ImageryProviderError}.
+     * are passed an instance of {@link TileProviderError}.
      *
      * @memberof SingleTileImageryProvider
      *

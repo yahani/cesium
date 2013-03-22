@@ -169,7 +169,7 @@ defineSuite([
     });
 
     it('gets maximum texture filter anisotropy', function() {
-        if (context.getTextureFilterAnisotropic()) {
+        if(context.getTextureFilterAnisotropic()) {
             expect(context.getMaximumTextureFilterAnisotropy() >= 2.0).toEqual(true);
         } else {
             expect(context.getMaximumTextureFilterAnisotropy()).toEqual(1.0);
@@ -226,4 +226,19 @@ defineSuite([
         c.destroy();
         expect(c.isDestroyed()).toEqual(true);
     });
-});
+
+    it('destroying Context destroys objects in cache', function() {
+        var c = createContext();
+        var destroyableObject = jasmine.createSpyObj('destroyableObject', ['destroy']);
+        c.cache.foo = destroyableObject;
+        c.destroy();
+        expect(destroyableObject.destroy).toHaveBeenCalled();
+    });
+
+    it('non-destroyable objects are allowed in the cache', function() {
+        var c = createContext();
+        var nonDestroyableObject = {};
+        c.cache.foo = nonDestroyableObject;
+        c.destroy();
+    });
+}, 'WebGL');

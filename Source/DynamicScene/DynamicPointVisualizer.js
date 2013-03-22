@@ -83,7 +83,7 @@ define([
         var oldCollection = this._dynamicObjectCollection;
         if (oldCollection !== dynamicObjectCollection) {
             if (typeof oldCollection !== 'undefined') {
-                oldCollection.objectsRemoved.removeEventListener(DynamicPointVisualizer.prototype._onObjectsRemoved);
+                oldCollection.objectsRemoved.removeEventListener(DynamicPointVisualizer.prototype._onObjectsRemoved, this);
                 this.removeAllPrimitives();
             }
             this._dynamicObjectCollection = dynamicObjectCollection;
@@ -216,8 +216,8 @@ define([
             // CZML_TODO Determine official defaults
             billboard._visualizerColor = Color.WHITE.clone(billboard._visualizerColor);
             billboard._visualizerOutlineColor = Color.BLACK.clone(billboard._visualizerOutlineColor);
-            billboard._visualizerOutlineWidth = 2;
-            billboard._visualizerPixelSize = 3;
+            billboard._visualizerOutlineWidth = 0;
+            billboard._visualizerPixelSize = 1;
             needRedraw = true;
         } else {
             billboard = this._billboardCollection.get(pointVisualizerIndex);
@@ -233,8 +233,8 @@ define([
         var property = dynamicPoint.color;
         if (typeof property !== 'undefined') {
             color = property.getValue(time, color);
-            if (billboard._visualizerColor !== color) {
-                billboard._visualizerColor = color;
+            if (!Color.equals(billboard._visualizerColor, color)) {
+                Color.clone(color, billboard._visualizerColor);
                 needRedraw = true;
             }
         }
@@ -242,8 +242,8 @@ define([
         property = dynamicPoint.outlineColor;
         if (typeof property !== 'undefined') {
             outlineColor = property.getValue(time, outlineColor);
-            if (billboard._visualizerOutlineColor !== outlineColor) {
-                billboard._visualizerOutlineColor = outlineColor;
+            if (!Color.equals(billboard._visualizerOutlineColor, outlineColor)) {
+                Color.clone(outlineColor, billboard._visualizerOutlineColor);
                 needRedraw = true;
             }
         }
@@ -267,8 +267,8 @@ define([
         }
 
         if (needRedraw) {
-            var cssColor = typeof billboard._visualizerColor !== 'undefined' ? billboard._visualizerColor.toCSSColor() : '#FFFFFF';
-            var cssOutlineColor = typeof billboard._visualizerOutlineColor !== 'undefined' ? billboard._visualizerOutlineColor.toCSSColor() : '#000000';
+            var cssColor = typeof billboard._visualizerColor !== 'undefined' ? billboard._visualizerColor.toCssColorString() : '#FFFFFF';
+            var cssOutlineColor = typeof billboard._visualizerOutlineColor !== 'undefined' ? billboard._visualizerOutlineColor.toCssColorString() : '#000000';
             var cssPixelSize = typeof billboard._visualizerPixelSize !== 'undefined' ? billboard._visualizerPixelSize : 3;
             var cssOutlineWidth = typeof billboard._visualizerOutlineWidth !== 'undefined' ? billboard._visualizerOutlineWidth : 2;
             var textureId = JSON.stringify([cssColor, cssPixelSize, cssOutlineColor, cssOutlineWidth]);

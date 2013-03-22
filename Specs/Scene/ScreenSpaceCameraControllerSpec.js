@@ -347,7 +347,7 @@ defineSuite([
 
         var frustum = camera.frustum;
         var ratio = frustum.top / frustum.right;
-        frustum.right = 10.05;
+        frustum.right = (controller.minimumZoomDistance + 1.0) * 0.5;
         frustum.left = -frustum.right;
         frustum.top = ratio * frustum.right;
         frustum.bottom = -frustum.top;
@@ -363,6 +363,32 @@ defineSuite([
         expect(position.y).toEqual(camera.position.y);
         expect(position.z).toEqual(camera.position.z);
         expect(frustumDiff).toEqual(camera.frustum.right - camera.frustum.left);
+    });
+
+    it('zooms out with maximum distance in 2D', function() {
+        var frameState = setUp2D();
+
+        var frustum = camera.frustum;
+        frustum.near = 1.0;
+        frustum.far = 2.0;
+        frustum.left = -2.0;
+        frustum.right = 2.0;
+        frustum.top = 1.0;
+        frustum.bottom = -1.0;
+
+        var maxZoom = 10.0;
+        controller.minimumZoomDistance = 0.0;
+        controller.maximumZoomDistance = maxZoom;
+
+        var startPosition = new Cartesian2(canvas.clientWidth / 2, canvas.clientHeight);
+        var endPosition = new Cartesian2(canvas.clientWidth / 2, 0);
+
+        moveMouse(MouseButtons.RIGHT, startPosition, endPosition);
+        updateController(frameState);
+        expect(camera.frustum.right).toEqualEpsilon(maxZoom * 0.5, CesiumMath.EPSILON10);
+        expect(camera.frustum.left).toEqual(-camera.frustum.right);
+        expect(camera.frustum.top).toEqualEpsilon(maxZoom * 0.25, CesiumMath.EPSILON10);
+        expect(camera.frustum.bottom).toEqual(-camera.frustum.top);
     });
 
     it('rotate counter-clockwise in 2D', function() {
@@ -746,6 +772,27 @@ defineSuite([
         expect(position.magnitude()).toBeLessThan(camera.position.magnitude());
     });
 
+    it('zooms out to maximum height in 3D', function() {
+        var frameState = setUp3D();
+
+        var positionCart = Ellipsoid.WGS84.cartesianToCartographic(camera.position);
+        positionCart.height = 0.0;
+        camera.position = Ellipsoid.WGS84.cartographicToCartesian(positionCart);
+
+        var maxDist = 100.0;
+        controller.minimumZoomDistance = 0.0;
+        controller.maximumZoomDistance = maxDist;
+
+        var startPosition = new Cartesian2(canvas.clientWidth / 2, canvas.clientHeight * 50);
+        var endPosition = new Cartesian2(canvas.clientWidth / 2, 0);
+
+        moveMouse(MouseButtons.RIGHT, startPosition, endPosition);
+        updateController(frameState);
+
+        var height = Ellipsoid.WGS84.cartesianToCartographic(camera.position).height;
+        expect(height).toEqualEpsilon(maxDist, CesiumMath.EPSILON2);
+    });
+
     it('zoom in 3D with wheel', function() {
         var frameState = setUp3D();
         var position = camera.position.clone();
@@ -813,8 +860,27 @@ defineSuite([
 
         moveMouse(MouseButtons.MIDDLE, startPosition, endPosition);
         updateController(frameState);
-        expect(camera.position).toEqual(position);
+        expect(camera.position).toEqualEpsilon(position, CesiumMath.EPSILON8);
         expect(camera.direction).toEqualEpsilon(camera.position.negate().normalize(), CesiumMath.EPSILON15);
+        expect(camera.direction.cross(camera.up)).toEqualEpsilon(camera.right, CesiumMath.EPSILON14);
+        expect(camera.right.cross(camera.direction)).toEqualEpsilon(camera.up, CesiumMath.EPSILON15);
+    });
+
+    it('tilts at the minimum zoom distance', function() {
+        var frameState = setUp3D();
+
+        var positionCart = Ellipsoid.WGS84.cartesianToCartographic(camera.position);
+        positionCart.height = controller.minimumZoomDistance;
+        camera.position = Ellipsoid.WGS84.cartographicToCartesian(positionCart);
+
+        var startPosition = new Cartesian2(canvas.clientWidth / 2, canvas.clientHeight);
+        var endPosition = new Cartesian2(canvas.clientWidth / 2, 0);
+
+        moveMouse(MouseButtons.MIDDLE, startPosition, endPosition);
+        updateController(frameState);
+
+        var height = Ellipsoid.WGS84.cartesianToCartographic(camera.position).height;
+        expect(height).toBeLessThan(controller.minimumZoomDistance);
         expect(camera.direction.cross(camera.up)).toEqualEpsilon(camera.right, CesiumMath.EPSILON14);
         expect(camera.right.cross(camera.direction)).toEqualEpsilon(camera.up, CesiumMath.EPSILON15);
     });
@@ -867,7 +933,7 @@ defineSuite([
         moveMouse(MouseButtons.LEFT, startPosition, endPosition);
         updateController(frameState);
 
-        expect(camera.position).toEqualEpsilon(axis.multiplyByScalar(camera.position.magnitude()), CesiumMath.EPSILON9);
+        expect(camera.position).toEqualEpsilon(axis.multiplyByScalar(camera.position.magnitude()), CesiumMath.EPSILON8);
         expect(camera.direction).toEqualEpsilon(axis.negate(), CesiumMath.EPSILON15);
         expect(Cartesian3.dot(camera.up, axis)).toBeLessThan(CesiumMath.EPSILON2);
         expect(camera.right).toEqualEpsilon(camera.direction.cross(camera.up), CesiumMath.EPSILON15);
@@ -915,6 +981,34 @@ defineSuite([
         expect(camera.direction).toEqualEpsilon(camera.position.normalize().negate(), CesiumMath.EPSILON15);
         expect(camera.right).toEqualEpsilon(axis, CesiumMath.EPSILON15);
         expect(camera.up).toEqualEpsilon(camera.right.cross(camera.direction), CesiumMath.EPSILON15);
+    });
+
+    it('controller does not modify the camera after re-enabling motion', function() {
+        var frameState = setUp3D();
+        var position = Cartesian3.clone(camera.position);
+        var direction = Cartesian3.clone(camera.direction);
+        var up = Cartesian3.clone(camera.up);
+        var right = Cartesian3.clone(camera.right);
+
+        var startPosition = new Cartesian2(0.0, 0.0);
+        var endPosition = new Cartesian2(canvas.clientWidth, canvas.clientHeight);
+
+        controller.enableRotate = false;
+        moveMouse(MouseButtons.LEFT, startPosition, endPosition);
+        updateController(frameState);
+
+        expect(camera.position).toEqual(position);
+        expect(camera.direction).toEqual(direction);
+        expect(camera.up).toEqual(up);
+        expect(camera.right).toEqual(right);
+
+        controller.enableRotate = true;
+        updateController(frameState);
+
+        expect(camera.position).toEqual(position);
+        expect(camera.direction).toEqual(direction);
+        expect(camera.up).toEqual(up);
+        expect(camera.right).toEqual(right);
     });
 
     it('is destroyed', function() {

@@ -150,6 +150,24 @@ defineSuite([
         expect(returnedResult).toEqualEpsilon(surfaceCartographic, CesiumMath.EPSILON8);
     });
 
+    it('cartesianToCartographic works close to center', function() {
+        var expected = new Cartographic(9.999999999999999e-11, 1.0067394967422763e-20, -6378137.0);
+        var returnedResult = Ellipsoid.WGS84.cartesianToCartographic(new Cartesian3(1e-50, 1e-60, 1e-70));
+        expect(returnedResult).toEqual(expected);
+    });
+
+    it('cartesianToCartographic return undefined very close to center', function() {
+        var ellipsoid = Ellipsoid.WGS84;
+        var returnedResult = ellipsoid.cartesianToCartographic(new Cartesian3(1e-150, 1e-150, 1e-150));
+        expect(returnedResult).toBeUndefined();
+    });
+
+    it('cartesianToCartographic return undefined at center', function() {
+        var ellipsoid = Ellipsoid.WGS84;
+        var returnedResult = ellipsoid.cartesianToCartographic(Cartesian3.ZERO);
+        expect(returnedResult).toBeUndefined();
+    });
+
     it('cartesianArrayToCartographicArray works without a result parameter', function() {
         var ellipsoid = Ellipsoid.WGS84;
         var returnedResult = ellipsoid.cartesianArrayToCartographicArray([spaceCartesian, surfaceCartesian]);
@@ -254,6 +272,13 @@ defineSuite([
         expect(result).toEqualEpsilon(expected, CesiumMath.EPSILON16);
     });
 
+    it('scaleToGeodeticSurface returns undefined at center', function() {
+        var ellipsoid = new Ellipsoid(1.0, 2.0, 3.0);
+        var cartesian = new Cartesian3(0.0, 0.0, 0.0);
+        var returnedResult = ellipsoid.scaleToGeodeticSurface(cartesian);
+        expect(returnedResult).toBeUndefined();
+    });
+
     it('equals works in all cases', function() {
         var ellipsoid = new Ellipsoid(1.0, 0.0, 0.0);
         expect(ellipsoid.equals(new Ellipsoid(1.0, 0.0, 0.0))).toEqual(true);
@@ -335,5 +360,40 @@ defineSuite([
         expect(function() {
             Ellipsoid.WGS84.scaleToGeocentricSurface(undefined);
         }).toThrow();
+    });
+
+    it('clone copies any object with the proper structure', function() {
+        var myEllipsoid = {
+                _radii : { x : 1.0, y : 2.0, z : 3.0 },
+                _radiiSquared : { x : 4.0, y : 5.0, z : 6.0 },
+                _radiiToTheFourth : { x: 7.0, y : 8.0, z : 9.0 },
+                _oneOverRadii : { x : 10.0, y : 11.0, z : 12.0 },
+                _oneOverRadiiSquared : { x : 13.0, y : 14.0, z : 15.0 },
+                _minimumRadius : 16.0,
+                _maximumRadius : 17.0,
+                _centerToleranceSquared : 18.0
+        };
+
+        var cloned = Ellipsoid.clone(myEllipsoid);
+        expect(cloned instanceof Ellipsoid).toBe(true);
+        expect(cloned).toEqual(myEllipsoid);
+    });
+
+    it('clone uses result parameter if provided', function() {
+        var myEllipsoid = {
+                _radii : { x : 1.0, y : 2.0, z : 3.0 },
+                _radiiSquared : { x : 4.0, y : 5.0, z : 6.0 },
+                _radiiToTheFourth : { x: 7.0, y : 8.0, z : 9.0 },
+                _oneOverRadii : { x : 10.0, y : 11.0, z : 12.0 },
+                _oneOverRadiiSquared : { x : 13.0, y : 14.0, z : 15.0 },
+                _minimumRadius : 16.0,
+                _maximumRadius : 17.0,
+                _centerToleranceSquared : 18.0
+        };
+
+        var result = new Ellipsoid();
+        var cloned = Ellipsoid.clone(myEllipsoid, result);
+        expect(cloned).toBe(result);
+        expect(cloned).toEqual(myEllipsoid);
     });
 });

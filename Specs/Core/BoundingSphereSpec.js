@@ -4,6 +4,7 @@ defineSuite([
          'Core/Cartesian2',
          'Core/Cartesian3',
          'Core/Cartesian4',
+         'Core/Cartographic',
          'Core/Ellipsoid',
          'Core/GeographicProjection',
          'Core/Extent',
@@ -16,6 +17,7 @@ defineSuite([
          Cartesian2,
          Cartesian3,
          Cartesian4,
+         Cartographic,
          Ellipsoid,
          GeographicProjection,
          Extent,
@@ -285,6 +287,30 @@ defineSuite([
         expect(BoundingSphere.fromExtent3D(extent, ellipsoid)).toEqual(expected);
     });
 
+    it('fromCornerPoints', function() {
+        var sphere = BoundingSphere.fromCornerPoints(new Cartesian3(-1.0, -0.0, 0.0), new Cartesian3(1.0, 0.0, 0.0));
+        expect(sphere).toEqual(new BoundingSphere(Cartesian3.ZERO, 1.0));
+    });
+
+    it('fromCornerPoints with a result parameter', function() {
+        var sphere = new BoundingSphere();
+        var result = BoundingSphere.fromCornerPoints(new Cartesian3(0.0, -1.0, 0.0), new Cartesian3(0.0, 1.0, 0.0), sphere);
+        expect(result).toBe(sphere);
+        expect(result).toEqual(new BoundingSphere(Cartesian3.ZERO, 1.0));
+    });
+
+    it('fromCornerPoints throws without corner', function() {
+        expect(function() {
+            BoundingSphere.fromCornerPoints();
+        }).toThrow();
+    });
+
+    it('fromCornerPoints throws without oppositeCorner', function() {
+        expect(function() {
+            BoundingSphere.fromCornerPoints(Cartesian3.UNIT_X);
+        }).toThrow();
+    });
+
     it('sphere on the positive side of a plane', function() {
         var sphere = new BoundingSphere(Cartesian3.ZERO, 0.5);
         var normal = Cartesian3.UNIT_X.negate();
@@ -423,5 +449,93 @@ defineSuite([
         expect(function() {
             BoundingSphere.getPlaneDistances(new BoundingSphere(), new Cartesian3());
         }).toThrow();
+    });
+
+    function expectBoundingSphereToContainPoint(boundingSphere, point, projection) {
+        var pointInCartesian = projection.project(point);
+        var distanceFromCenter = pointInCartesian.subtract(boundingSphere.center).magnitude();
+
+        // The distanceFromCenter for corner points at the height extreme should equal the
+        // bounding sphere's radius.  But due to rounding errors it can end up being
+        // very slightly greater.  Pull in the distanceFromCenter slightly to
+        // account for this possibility.
+        distanceFromCenter -= CesiumMath.EPSILON9;
+
+        expect(distanceFromCenter).toBeLessThanOrEqualTo(boundingSphere.radius);
+    }
+
+    it('fromExtentWithHeights2D includes specified min and max heights', function() {
+        var extent = new Extent(0.1, 0.5, 0.2, 0.6);
+        var projection = new GeographicProjection();
+        var minHeight = -327.0;
+        var maxHeight = 2456.0;
+        var boundingSphere = BoundingSphere.fromExtentWithHeights2D(extent, projection, minHeight, maxHeight);
+
+        // Test that the corners are inside the bounding sphere.
+        var point = extent.getSouthwest().clone();
+        point.height = minHeight;
+        expectBoundingSphereToContainPoint(boundingSphere, point, projection);
+
+        point = extent.getSouthwest().clone();
+        point.height = maxHeight;
+        expectBoundingSphereToContainPoint(boundingSphere, point, projection);
+
+        point = extent.getNortheast().clone();
+        point.height = minHeight;
+        expectBoundingSphereToContainPoint(boundingSphere, point, projection);
+
+        point = extent.getNortheast().clone();
+        point.height = maxHeight;
+        expectBoundingSphereToContainPoint(boundingSphere, point, projection);
+
+        point = extent.getSoutheast().clone();
+        point.height = minHeight;
+        expectBoundingSphereToContainPoint(boundingSphere, point, projection);
+
+        point = extent.getSoutheast().clone();
+        point.height = maxHeight;
+        expectBoundingSphereToContainPoint(boundingSphere, point, projection);
+
+        point = extent.getNorthwest().clone();
+        point.height = minHeight;
+        expectBoundingSphereToContainPoint(boundingSphere, point, projection);
+
+        point = extent.getNorthwest().clone();
+        point.height = maxHeight;
+        expectBoundingSphereToContainPoint(boundingSphere, point, projection);
+
+        // Test that the center is inside the bounding sphere
+        point = extent.getCenter().clone();
+        point.height = minHeight;
+        expectBoundingSphereToContainPoint(boundingSphere, point, projection);
+
+        point = extent.getCenter().clone();
+        point.height = maxHeight;
+        expectBoundingSphereToContainPoint(boundingSphere, point, projection);
+
+        // Test that the edge midpoints are inside the bounding sphere.
+        point = new Cartographic(extent.getCenter().longitude, extent.south, minHeight);
+        expectBoundingSphereToContainPoint(boundingSphere, point, projection);
+
+        point = new Cartographic(extent.getCenter().longitude, extent.south, maxHeight);
+        expectBoundingSphereToContainPoint(boundingSphere, point, projection);
+
+        point = new Cartographic(extent.getCenter().longitude, extent.north, minHeight);
+        expectBoundingSphereToContainPoint(boundingSphere, point, projection);
+
+        point = new Cartographic(extent.getCenter().longitude, extent.north, maxHeight);
+        expectBoundingSphereToContainPoint(boundingSphere, point, projection);
+
+        point = new Cartographic(extent.west, extent.getCenter().latitude, minHeight);
+        expectBoundingSphereToContainPoint(boundingSphere, point, projection);
+
+        point = new Cartographic(extent.west, extent.getCenter().latitude, maxHeight);
+        expectBoundingSphereToContainPoint(boundingSphere, point, projection);
+
+        point = new Cartographic(extent.east, extent.getCenter().latitude, minHeight);
+        expectBoundingSphereToContainPoint(boundingSphere, point, projection);
+
+        point = new Cartographic(extent.east, extent.getCenter().latitude, maxHeight);
+        expectBoundingSphereToContainPoint(boundingSphere, point, projection);
     });
 });

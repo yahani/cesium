@@ -3,11 +3,13 @@ define([
         '../Core/destroyObject',
         '../Core/BoundingRectangle',
         '../Renderer/PixelFormat',
+        './Material',
         './ViewportQuad'
     ], function(
         destroyObject,
         BoundingRectangle,
         PixelFormat,
+        Material,
         ViewportQuad) {
     "use strict";
 
@@ -32,9 +34,9 @@ define([
             description = {};
         }
 
-        this._fpsColor = typeof description.fpsColor !== 'undefined' ? description.fpsColor.toCSSColor() : '#e52';
-        this._frameTimeColor = typeof description.frameTimeColor !== 'undefined' ? description.frameTimeColor.toCSSColor() : '#de3';
-        this._backgroundColor = typeof description.backgroundColor !== 'undefined' ? description.backgroundColor.toCSSColor() : 'rgba(0, 0, 30, 0.9)';
+        this._fpsColor = typeof description.fpsColor !== 'undefined' ? description.fpsColor.toCssColorString() : '#e52';
+        this._frameTimeColor = typeof description.frameTimeColor !== 'undefined' ? description.frameTimeColor.toCssColorString() : '#de3';
+        this._backgroundColor = typeof description.backgroundColor !== 'undefined' ? description.backgroundColor.toCssColorString() : 'rgba(0, 0, 30, 0.9)';
         this._font = typeof description.font !== 'undefined' ? description.font : 'bold 10px Helvetica,Arial,sans-serif';
         this._rectangle = typeof description.rectangle !== 'undefined' ? description.rectangle : new BoundingRectangle(0, 0, 80, 40);
 
@@ -59,8 +61,7 @@ define([
         this._lastFpsSampleTime = undefined;
         this._frameCount = 0;
 
-        this._quad = new ViewportQuad(new BoundingRectangle(0, 0, 0, 0));
-        this._quad.enableBlending = true;
+        this._quad = undefined;
 
         this._time = undefined;
         this._texture = undefined;
@@ -132,12 +133,16 @@ define([
             }
         }
 
+        if (typeof this._quad === 'undefined') {
+            this._quad = new ViewportQuad(undefined, Material.fromType(context, Material.ImageType));
+        }
+
         if (typeof this._texture === 'undefined') {
             this._texture = context.createTexture2D({
                 source : this._canvas,
                 pixelFormat : PixelFormat.RGBA
             });
-            this._quad.setTexture(this._texture);
+            this._quad.material.uniforms.image = this._texture;
         } else {
             this._texture.copyFrom(this._canvas);
         }
@@ -145,7 +150,11 @@ define([
         var viewportHeight = context.getCanvas().clientHeight;
         if (viewportHeight !== this._viewportHeight) {
             this._viewportHeight = viewportHeight;
-            this._quad.setRectangle(new BoundingRectangle(this._rectangle.x, viewportHeight - canvasHeight - this._rectangle.y, canvasWidth, canvasHeight));
+            var rect = this._quad.rectangle;
+            rect.x = this._rectangle.x;
+            rect.y = viewportHeight - canvasHeight - this._rectangle.y;
+            rect.width = canvasWidth;
+            rect.height = canvasHeight;
         }
 
         this._quad.update(context, frameState, commandList);

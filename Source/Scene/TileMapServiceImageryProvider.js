@@ -96,7 +96,7 @@ define([
 
         var that = this;
 
-        // Try to load remaing parameters from XML
+        // Try to load remaining parameters from XML
         loadXML(url + 'tilemapresource.xml').then(function(xml) {
             // Allowing description properties to override XML values
             var format = xml.getElementsByTagName('TileFormat')[0];
@@ -107,17 +107,35 @@ define([
             that._maximumLevel = defaultValue(description.maximumLevel, parseInt(tilesets[tilesets.length - 1].getAttribute('order'), 10));
 
             // extent handling
-            var bbox = xml.getElementsByTagName('BoundingBox')[0];
-            var sw = Cartographic.fromDegrees(parseFloat(bbox.getAttribute('miny')), parseFloat(bbox.getAttribute('minx')));
-            var ne = Cartographic.fromDegrees(parseFloat(bbox.getAttribute('maxy')), parseFloat(bbox.getAttribute('maxx')));
-            var extent = new Extent(sw.longitude, sw.latitude, ne.longitude, ne.latitude);
-            that._extent = defaultValue(description.extent, extent);
+            that._extent = description.extent;
+            if (typeof that._extent === 'undefined') {
+                var bbox = xml.getElementsByTagName('BoundingBox')[0];
+                var sw = Cartographic.fromDegrees(parseFloat(bbox.getAttribute('miny')), parseFloat(bbox.getAttribute('minx')));
+                var ne = Cartographic.fromDegrees(parseFloat(bbox.getAttribute('maxy')), parseFloat(bbox.getAttribute('maxx')));
+                that._extent = new Extent(sw.longitude, sw.latitude, ne.longitude, ne.latitude);
+            } else {
+                that._extent = that._extent.clone();
+            }
 
             // tiling scheme handling
             var tilingScheme = description.tilingScheme;
             if (typeof tilingScheme === 'undefined') {
                 var tilingSchemeName = xml.getElementsByTagName('TileSets')[0].getAttribute('profile');
                 tilingScheme = tilingSchemeName === 'geodetic' ? new GeographicTilingScheme() : new WebMercatorTilingScheme();
+            }
+
+            // The extent must not be outside the bounds allowed by the tiling scheme.
+            if (that._extent.west < tilingScheme.getExtent().west) {
+                that._extent.west = tilingScheme.getExtent().west;
+            }
+            if (that._extent.east > tilingScheme.getExtent().east) {
+                that._extent.east = tilingScheme.getExtent().east;
+            }
+            if (that._extent.south < tilingScheme.getExtent().south) {
+                that._extent.south = tilingScheme.getExtent().south;
+            }
+            if (that._extent.north > tilingScheme.getExtent().north) {
+                that._extent.north = tilingScheme.getExtent().north;
             }
 
             that._tilingScheme = tilingScheme;
@@ -157,6 +175,19 @@ define([
      */
     TileMapServiceImageryProvider.prototype.getUrl = function() {
         return this._url;
+    };
+
+    /**
+     * Gets the proxy used by this provider.
+     *
+     * @memberof TileMapServiceImageryProvider
+     *
+     * @returns {Proxy} The proxy.
+     *
+     * @see DefaultProxy
+     */
+    TileMapServiceImageryProvider.prototype.getProxy = function() {
+        return this._proxy;
     };
 
     /**
@@ -259,7 +290,7 @@ define([
     /**
      * Gets an event that is raised when the imagery provider encounters an asynchronous error.  By subscribing
      * to the event, you will be notified of the error and can potentially recover from it.  Event listeners
-     * are passed an instance of {@link ImageryProviderError}.
+     * are passed an instance of {@link TileProviderError}.
      *
      * @memberof TileMapServiceImageryProvider
      *

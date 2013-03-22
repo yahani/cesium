@@ -10,7 +10,7 @@ define([
         './DiscardMissingTileImagePolicy',
         './GeographicTilingScheme',
         './ImageryProvider',
-        './ImageryProviderError',
+        './TileProviderError',
         './WebMercatorTilingScheme',
         '../ThirdParty/when'
     ], function(
@@ -24,7 +24,7 @@ define([
         DiscardMissingTileImagePolicy,
         GeographicTilingScheme,
         ImageryProvider,
-        ImageryProviderError,
+        TileProviderError,
         WebMercatorTilingScheme,
         when) {
     "use strict";
@@ -113,7 +113,7 @@ define([
                     that._tilingScheme = new GeographicTilingScheme();
                 } else {
                     var message = 'Tile spatial reference WKID ' + data.tileInfo.spatialReference.wkid + ' is not supported.';
-                    metadataError = ImageryProviderError.handleError(metadataError, that, that._errorEvent, message, undefined, undefined, undefined, requestMetadata);
+                    metadataError = TileProviderError.handleError(metadataError, that, that._errorEvent, message, undefined, undefined, undefined, requestMetadata);
                     return;
                 }
                 that._maximumLevel = data.tileInfo.lods.length - 1;
@@ -130,7 +130,6 @@ define([
                 that._useTiles = true;
             }
 
-            // Create the copyright message.
             if (typeof data.copyrightText !== 'undefined' && data.copyrightText.length > 0) {
                 that._logo = writeTextToCanvas(data.copyrightText, {
                     font : '12px sans-serif'
@@ -138,12 +137,12 @@ define([
             }
 
             that._ready = true;
-            ImageryProviderError.handleSuccess(metadataError);
+            TileProviderError.handleSuccess(metadataError);
         }
 
         function metadataFailure(e) {
             var message = 'An error occurred while accessing ' + that._url + '.';
-            metadataError = ImageryProviderError.handleError(metadataError, that, that._errorEvent, message, undefined, undefined, undefined, requestMetadata);
+            metadataError = TileProviderError.handleError(metadataError, that, that._errorEvent, message, undefined, undefined, undefined, requestMetadata);
         }
 
         function requestMetadata() {
@@ -204,6 +203,19 @@ define([
      */
     ArcGisMapServerImageryProvider.prototype.getUrl = function() {
         return this._url;
+    };
+
+    /**
+     * Gets the proxy used by this provider.
+     *
+     * @memberof ArcGisMapServerImageryProvider
+     *
+     * @returns {Proxy} The proxy.
+     *
+     * @see DefaultProxy
+     */
+    ArcGisMapServerImageryProvider.prototype.getProxy = function() {
+        return this._proxy;
     };
 
     /**
@@ -318,7 +330,7 @@ define([
     /**
      * Gets an event that is raised when the imagery provider encounters an asynchronous error.  By subscribing
      * to the event, you will be notified of the error and can potentially recover from it.  Event listeners
-     * are passed an instance of {@link ImageryProviderError}.
+     * are passed an instance of {@link TileProviderError}.
      *
      * @memberof ArcGisMapServerImageryProvider
      *

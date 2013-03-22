@@ -828,7 +828,7 @@ function(JulianDate,
     });
 
     it('toDate works on a leap second', function() {
-        var expectedDate = new Date('7/1/1997 12:00:00 AM UTC');
+        var expectedDate = new Date('6/30/1997 11:59:59 PM UTC');
         var date = new JulianDate(2450630, 43230.0, TimeStandard.TAI).toDate();
         expect(date).toEqual(expectedDate);
     });
@@ -849,6 +849,75 @@ function(JulianDate,
         var expectedDate = new Date('11/17/2039 12:00:00 AM UTC');
         var date = new JulianDate(2466109, 43235.0, TimeStandard.TAI).toDate();
         expect(date).toEqual(expectedDate);
+    });
+
+    it('toIso8601 works a second before a leap second', function() {
+        var expectedDate = '1997-06-30T23:59:59Z';
+        var date = JulianDate.fromIso8601(expectedDate).toIso8601();
+        expect(date).toEqual(expectedDate);
+    });
+
+    it('toIso8601 works on a leap second', function() {
+        var expectedDate = '1997-06-30T23:59:60Z';
+        var date = JulianDate.fromIso8601(expectedDate).toIso8601();
+        expect(date).toEqual(expectedDate);
+    });
+
+    it('toIso8601 works a second after a leap second', function() {
+        var expectedDate = '1997-07-01T00:00:00Z';
+        var date = JulianDate.fromIso8601(expectedDate).toIso8601();
+        expect(date).toEqual(expectedDate);
+    });
+
+    it('toIso8601 works on date before any leap seconds', function() {
+        var expectedDate = '1968-09-10T00:00:00Z';
+        var date = JulianDate.fromIso8601(expectedDate).toIso8601();
+        expect(date).toEqual(expectedDate);
+    });
+
+    it('toIso8601 works on date later than all leap seconds', function() {
+        var expectedDate = '2031-11-17T00:00:00Z';
+        var date = JulianDate.fromIso8601(expectedDate).toIso8601();
+        expect(date).toEqual(expectedDate);
+    });
+
+    it('toIso8601 works without precision', function() {
+        var expectedDate = '0950-01-02T03:04:05.5Z';
+        var date = JulianDate.fromIso8601(expectedDate).toIso8601();
+        expect(date).toEqual(expectedDate);
+    });
+
+    it('toIso8601 pads zeros for year less than four digits or time components less than two digits', function() {
+        var expectedDate = '0950-01-02T03:04:05.005Z';
+        var date = JulianDate.fromIso8601(expectedDate).toIso8601(3);
+        expect(date).toEqual(expectedDate);
+    });
+
+    it('toIso8601 does not show milliseconds if they are 0', function() {
+        var expectedDate = '0950-01-02T03:04:05Z';
+        var date = JulianDate.fromIso8601(expectedDate).toIso8601();
+        expect(date).toEqual(expectedDate);
+    });
+
+    it('toIso8601 works with specified precision', function() {
+        var isoDate = '0950-01-02T03:04:05.012345Z';
+        var date;
+        date = JulianDate.fromIso8601(isoDate).toIso8601(0);
+        expect(date).toEqual('0950-01-02T03:04:05Z');
+        date = JulianDate.fromIso8601(isoDate).toIso8601(1);
+        expect(date).toEqual('0950-01-02T03:04:05.0Z');
+        date = JulianDate.fromIso8601(isoDate).toIso8601(2);
+        expect(date).toEqual('0950-01-02T03:04:05.01Z');
+        date = JulianDate.fromIso8601(isoDate).toIso8601(3);
+        expect(date).toEqual('0950-01-02T03:04:05.012Z');
+        date = JulianDate.fromIso8601(isoDate).toIso8601(4);
+        expect(date).toEqual('0950-01-02T03:04:05.0123Z');
+        date = JulianDate.fromIso8601(isoDate).toIso8601(5);
+        expect(date).toEqual('0950-01-02T03:04:05.01234Z');
+        date = JulianDate.fromIso8601(isoDate).toIso8601(6);
+        expect(date).toEqual('0950-01-02T03:04:05.012345Z');
+        date = JulianDate.fromIso8601(isoDate).toIso8601(7);
+        expect(date).toEqual('0950-01-02T03:04:05.0123450Z');
     });
 
     it('getSecondsDifference works in UTC', function() {
@@ -885,6 +954,20 @@ function(JulianDate,
         var start = JulianDate.fromDate(new Date('July 4, 2011 12:00:00 UTC'));
         var end = JulianDate.fromDate(new Date('July 5, 2011 12:01:00 UTC'));
         expect(start.getMinutesDifference(end)).toEqualEpsilon(TimeConstants.MINUTES_PER_DAY + 1.0, CesiumMath.EPSILON5);
+    });
+
+    it('getDaysDifference works', function() {
+        var start = JulianDate.fromDate(new Date('July 4, 2011 12:00:00'));
+        var end = JulianDate.fromDate(new Date('July 5, 2011 14:24:00'));
+        var difference = start.getDaysDifference(end);
+        expect(difference).toEqual(1.1);
+    });
+
+    it('getDaysDifference works with negative result', function() {
+        var end = JulianDate.fromDate(new Date('July 4, 2011 12:00:00'));
+        var start = JulianDate.fromDate(new Date('July 5, 2011 14:24:00'));
+        var difference = start.getDaysDifference(end);
+        expect(difference).toEqual(-1.1);
     });
 
     it('addSeconds works with whole seconds', function() {
@@ -1115,6 +1198,7 @@ function(JulianDate,
         var datePlusOne = date.addSeconds(0.01);
         expect(date.equalsEpsilon(datePlusOne, CesiumMath.EPSILON1)).toEqual(true);
     });
+
     it('getTaiMinusUtc works before all leap seconds', function() {
         var date = new Date('July 11, 1970 12:00:00 UTC');
         var jd = JulianDate.fromDate(date, TimeStandard.TAI);
@@ -1140,5 +1224,13 @@ function(JulianDate,
     it('getTaiMinusUtc works after all leap seconds', function() {
         var date = new JulianDate(2556109, 43235.0, TimeStandard.TAI);
         expect(date.getTaiMinusUtc()).toEqual(35);
+    });
+
+    it('can compare instances with compareTo', function() {
+        var date = new JulianDate(0, 0.0, TimeStandard.TAI);
+        var date2 = new JulianDate(1, 0.0, TimeStandard.TAI);
+
+        expect(date.compareTo(date2)).toBeLessThan(0);
+        expect(date2.compareTo(date)).toBeGreaterThan(0);
     });
 });

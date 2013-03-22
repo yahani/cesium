@@ -3,9 +3,11 @@ defineSuite([
          'Scene/TileMapServiceImageryProvider',
          'Core/jsonp',
          'Core/loadImage',
+         'Core/loadXML',
          'Core/DefaultProxy',
          'Core/Extent',
          'Core/Math',
+         'Core/WebMercatorProjection',
          'Scene/Imagery',
          'Scene/ImageryLayer',
          'Scene/ImageryProvider',
@@ -16,9 +18,11 @@ defineSuite([
          TileMapServiceImageryProvider,
          jsonp,
          loadImage,
+         loadXML,
          DefaultProxy,
          Extent,
          CesiumMath,
+         WebMercatorProjection,
          Imagery,
          ImageryLayer,
          ImageryProvider,
@@ -31,6 +35,7 @@ defineSuite([
     afterEach(function() {
         jsonp.loadAndExecuteScript = jsonp.defaultLoadAndExecuteScript;
         loadImage.createImage = loadImage.defaultCreateImage;
+        loadXML.loadXML = loadXML.defaultLoadXML;
     });
 
     it('conforms to ImageryProvider interface', function() {
@@ -147,7 +152,7 @@ defineSuite([
             url : 'made/up/gms/server',
             credit : 'Thanks to our awesome made up source of this imagery!'
         });
-        expect(providerWithCredit.getLogo()).not.toBeUndefined();
+        expect(providerWithCredit.getLogo()).toBeDefined();
     });
 
     it('routes requests through a proxy if one is specified', function() {
@@ -166,6 +171,7 @@ defineSuite([
         runs(function() {
             loadImage.createImage = function(url, crossOrigin, deferred) {
                 expect(url.indexOf(proxy.getURL('made/up/tms/server'))).toEqual(0);
+                expect(provider.getProxy()).toEqual(proxy);
                 expect(crossOrigin).toEqual(true);
 
                 // Just return any old image.
@@ -279,6 +285,45 @@ defineSuite([
             expect(imagery.image).toBeInstanceOf(Image);
             expect(tries).toEqual(2);
             imagery.releaseReference();
+        });
+    });
+
+    it('keeps the extent within the bounds allowed by the tiling scheme no matter what the tilemapresource.xml says.', function() {
+        loadXML.loadXML = function(url, headers, deferred) {
+            var parser = new DOMParser();
+            var xmlString =
+                "<TileMap version='1.0.0' tilemapservice='http://tms.osgeo.org/1.0.0'>" +
+                "  <Title>dnb_land_ocean_ice.2012.54000x27000_geo.tif</Title>" +
+                "  <Abstract/>" +
+                "  <SRS>EPSG:900913</SRS>" +
+                "  <BoundingBox minx='-88.0' miny='-185.0' maxx='88.0' maxy='185.0'/>" +
+                "  <Origin x='-88.0' y='-180.00000000000000'/>" +
+                "  <TileFormat width='256' height='256' mime-type='image/png' extension='png'/>" +
+                "  <TileSets profile='mercator'>" +
+                "    <TileSet href='8' units-per-pixel='611.49622617187504' order='8'/>" +
+                "  </TileSets>" +
+                "</TileMap>";
+            var xml = parser.parseFromString(xmlString, "text/xml");
+            deferred.resolve(xml);
+        };
+
+        var provider = new TileMapServiceImageryProvider({
+            url : 'made/up/tms/server'
+        });
+
+        waitsFor(function() {
+            return provider.isReady();
+        }, 'imagery provider to become ready');
+
+        runs(function() {
+            expect(provider.getExtent().west).toEqualEpsilon(CesiumMath.toRadians(-180.0), CesiumMath.EPSILON14);
+            expect(provider.getExtent().west).toBeGreaterThanOrEqualTo(provider.getTilingScheme().getExtent().west);
+            expect(provider.getExtent().east).toEqualEpsilon(CesiumMath.toRadians(180.0), CesiumMath.EPSILON14);
+            expect(provider.getExtent().east).toBeLessThanOrEqualTo(provider.getTilingScheme().getExtent().east);
+            expect(provider.getExtent().south).toEqualEpsilon(-WebMercatorProjection.MaximumLatitude, CesiumMath.EPSILON14);
+            expect(provider.getExtent().south).toBeGreaterThanOrEqualTo(provider.getTilingScheme().getExtent().south);
+            expect(provider.getExtent().north).toEqualEpsilon(WebMercatorProjection.MaximumLatitude, CesiumMath.EPSILON14);
+            expect(provider.getExtent().north).toBeLessThanOrEqualTo(provider.getTilingScheme().getExtent().north);
         });
     });
 });
