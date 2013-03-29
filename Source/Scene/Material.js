@@ -36,7 +36,6 @@ define([
         '../Shaders/Materials/ErosionMaterial',
         '../Shaders/Materials/FadeMaterial',
         '../Shaders/Materials/PolylineArrowMaterial',
-        '../Shaders/Materials/PolylineGlowMaterial',
         '../Shaders/Materials/PolylineOutlineMaterial',
         '../Shaders/Materials/PolylineStippleMaterial'
     ], function(
@@ -76,7 +75,6 @@ define([
         ErosionMaterial,
         FadeMaterial,
         PolylineArrowMaterial,
-        PolylineGlowMaterial,
         PolylineOutlineMaterial,
         PolylineStippleMaterial) {
     "use strict";
@@ -273,6 +271,25 @@ define([
      *      <li><code>color</code>:  diffuse color and alpha.</li>
      *      <li><code>time</code>:  Time of erosion.  1.0 is no erosion; 0.0 is fully eroded.</li>
      *  </ul>
+     *  <li>Fade</li>
+     *  <ul>
+     *      <li><code>fadeInColor</code>: diffuse color and alpha at <code>time</code></li>
+     *      <li><code>fadeOutColor</code>: diffuse color and alpha at <code>maximumDistance<code> from <code>time</code></li>
+     *      <li><code>maximumDistance</code>: Number between 0.0 and 1.0 where the <code>fadeInColor</code> becomes the <code>fadeOutColor</code>. A value of 0.0 gives the entire material a color of <code>fadeOutColor</code> and a value of 1.0 gives the the entire material a color of <code>fadeInColor</code></li>
+     *      <li><code>repeat</code>: true if the fade should wrap around the texture coodinates.</li>
+     *      <li><code>fadeDirection</code>: Object with x and y values specifying if the fade should be in the x and y directions.</li>
+     *      <li><code>time</code>: Object with x and y values between 0.0 and 1.0 of the <code>fadeInColor</code> position</li>
+     *  </ul>
+     *  <li>PolylineArrow</li>
+     *  <ul>
+     *      <li><code>color</code>: diffuse color and alpha.</li>
+     *  </ul>
+     *  <li>PolylineOutline</li>
+     *  <ul>
+     *      <li><code>color</code>: diffuse color and alpha for the interior of the line.</li>
+     *      <li><code>outlineColor</code>: diffuse color and alpha for the outline.</li>
+     *      <li><code>outlineWidth</code>: width of the outline in pixels.</li>
+     *  </ul>
      * </ul>
      * </div>
      *
@@ -354,13 +371,22 @@ define([
         this._context = undefined;
         this._strict = undefined;
         this._template = undefined;
+        this._count = undefined;
 
-        initializeMaterial(description, 0, this);
+        initializeMaterial(description, this);
         Object.defineProperty(this, 'type', {
             value : this.type,
             writable : false
         });
+
+        if (typeof Material._uniformList[this.type] === 'undefined') {
+            Material._uniformList[this.type] = Object.keys(this._uniforms);
+        }
     };
+
+    // Cached list of combined uniform names indexed by type.
+    // Used to get the list of uniforms in the same order.
+    Material._uniformList = {};
 
     /**
      * Creates a new material using an existing material type.
@@ -438,16 +464,17 @@ define([
         }
         for ( var material in materials) {
             if (materials.hasOwnProperty(material)) {
-                material.destroy();
+                materials[material].destroy();
             }
         }
         return destroyObject(this);
     };
 
-    function initializeMaterial(description, count, result) {
+    function initializeMaterial(description, result) {
         description = defaultValue(description, {});
         result._context = description.context;
         result._strict = defaultValue(description.strict, false);
+        result._count = defaultValue(description.count, 0);
         result._template = defaultValue(description.fabric, {});
         result._template.uniforms = defaultValue(result._template.uniforms, {});
         result._template.materials = defaultValue(result._template.materials, {});
@@ -475,9 +502,8 @@ define([
         }
 
         createMethodDefinition(result);
-        count = createUniforms(result, count);
-        count = createSubMaterials(result, count);
-        return count;
+        createUniforms(result);
+        createSubMaterials(result);
     }
 
     function checkForValidProperties(object, properties, result, throwNotFound) {
@@ -555,19 +581,18 @@ define([
         }
     }
 
-    function createUniforms(material, count) {
+    function createUniforms(material) {
         var uniforms = material._template.uniforms;
         for ( var uniformId in uniforms) {
             if (uniforms.hasOwnProperty(uniformId)) {
-                count = createUniform(material, uniformId, count);
+                createUniform(material, uniformId);
             }
         }
-        return count;
     }
 
     // Writes uniform declarations to the shader file and connects uniform values with
     // corresponding material properties through the returnUniforms function.
-    function createUniform(material, uniformId, count) {
+    function createUniform(material, uniformId) {
         var strict = material._strict;
         var materialUniforms = material._template.uniforms;
         var uniformValue = materialUniforms[uniformId];
@@ -604,7 +629,7 @@ define([
                 material.shaderSource = uniformPhrase + material.shaderSource;
             }
 
-            var newUniformId = uniformId + '_' + count++;
+            var newUniformId = uniformId + '_' + material._count++;
             if (replaceToken(material, uniformId, newUniformId) === 1 && strict) {
                 throw new DeveloperError('strict: shader source does not use uniform \'' + uniformId + '\'.');
             }
@@ -612,8 +637,6 @@ define([
             material.uniforms[uniformId] = uniformValue;
             material._uniforms[newUniformId] = returnUniform(material, uniformId, uniformType);
         }
-
-        return count;
     }
 
     // Checks for updates to material values to refresh the uniforms.
@@ -696,26 +719,27 @@ define([
     }
 
     // Create all sub-materials by combining source and uniforms together.
-    function createSubMaterials(material, count) {
+    function createSubMaterials(material) {
         var context = material._context;
         var strict = material._strict;
         var subMaterialTemplates = material._template.materials;
         for ( var subMaterialId in subMaterialTemplates) {
             if (subMaterialTemplates.hasOwnProperty(subMaterialId)) {
                 // Construct the sub-material.
-                var subMaterial = {};
-                count = initializeMaterial({
+                var subMaterial = new Material({
                     context : context,
                     strict : strict,
-                    fabric : subMaterialTemplates[subMaterialId]
-                }, count, subMaterial);
+                    fabric : subMaterialTemplates[subMaterialId],
+                    count : material._count
+                });
 
+                material._count = subMaterial._count;
                 material._uniforms = combine([material._uniforms, subMaterial._uniforms]);
                 material.materials[subMaterialId] = subMaterial;
 
                 // Make the material's czm_getMaterial unique by appending the sub-material type.
                 var originalMethodName = 'czm_getMaterial';
-                var newMethodName = originalMethodName + '_' + count++;
+                var newMethodName = originalMethodName + '_' + material._count++;
                 replaceToken(subMaterial, originalMethodName, newMethodName);
                 material.shaderSource = subMaterial.shaderSource + material.shaderSource;
 
@@ -726,7 +750,6 @@ define([
                 }
             }
         }
-        return count;
     }
 
     // Used for searching or replacing a token in a material's shader source with something else.
@@ -1189,13 +1212,13 @@ define([
         uniforms : {
             fadeInColor : new Color(1.0, 0.0, 0.0, 1.0),
             fadeOutColor : new Color(0.0, 0.0, 0.0, 0.0),
-            maxDistance : 0.5,
+            maximumDistance : 0.5,
             repeat : true,
             fadeDirection : {
                 x : true,
                 y : true
             },
-            time : Cartesian2.ZERO.clone()
+            time : new Cartesian2(0.5, 0.5)
         },
         source : FadeMaterial
     });
@@ -1203,20 +1226,19 @@ define([
     Material.PolylineArrowType = 'PolylineArrow';
     Material._materialCache.addMaterial(Material.PolylineArrowType, {
         type : Material.PolylineArrowType,
+        uniforms : {
+            color : new Color(1.0, 1.0, 1.0, 1.0)
+        },
         source : PolylineArrowMaterial
-    });
-
-    Material.PolylineGlowType = 'PolylineGlow';
-    Material._materialCache.addMaterial(Material.PolylineGlowType, {
-        type : Material.PolylineGlowType,
-        source : PolylineGlowMaterial
     });
 
     Material.PolylineOutlineType = 'PolylineOutline';
     Material._materialCache.addMaterial(Material.PolylineOutlineType, {
         type : Material.PolylineOutlineType,
         uniforms : {
-            outlineWidth : 0.0
+            color : new Color(1.0, 1.0, 1.0, 1.0),
+            outlineColor : new Color(1.0, 0.0, 0.0, 1.0),
+            outlineWidth : 1.0
         },
         source : PolylineOutlineMaterial
     });

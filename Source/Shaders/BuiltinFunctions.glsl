@@ -576,31 +576,43 @@ vec3 czm_multiplyWithColorBalance(vec3 left, vec3 right)
 }
 
 /**
- * Unpacks an encoded color from a floating point number to an RGB vector.
+ * Procedural anti-aliasing by blurring two colors that meet at a sharp edge.
  *
- * @name czm_decodeColor
+ * @name czm_antialias
  * @glslFunction
  *
- * @param {float} The encoded color.
- * 
- * @returns {vec3} The decoded color.
+ * @param {vec4} color1 The color on one side of the edge.
+ * @param {vec4} color2 The color on the other side of the edge.
+ * @param {vec4} currentcolor The current color, either <code>color1</code> or <code>color2</code>.
+ * @param {float} dist The distance to the edge in texture coordinates.
+ * @param {float} [fuzzFactor=0.1] Controls the blurriness between the two colors.
+ * @returns {vec4} The anti-aliased color.
  *
  * @example
- * attribute float encodedColor;
- * //...
- * varying vec4 v_color;
- * //...
- * v_color = vec4(czm_decodeColor(encodedColor), 1.0);
+ * // GLSL declarations
+ * vec4 czm_antialias(vec4 color1, vec4 color2, vec4 currentColor, float dist, float fuzzFactor);
+ * vec4 czm_antialias(vec4 color1, vec4 color2, vec4 currentColor, float dist);
+ *
+ * // get the color for a material that has a sharp edge at the line y = 0.5 in texture space
+ * float dist = abs(textureCoordinates.t - 0.5);
+ * vec4 currentColor = mix(bottomColor, topColor, step(0.5, textureCoordinates.t));
+ * vec4 color = czm_antialias(bottomColor, topColor, currentColor, dist, 0.1);
  */
-vec3 czm_decodeColor(float encoded)
+vec4 czm_antialias(vec4 color1, vec4 color2, vec4 currentColor, float dist, float fuzzFactor)
 {
-    const vec3 scale = vec3(1.0, 256.0, 65536.0);
-    vec3 decoded = scale * encoded;
-    float r = floor(decoded.r) / 256.0;
-    float g = fract(decoded.r);
-    float b = fract(decoded.g);
+    float val1 = clamp(dist / fuzzFactor, 0.0, 1.0);
+    float val2 = clamp((dist - 0.5) / fuzzFactor, 0.0, 1.0);
+    val1 = val1 * (1.0 - val2);
+    val1 = val1 * val1 * (3.0 - (2.0 * val1));
+    val1 = pow(val1, 0.5); //makes the transition nicer
     
-    return vec3(r, g, b);
+    vec4 midColor = (color1 + color2) * 0.5;
+    return mix(midColor, currentColor, val1);
+}
+
+vec4 czm_antialias(vec4 color1, vec4 color2, vec4 currentColor, float dist)
+{
+    return czm_antialias(color1, color2, currentColor, dist, 0.1);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -988,33 +1000,6 @@ vec3 czm_translateRelativeToEye(vec3 high, vec3 low)
     vec3 lowDifference = low - czm_encodedCameraPositionMCLow;
 
     return highDifference + lowDifference;
-}
-
-/**
- * Converts from spherical coordinates to cartesian coordinates.
- * 
- * @name czm_sphericalToCartesianCoordinates
- * @glslFunction
- *
- * @param {vec2} spherical The spherical coordinates. The x property is the angle in 
- * the xy-plane from the positive x-axis. The y property is the angle from the positive z-axis.
- * @returns {vec3} The cartesian coordinates
- * 
- * @example
- * // normal in spherical coordinates to cartesian coordinates
- * vec3 normal = normalize(czm_sphericalToCartesianCoordinates(normalSpherical));
- *
- * // position in spherical coordinates to cartesian coordinates
- * vec3 position = normalize(czm_sphericalToCartesianCoordinates(positionSpherical));
- * position *= radius;
- */
-vec3 czm_sphericalToCartesianCoordinates(vec2 spherical)
-{
-    float sinTheta = sin(spherical.x);
-    float x = sinTheta * cos(spherical.y);
-    float y = sinTheta * sin(spherical.y);
-    float z = cos(spherical.x);
-    return vec3(x, y, z);
 }
 
 /**

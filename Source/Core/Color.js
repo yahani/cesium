@@ -2,12 +2,10 @@
 define([
         './defaultValue',
         './freezeObject',
-        './Cartesian3',
         './DeveloperError'
     ], function(
         defaultValue,
         freezeObject,
-        Cartesian3,
         DeveloperError) {
     "use strict";
 
@@ -213,30 +211,6 @@ define([
         return number === 1.0 ? 255.0 : (number * 256.0) | 0;
     };
 
-    var scale = new Cartesian3(1.0, 1.0 / Math.pow(2, 8), 1.0 / Math.pow(2, 16));
-    var scratch = new Cartesian3();
-
-    /**
-     * Encodes the red, green, and blue components of a color into a 32 bit floating point number.
-     *
-     * @param {Color} color The color to be encoded.
-     * @returns {Number} A floating point number representing the encoded red, green, and blue values of the color.
-     *
-     * @exception {DeveloperError} color is required.
-     *
-     * @see czm_decodeColor
-     */
-    Color.encode = function(color) {
-        if (typeof color === 'undefined') {
-            throw new DeveloperError('color is required.');
-        }
-
-        scratch.x = Color.floatToByte(color.red);
-        scratch.y = Color.floatToByte(color.green);
-        scratch.z = Color.floatToByte(color.blue);
-        return Cartesian3.dot(scratch, scale);
-    };
-
     /**
      * Duplicates a Color.
      * @memberof Color
@@ -328,12 +302,15 @@ define([
      * @memberof Color
      *
      * @return {String} The CSS equivalent of this color.
-     * @see <a href="http://www.w3.org/TR/css3-color/#rgba-color">CSS RGBA color values</a>
+     * @see <a href="http://www.w3.org/TR/css3-color/#rgba-color">CSS RGB or RGBA color values</a>
      */
     Color.prototype.toCssColorString = function() {
         var red = Color.floatToByte(this.red);
         var green = Color.floatToByte(this.green);
         var blue = Color.floatToByte(this.blue);
+        if (this.alpha === 1) {
+            return 'rgb(' + red + ',' + green + ',' + blue + ')';
+        }
         return 'rgba(' + red + ',' + green + ',' + blue + ',' + this.alpha + ')';
     };
 

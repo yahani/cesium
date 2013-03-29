@@ -1,6 +1,7 @@
-#extension GL_OES_standard_derivatives : enable // TODO check for support
+#extension GL_OES_standard_derivatives : enable
 
-varying vec4 v_color;
+uniform vec4 color;
+
 varying float v_width;
 
 float getPointOnLine(vec2 p0, vec2 p1, float x)
@@ -15,7 +16,7 @@ czm_material czm_getMaterial(czm_materialInput materialInput)
     
     vec2 st = materialInput.st;
     
-    float base = 1.0 - dFdx(st.s) * 10.0;
+    float base = 1.0 - abs(dFdx(st.s)) * 10.0;
     vec2 center = vec2(1.0, 0.5);
     float ptOnUpperLine = getPointOnLine(vec2(base, 1.0), center, st.s);
     float ptOnLowerLine = getPointOnLine(vec2(base, 0.0), center, st.s);
@@ -30,12 +31,12 @@ czm_material czm_getMaterial(czm_materialInput materialInput)
     t *= step(ptOnLowerLine, st.t);
     
     // Find the distance from the closest separator (region between two colors)
-    float value;
+    float dist;
     if (st.s < base)
     {
         float d1 = abs(st.t - (0.5 - halfWidth));
         float d2 = abs(st.t - (0.5 + halfWidth));
-        value = min(d1, d2);
+        dist = min(d1, d2);
     }
     else
     {
@@ -46,23 +47,14 @@ czm_material czm_getMaterial(czm_materialInput materialInput)
         }
         float d2 = abs(st.t - ptOnUpperLine);
         float d3 = abs(st.t - ptOnLowerLine);
-        value = min(min(d1, d2), d3);
+        dist = min(min(d1, d2), d3);
     }
     
-    //anti-aliasing
-    const float fuzz = 0.1;
-    float val1 = clamp(value / fuzz, 0.0, 1.0);
-    float val2 = clamp((value - 0.5) / fuzz, 0.0, 1.0);
-    val1 = val1 * (1.0 - val2);
-    val1 = val1 * val1 * (3.0 - (2.0 * val1));
-    val1 = pow(val1, 0.5); //makes the transition nicer
-    
     vec4 outsideColor = vec4(0.0);
-    vec4 midColor = (outsideColor + v_color) * 0.5;
-    vec4 currentColor = mix(outsideColor, v_color, clamp(s + t, 0.0, 1.0));
-    vec4 color = mix(midColor, currentColor, val1);
+    vec4 currentColor = mix(outsideColor, color, clamp(s + t, 0.0, 1.0));
+    vec4 outColor = czm_antialias(outsideColor, color, currentColor, dist);
     
-    material.diffuse = color.rgb;
-    material.alpha = color.a;
+    material.diffuse = outColor.rgb;
+    material.alpha = outColor.a;
     return material;
 }

@@ -61,26 +61,6 @@ defineSuite(['Core/Color',
         expect(Color.floatToByte(127 / 255)).toEqual(127);
     });
 
-    it('encodes a color', function() {
-        var color = new Color(0.75, 0.5, 0.25);
-        var encoded = Color.encode(color);
-
-        var red = Math.floor(encoded) / 256.0;
-        var green = encoded - Math.floor(encoded);
-        var blue = encoded * 256.0;
-        blue = blue - Math.floor(blue);
-
-        expect(red).toEqualEpsilon(color.red, CesiumMath.EPSILON3);
-        expect(green).toEqualEpsilon(color.green, CesiumMath.EPSILON3);
-        expect(blue).toEqualEpsilon(color.blue, CesiumMath.EPSILON3);
-    });
-
-    it('encode throws without a color', function() {
-        expect(function() {
-            return Color.encode();
-        }).toThrow();
-    });
-
     it('clone with no parameters returns a new identical copy.', function() {
         var v = new Color(0.1, 0.2, 0.3, 0.4);
         var v2 = v.clone();
@@ -131,11 +111,11 @@ defineSuite(['Core/Color',
     });
 
     it('toCssColorString produces expected output', function() {
-        expect(Color.WHITE.toCssColorString()).toEqual('rgba(255,255,255,1)');
-        expect(Color.RED.toCssColorString()).toEqual('rgba(255,0,0,1)');
-        expect(Color.BLUE.toCssColorString()).toEqual('rgba(0,0,255,1)');
-        expect(Color.LIME.toCssColorString()).toEqual('rgba(0,255,0,1)');
-        expect(new Color(0.0, 0.0, 0.0, 1.0).toCssColorString()).toEqual('rgba(0,0,0,1)');
+        expect(Color.WHITE.toCssColorString()).toEqual('rgb(255,255,255)');
+        expect(Color.RED.toCssColorString()).toEqual('rgb(255,0,0)');
+        expect(Color.BLUE.toCssColorString()).toEqual('rgb(0,0,255)');
+        expect(Color.LIME.toCssColorString()).toEqual('rgb(0,255,0)');
+        expect(new Color(0.0, 0.0, 0.0, 1.0).toCssColorString()).toEqual('rgb(0,0,0)');
         expect(new Color(0.1, 0.2, 0.3, 0.4).toCssColorString()).toEqual('rgba(25,51,76,0.4)');
     });
 
