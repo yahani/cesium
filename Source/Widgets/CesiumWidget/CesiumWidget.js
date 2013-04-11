@@ -155,7 +155,7 @@ define(['../../Core/buildModuleUrl',
          * @memberof CesiumWidget
          * @type {Element}
          */
-        this.widgetNode = widgetNode;
+        this.element = widgetNode;
 
         /**
          * Gets the canvas.
@@ -201,8 +201,7 @@ define(['../../Core/buildModuleUrl',
 
         var widget = this;
         //Subscribe for resize events and set the initial size.
-        this._needResize = false;
-        this.resize();
+        this._needResize = true;
         this._resizeCallback = function() {
             widget._needResize = true;
         };
@@ -235,7 +234,7 @@ define(['../../Core/buildModuleUrl',
      */
     CesiumWidget.prototype.destroy = function() {
         window.removeEventListener('resize', this._resizeCallback, false);
-        this.container.removeChild(this.widgetNode);
+        this.container.removeChild(this.element);
         this._isDestroyed = true;
         destroyObject(this);
     };

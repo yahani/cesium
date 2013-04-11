@@ -28,6 +28,8 @@ define([
      *
      * @alias Polyline
      * @internalConstructor
+     *
+     * @demo <a href="http://cesium.agi.com/Cesium/Apps/Sandcastle/index.html?src=Polylines.html">Cesium Sandcastle Polyline Demo</a>
      */
     var Polyline = function(description, polylineCollection) {
         description = defaultValue(description, EMPTY_OBJECT);
@@ -178,20 +180,21 @@ define([
             modelMatrix = this._polylineCollection.modelMatrix;
         }
 
-        var length = this._segments.positions.length;
+        var segmentPositionsLength = this._segments.positions.length;
         var segmentLengths = this._segments.lengths;
-        this._modelMatrix = modelMatrix;
 
         var positionsChanged = this._propertiesChanged[POSITION_INDEX] > 0 || this._propertiesChanged[POSITION_SIZE_INDEX] > 0;
         if (!modelMatrix.equals(this._modelMatrix) || positionsChanged) {
             this._segments = PolylinePipeline.wrapLongitude(this._positions, modelMatrix);
         }
 
-        if (this._segments.positions.length !== length) {
+        this._modelMatrix = modelMatrix;
+
+        if (this._segments.positions.length !== segmentPositionsLength) {
             // number of positions changed
             makeDirty(this, POSITION_SIZE_INDEX);
         } else {
-            length = segmentLengths.length;
+            var length = segmentLengths.length;
             for (var i = 0; i < length; ++i) {
                 if (segmentLengths[i] !== this._segments.lengths[i]) {
                     // indices changed

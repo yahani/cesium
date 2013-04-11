@@ -273,7 +273,6 @@ define([
         for (var m = 0; m < numFrustums; ++m) {
             var curNear = Math.max(near, Math.pow(farToNearRatio, m) * near);
             var curFar = Math.min(far, farToNearRatio * curNear);
-            curNear *= 0.99;
 
             var frustumCommands = frustumCommandsList[m];
             if (typeof frustumCommands === 'undefined') {
@@ -304,7 +303,7 @@ define([
             }
 
             // PERFORMANCE_IDEA: sort bins
-            frustumCommands.commands.push(command);
+            frustumCommands.commands[frustumCommands.index++] = command;
 
             if (command.executeInClosestFrustum) {
                 break;
@@ -325,7 +324,7 @@ define([
         var frustumCommandsList = scene._frustumCommandsList;
         var frustumsLength = frustumCommandsList.length;
         for (var n = 0; n < frustumsLength; ++n) {
-            frustumCommandsList[n].commands.length = 0;
+            frustumCommandsList[n].index = 0;
         }
 
         var near = Number.MAX_VALUE;
@@ -437,7 +436,7 @@ define([
             us.updateFrustum(frustum);
 
             var commands = frustumCommands.commands;
-            var length = commands.length;
+            var length = frustumCommands.index;
             for (var j = 0; j < length; ++j) {
                 commands[j].execute(context, framebuffer);
             }
