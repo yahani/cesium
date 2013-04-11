@@ -1092,12 +1092,6 @@ define([
             var segmentIndex = 0;
             var count = 0;
 
-            var lengthMeters = 0;
-            for (var n = 1; n < positionsLength; ++n) {
-                lengthMeters += Cartesian3.subtract(positions[n], positions[n - 1]).magnitude();
-            }
-
-            var segmentLength = 0.0;
             for ( var j = 0; j < positionsLength; ++j) {
                 var position = (j !== 0) ? positions[j - 1] : positions[j];
                 scratchWritePrevPosition.x = position.x;
