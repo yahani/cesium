@@ -112,7 +112,8 @@ define([
 
         var that = this;
         return when(promise, function(buffer) {
-            var heightBuffer = new Uint16Array(buffer, 0, that._heightmapWidth * that._heightmapWidth);
+//            var heightBuffer = new Uint16Array(buffer, 0, that._heightmapWidth * that._heightmapWidth);
+          var heightBuffer = new Uint16Array(that._heightmapWidth * that._heightmapWidth);
             return new HeightmapTerrainData({
                 buffer : heightBuffer,
                 childTileMask : new Uint8Array(buffer, heightBuffer.byteLength, 1)[0],
