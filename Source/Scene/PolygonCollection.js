@@ -75,6 +75,7 @@ define([
         position2DHigh : 2,
         position2DLow : 3,
         textureCoordinates : 4,
+        color : 6,
         pickColor : 5
     };
 
@@ -206,6 +207,7 @@ define([
         };
 
         this._collectionPositions = undefined;
+        this._collectionColors = undefined;
         this._collectionHeights = undefined;
         this._collectionTextureRotationAngle = undefined;
 
@@ -340,10 +342,11 @@ define([
     /**
      * DOC_TBA
      */
-    PolygonCollection.prototype.setCollectionPositions = function(positions, heights, textureRotationAngles) {
+    PolygonCollection.prototype.setCollectionPositions = function(positions, colors, heights, textureRotationAngles) {
         // TODO: throw exceptions
 
         this._collectionPositions = positions;
+        this._collectionColors = colors;
         this._collectionHeights = heights;
         this._collectionTextureRotationAngle = textureRotationAngles;
 
@@ -514,6 +517,33 @@ define([
         return mesh;
     }
 
+    function appendColors(mesh, color) {
+        var positions = mesh.attributes.position.values;
+        var colors = new Uint8Array(4 * (positions.length / 3));
+
+        var red = Color.floatToByte(color.red);
+        var green = Color.floatToByte(color.green);
+        var blue = Color.floatToByte(color.blue);
+        var alpha = Color.floatToByte(color.alpha);
+
+        var length = colors.length;
+        for (var i = 0; i < length; i += 4) {
+            colors[i] = red;
+            colors[i + 1] = green;
+            colors[i + 2] = blue;
+            colors[i + 3] = alpha;
+        }
+
+        mesh.attributes.color = {
+            componentDatatype : ComponentDatatype.UNSIGNED_BYTE,
+            componentsPerAttribute : 4,
+            normalize : true,
+            values : colors
+        };
+
+        return mesh;
+    }
+
     function appendPickIds(mesh, pickId) {
         var positions = mesh.attributes.position.values;
         var pickColors = new Uint8Array(4 * (positions.length / 3));
@@ -535,7 +565,6 @@ define([
         mesh.attributes.pickColor = {
             componentDatatype : ComponentDatatype.UNSIGNED_BYTE,
             componentsPerAttribute : 4,
-// TODO: need normalize?
             normalize : true,
             values : pickColors
         };
@@ -586,7 +615,7 @@ define([
     var createMeshFromPositionsPositions = [];
     var createMeshFromPositionsBoundingRectangle = new BoundingRectangle();
 
-    function createMeshFromPositions(polygon, positions, angle, outerPositions, pickId) {
+    function createMeshFromPositions(polygon, positions, angle, outerPositions, color, pickId) {
         var cleanedPositions = PolygonPipeline.cleanUp(positions);
         if (cleanedPositions.length < 3) {
             // Duplicate positions result in not enough positions to form a polygon.
@@ -606,6 +635,7 @@ define([
         var boundary = outerPositions || cleanedPositions;
         var boundingRectangle = computeBoundingRectangle(tangentPlane, boundary, angle, createMeshFromPositionsBoundingRectangle);
         mesh = appendTextureCoordinates(tangentPlane, boundingRectangle, mesh, angle);
+        mesh = appendColors(mesh, color);
         mesh = appendPickIds(mesh, pickId);
         return mesh;
     }
@@ -623,13 +653,14 @@ define([
                 var textureRotationAngle = (typeof polygon._collectionTextureRotationAngle !== 'undefined') ?
                         polygon._collectionTextureRotationAngle[i] : 0.0;
 
-// TODO: These are never destroied
+// TODO: These are never destroyed
                 var pickId = context.createPickId({
                     polygon : polygon,
                     index : i
                 });
 
-                mesh = createMeshFromPositions(polygon, positions, textureRotationAngle, undefined, pickId);
+                mesh = createMeshFromPositions(polygon, positions, textureRotationAngle, undefined,
+                        polygon._collectionColors[i], pickId);
 
                 if (typeof mesh !== 'undefined') {
                     meshes.push(mesh);

@@ -3,9 +3,11 @@ uniform float u_morphTime;
 varying vec3 v_positionMC;
 varying vec3 v_positionEC;
 varying vec2 v_textureCoordinates;
+varying vec4 v_color;
 
 void main()
 {
+/*
     czm_materialInput materialInput;
     
     // TODO: Real 1D distance, and better 3D coordinate
@@ -24,4 +26,6 @@ void main()
     czm_material material = czm_getMaterial(materialInput);
     
     gl_FragColor = czm_phong(normalize(positionToEyeEC), material);
+*/
+    gl_FragColor = v_color;
 }

@@ -74,7 +74,7 @@ require([
                                          			Cesium.Cartographic.fromDegrees(-48.0, 20.0)
                                          		]);
 		
-		collection.setCollectionPositions([positions, morePositions]);
+		collection.setCollectionPositions([positions, morePositions], [Cesium.Color.BLUE, Cesium.Color.RED]);
 		primitives.add(collection);
 
         var handler = new Cesium.ScreenSpaceEventHandler(scene.getCanvas());
