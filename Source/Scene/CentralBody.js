@@ -747,6 +747,10 @@ define([
                     colorCommandList.push(this._clearDepthCommand);
                     colorCommandList.push(this._depthCommand);
                 }
+            } else if (mode === SceneMode.COLUMBUS_VIEW) {
+                if (!this.depthTestAgainstTerrain) {
+                    colorCommandList.push(this._clearDepthCommand);
+                }
             }
         }
 
