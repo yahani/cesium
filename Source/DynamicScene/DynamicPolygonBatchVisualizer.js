@@ -110,7 +110,7 @@ define(['../Core/Cartesian3',
         if (typeof this._dynamicObjectCollection !== 'undefined') {
             var dynamicObjects = this._dynamicObjectCollection.getObjects();
             for ( var i = 0, len = dynamicObjects.length; i < len; i++) {
-                if (!this.class) {
+                if (!this.called) {
                     this._primitives.add(this._polygonCollection);
                 }
                 this.called = true;
