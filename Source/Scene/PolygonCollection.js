@@ -640,6 +640,10 @@ define([
         return mesh;
     }
 
+    function combineArray(target, source) {
+        target.push.apply(target, source);
+    }
+
     function createMeshes(context, polygon) {
         // PERFORMANCE_IDEA:  Move this to a web-worker.
         var i;
@@ -668,6 +672,60 @@ define([
                     polygon._boundingVolume = undefined;
                 }
             }
+
+// TODO: this should be a general function
+// slow and hacky, I know.
+            var combinedMesh = {
+                attributes : {
+                    color : {
+                        componentDatatype : ComponentDatatype.UNSIGNED_BYTE,
+                        componentsPerAttribute : 4,
+                        normalize : true,
+                        values : []
+                    },
+                    pickColor : {
+                        componentDatatype : ComponentDatatype.UNSIGNED_BYTE,
+                        componentsPerAttribute : 4,
+                        normalize : true,
+                        values : []
+                    },
+                    position : {
+                        componentDatatype : ComponentDatatype.FLOAT,
+                        componentsPerAttribute : 3,
+                        values : []
+                    },
+                    textureCoordinates : {
+                        componentDatatype : ComponentDatatype.FLOAT,
+                        componentsPerAttribute : 2,
+                        values : []
+                    }
+                },
+                indexLists : [{
+                    primitiveType : PrimitiveType.TRIANGLES,
+                    values : []
+                }]
+            };
+
+            var offset = 0;
+
+            for (i = 0; i < meshes.length; ++i) {
+                var m = meshes[i];
+
+                combineArray(combinedMesh.attributes.color.values, m.attributes.color.values);
+                combineArray(combinedMesh.attributes.pickColor.values, m.attributes.pickColor.values);
+                combineArray(combinedMesh.attributes.position.values, m.attributes.position.values);
+                combineArray(combinedMesh.attributes.textureCoordinates.values, m.attributes.textureCoordinates.values);
+
+                var vv = m.indexLists[0].values;
+                for (var k = 0; k < vv.length; ++k) {
+                    combinedMesh.indexLists[0].values.push(offset + vv[k]);
+                }
+
+                offset += m.attributes.color.values.length / m.attributes.color.componentsPerAttribute;
+            }
+
+            meshes = [combinedMesh];
+
         } else if ((typeof polygon._extent !== 'undefined') && !polygon._extent.isEmpty()) {
             meshes.push(ExtentTessellator.compute({extent: polygon._extent, generateTextureCoordinates:true}));
 
@@ -832,6 +890,7 @@ define([
         }
 
         var boundingVolume;
+/*
         if (mode === SceneMode.SCENE3D) {
             boundingVolume = this._boundingVolume;
         } else if (mode === SceneMode.COLUMBUS_VIEW || mode === SceneMode.SCENE2D) {
@@ -839,6 +898,7 @@ define([
         } else {
             boundingVolume = this._boundingVolume.union(this._boundingVolume2D);
         }
+*/
 
         var pass = frameState.passes;
         var vas = this._vertices.getVertexArrays();

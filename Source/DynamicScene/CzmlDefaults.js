@@ -18,7 +18,7 @@ define([
         './DynamicLabelVisualizer',
         './DynamicPathVisualizer',
         './DynamicPointVisualizer',
-        './DynamicPolygonVisualizer',
+        './DynamicPolygonBatchVisualizer',
         './DynamicPolylineVisualizer',
         './DynamicPyramidVisualizer'
     ], function(
