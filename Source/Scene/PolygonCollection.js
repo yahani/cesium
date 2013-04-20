@@ -74,7 +74,8 @@ define([
         position3DLow : 1,
         position2DHigh : 2,
         position2DLow : 3,
-        textureCoordinates : 4
+        textureCoordinates : 4,
+        pickColor : 5
     };
 
     function PositionVertices() {
@@ -513,6 +514,35 @@ define([
         return mesh;
     }
 
+    function appendPickIds(mesh, pickId) {
+        var positions = mesh.attributes.position.values;
+        var pickColors = new Uint8Array(4 * (positions.length / 3));
+
+        var pickColor = pickId.color;
+        var red = Color.floatToByte(pickColor.red);
+        var green = Color.floatToByte(pickColor.green);
+        var blue = Color.floatToByte(pickColor.blue);
+        var alpha = Color.floatToByte(pickColor.alpha);
+
+        var length = pickColors.length;
+        for (var i = 0; i < length; i += 4) {
+            pickColors[i] = red;
+            pickColors[i + 1] = green;
+            pickColors[i + 2] = blue;
+            pickColors[i + 3] = alpha;
+        }
+
+        mesh.attributes.pickColor = {
+            componentDatatype : ComponentDatatype.UNSIGNED_BYTE,
+            componentsPerAttribute : 4,
+// TODO: need normalize?
+            normalize : true,
+            values : pickColors
+        };
+
+        return mesh;
+    }
+
     var computeBoundingRectangleCartesian2 = new Cartesian2();
     var computeBoundingRectangleCartesian3 = new Cartesian3();
     var computeBoundingRectangleQuaternion = new Quaternion();
@@ -556,7 +586,7 @@ define([
     var createMeshFromPositionsPositions = [];
     var createMeshFromPositionsBoundingRectangle = new BoundingRectangle();
 
-    function createMeshFromPositions(polygon, positions, angle, outerPositions) {
+    function createMeshFromPositions(polygon, positions, angle, outerPositions, pickId) {
         var cleanedPositions = PolygonPipeline.cleanUp(positions);
         if (cleanedPositions.length < 3) {
             // Duplicate positions result in not enough positions to form a polygon.
@@ -576,10 +606,11 @@ define([
         var boundary = outerPositions || cleanedPositions;
         var boundingRectangle = computeBoundingRectangle(tangentPlane, boundary, angle, createMeshFromPositionsBoundingRectangle);
         mesh = appendTextureCoordinates(tangentPlane, boundingRectangle, mesh, angle);
+        mesh = appendPickIds(mesh, pickId);
         return mesh;
     }
 
-    function createMeshes(polygon) {
+    function createMeshes(context, polygon) {
         // PERFORMANCE_IDEA:  Move this to a web-worker.
         var i;
         var meshes = [];
@@ -592,7 +623,13 @@ define([
                 var textureRotationAngle = (typeof polygon._collectionTextureRotationAngle !== 'undefined') ?
                         polygon._collectionTextureRotationAngle[i] : 0.0;
 
-                mesh = createMeshFromPositions(polygon, positions, textureRotationAngle);
+// TODO: These are never destroied
+                var pickId = context.createPickId({
+                    polygon : polygon,
+                    index : i
+                });
+
+                mesh = createMeshFromPositions(polygon, positions, textureRotationAngle, undefined, pickId);
 
                 if (typeof mesh !== 'undefined') {
                     meshes.push(mesh);
@@ -756,7 +793,7 @@ define([
 
         if (this._createVertexArray) {
             this._createVertexArray = false;
-            this._vertices.update(context, createMeshes(this), this.bufferUsage);
+            this._vertices.update(context, createMeshes(context, this), this.bufferUsage);
         }
 
         if (typeof this._vertices.getVertexArrays() === 'undefined') {
@@ -837,7 +874,7 @@ define([
                     '#line 0\n' +
                     this.material.shaderSource +
                     '#line 0\n' +
-                    PolygonFS, 'uniform');
+                    PolygonFS, 'varying');
 
                 this._spPick = context.getShaderCache().replaceShaderProgram(this._spPick, PolygonVS, pickFS, attributeIndices);
                 this._pickUniforms = combine([this._uniforms, this._pickColorUniform, this.material._uniforms], false, false);

@@ -77,6 +77,17 @@ require([
 		collection.setCollectionPositions([positions, morePositions]);
 		primitives.add(collection);
 
+        var handler = new Cesium.ScreenSpaceEventHandler(scene.getCanvas());
+        handler.setInputAction(
+            function (movement) {
+                var pickedObject = scene.pick(movement.endPosition);
+                if (typeof pickedObject !== 'undefined') {
+                    console.log(pickedObject);
+                }
+            },
+            Cesium.ScreenSpaceEventType.MOUSE_MOVE
+        ); 
+		
 
         // Create a nested polygon with holes
         var polygonHierarchy = new Cesium.Polygon();
