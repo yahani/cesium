@@ -41,6 +41,7 @@ require([
         var ellipsoid = widget.centralBody.getEllipsoid();
         var primitives = scene.getPrimitives();
 
+/*        
         // Create a simple polygon
         var polygon = new Cesium.Polygon();
         Sandcastle.declare(polygon);    // For highlighting on mouseover in Sandcastle.
@@ -52,6 +53,30 @@ require([
             Cesium.Cartographic.fromDegrees(-68.0, 40.0)
         ]));
         primitives.add(polygon);
+*/
+
+		var collection = new Cesium.PolygonCollection();
+		Sandcastle.declare(collection);    // For highlighting on mouseover in Sandcastle.
+		
+		var positions = ellipsoid.cartographicArrayToCartesianArray([
+			Cesium.Cartographic.fromDegrees(-72.0, 40.0),
+			Cesium.Cartographic.fromDegrees(-70.0, 35.0),
+			Cesium.Cartographic.fromDegrees(-75.0, 30.0),
+			Cesium.Cartographic.fromDegrees(-70.0, 30.0),
+			Cesium.Cartographic.fromDegrees(-68.0, 40.0)
+		]);
+
+		var morePositions = ellipsoid.cartographicArrayToCartesianArray([
+                                         			Cesium.Cartographic.fromDegrees(-52.0, 20.0),
+                                         			Cesium.Cartographic.fromDegrees(-50.0, 15.0),
+                                         			Cesium.Cartographic.fromDegrees(-55.0, 10.0),
+                                         			Cesium.Cartographic.fromDegrees(-50.0, 10.0),
+                                         			Cesium.Cartographic.fromDegrees(-48.0, 20.0)
+                                         		]);
+		
+		collection.setCollectionPositions([positions, morePositions]);
+		primitives.add(collection);
+
 
         // Create a nested polygon with holes
         var polygonHierarchy = new Cesium.Polygon();

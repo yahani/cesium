@@ -204,6 +204,10 @@ define([
          */
         };
 
+        this._collectionPositions = undefined;
+        this._collectionHeights = undefined;
+        this._collectionTextureRotationAngle = undefined;
+
         this._positions = undefined;
         this._textureRotationAngle = undefined;
         this._extent = undefined;
@@ -329,6 +333,22 @@ define([
         this._extent = undefined;
         this._polygonHierarchy = undefined;
         this._positions = positions;
+        this._createVertexArray = true;
+    };
+
+    /**
+     * DOC_TBA
+     */
+    PolygonCollection.prototype.setCollectionPositions = function(positions, heights, textureRotationAngles) {
+        // TODO: throw exceptions
+
+        this._collectionPositions = positions;
+        this._collectionHeights = heights;
+        this._collectionTextureRotationAngle = textureRotationAngles;
+
+        this._extent = undefined;
+        this._polygonHierarchy = undefined;
+        this._positions = undefined;
         this._createVertexArray = true;
     };
 
@@ -565,7 +585,22 @@ define([
         var meshes = [];
         var mesh;
 
-        if ((typeof polygon._extent !== 'undefined') && !polygon._extent.isEmpty()) {
+        if (typeof polygon._collectionPositions !== 'undefined') {
+            var len = polygon._collectionPositions.length;
+            for (i = 0; i < len; ++i) {
+                var positions = polygon._collectionPositions[i];
+                var textureRotationAngle = (typeof polygon._collectionTextureRotationAngle !== 'undefined') ?
+                        polygon._collectionTextureRotationAngle[i] : 0.0;
+
+                mesh = createMeshFromPositions(polygon, positions, textureRotationAngle);
+
+                if (typeof mesh !== 'undefined') {
+                    meshes.push(mesh);
+                    // TODO: better bounding volume
+                    polygon._boundingVolume = undefined;
+                }
+            }
+        } else if ((typeof polygon._extent !== 'undefined') && !polygon._extent.isEmpty()) {
             meshes.push(ExtentTessellator.compute({extent: polygon._extent, generateTextureCoordinates:true}));
 
             polygon._boundingVolume = BoundingSphere.fromExtent3D(polygon._extent, polygon._ellipsoid, polygon._boundingVolume);
@@ -603,8 +638,11 @@ define([
 
         var processedMeshes = [];
         for (i = 0; i < meshes.length; i++) {
+            var height = (typeof polygon._collectionHeights !== 'undefined') ?
+                    polygon._collectionHeights[i] : polygon.height;
+
             mesh = meshes[i];
-            mesh = PolygonPipeline.scaleToGeodeticHeight(mesh, polygon.height, polygon.ellipsoid);
+            mesh = PolygonPipeline.scaleToGeodeticHeight(mesh, height, polygon.ellipsoid);
             mesh = MeshFilters.reorderForPostVertexCache(mesh);
             mesh = MeshFilters.reorderForPreVertexCache(mesh);
 
