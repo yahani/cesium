@@ -246,7 +246,7 @@ define(['../Core/Cartesian3',
     };
 
     DynamicPolygonBatchVisualizer.prototype._onObjectsRemoved = function(dynamicObjectCollection, dynamicObjects) {
-
+        this.removeAllPrimitives();
     };
 
     return DynamicPolygonBatchVisualizer;
