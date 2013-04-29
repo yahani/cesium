@@ -640,10 +640,6 @@ define([
         return mesh;
     }
 
-    function combineArray(target, source) {
-        target.push.apply(target, source);
-    }
-
     function createMeshes(context, polygon) {
         // PERFORMANCE_IDEA:  Move this to a web-worker.
         var i;
@@ -672,60 +668,6 @@ define([
                     polygon._boundingVolume = undefined;
                 }
             }
-
-// TODO: this should be a general function
-// slow and hacky, I know.
-            var combinedMesh = {
-                attributes : {
-                    color : {
-                        componentDatatype : ComponentDatatype.UNSIGNED_BYTE,
-                        componentsPerAttribute : 4,
-                        normalize : true,
-                        values : []
-                    },
-                    pickColor : {
-                        componentDatatype : ComponentDatatype.UNSIGNED_BYTE,
-                        componentsPerAttribute : 4,
-                        normalize : true,
-                        values : []
-                    },
-                    position : {
-                        componentDatatype : ComponentDatatype.FLOAT,
-                        componentsPerAttribute : 3,
-                        values : []
-                    },
-                    textureCoordinates : {
-                        componentDatatype : ComponentDatatype.FLOAT,
-                        componentsPerAttribute : 2,
-                        values : []
-                    }
-                },
-                indexLists : [{
-                    primitiveType : PrimitiveType.TRIANGLES,
-                    values : []
-                }]
-            };
-
-            var offset = 0;
-
-            for (i = 0; i < meshes.length; ++i) {
-                var m = meshes[i];
-
-                combineArray(combinedMesh.attributes.color.values, m.attributes.color.values);
-                combineArray(combinedMesh.attributes.pickColor.values, m.attributes.pickColor.values);
-                combineArray(combinedMesh.attributes.position.values, m.attributes.position.values);
-                combineArray(combinedMesh.attributes.textureCoordinates.values, m.attributes.textureCoordinates.values);
-
-                var vv = m.indexLists[0].values;
-                for (var k = 0; k < vv.length; ++k) {
-                    combinedMesh.indexLists[0].values.push(offset + vv[k]);
-                }
-
-                offset += m.attributes.color.values.length / m.attributes.color.componentsPerAttribute;
-            }
-
-            meshes = [combinedMesh];
-
         } else if ((typeof polygon._extent !== 'undefined') && !polygon._extent.isEmpty()) {
             meshes.push(ExtentTessellator.compute({extent: polygon._extent, generateTextureCoordinates:true}));
 
@@ -762,47 +704,46 @@ define([
             return undefined;
         }
 
-        var processedMeshes = [];
         for (i = 0; i < meshes.length; i++) {
             var height = (typeof polygon._collectionHeights !== 'undefined') ?
                     polygon._collectionHeights[i] : polygon.height;
 
-            mesh = meshes[i];
-            mesh = PolygonPipeline.scaleToGeodeticHeight(mesh, height, polygon.ellipsoid);
-            mesh = MeshFilters.reorderForPostVertexCache(mesh);
-            mesh = MeshFilters.reorderForPreVertexCache(mesh);
-
-            if (polygon._mode === SceneMode.SCENE3D) {
-                mesh.attributes.position2DHigh = { // Not actually used in shader
-                    value : [0.0, 0.0]
-                };
-                mesh.attributes.position2DLow = { // Not actually used in shader
-                    value : [0.0, 0.0]
-                };
-                mesh = MeshFilters.encodeAttribute(mesh, 'position', 'position3DHigh', 'position3DLow');
-            } else {
-                mesh = MeshFilters.projectTo2D(mesh, polygon._projection);
-
-                if ((i === 0) && (polygon._mode !== SceneMode.SCENE3D)) {
-                    var projectedPositions = mesh.attributes.position2D.values;
-                    var positions = [];
-
-                    for (var j = 0; j < projectedPositions.length; j += 2) {
-                        positions.push(new Cartesian3(projectedPositions[j], projectedPositions[j + 1], 0.0));
-                    }
-
-                    polygon._boundingVolume2D = BoundingSphere.fromPoints(positions, polygon._boundingVolume2D);
-                    var center2DPositions = polygon._boundingVolume2D.center;
-                    polygon._boundingVolume2D.center = new Cartesian3(0.0, center2DPositions.x, center2DPositions.y);
-                }
-
-                mesh = MeshFilters.encodeAttribute(mesh, 'position3D', 'position3DHigh', 'position3DLow');
-                mesh = MeshFilters.encodeAttribute(mesh, 'position2D', 'position2DHigh', 'position2DLow');
-            }
-            processedMeshes = processedMeshes.concat(MeshFilters.fitToUnsignedShortIndices(mesh));
+            meshes[i] = PolygonPipeline.scaleToGeodeticHeight(meshes[i], height, polygon.ellipsoid);
         }
 
-        return processedMeshes;
+        mesh = MeshFilters.combine(meshes);
+        mesh = MeshFilters.reorderForPostVertexCache(mesh);
+        mesh = MeshFilters.reorderForPreVertexCache(mesh);
+
+        if (polygon._mode === SceneMode.SCENE3D) {
+            mesh.attributes.position2DHigh = { // Not actually used in shader
+                value : [0.0, 0.0]
+            };
+            mesh.attributes.position2DLow = { // Not actually used in shader
+                value : [0.0, 0.0]
+            };
+            mesh = MeshFilters.encodeAttribute(mesh, 'position', 'position3DHigh', 'position3DLow');
+        } else {
+            mesh = MeshFilters.projectTo2D(mesh, polygon._projection);
+
+            if (polygon._mode !== SceneMode.SCENE3D) {
+                var projectedPositions = mesh.attributes.position2D.values;
+                var positions = [];
+
+                for (var j = 0; j < projectedPositions.length; j += 2) {
+                    positions.push(new Cartesian3(projectedPositions[j], projectedPositions[j + 1], 0.0));
+                }
+
+                polygon._boundingVolume2D = BoundingSphere.fromPoints(positions, polygon._boundingVolume2D);
+                var center2DPositions = polygon._boundingVolume2D.center;
+                polygon._boundingVolume2D.center = new Cartesian3(0.0, center2DPositions.x, center2DPositions.y);
+            }
+
+            mesh = MeshFilters.encodeAttribute(mesh, 'position3D', 'position3DHigh', 'position3DLow');
+            mesh = MeshFilters.encodeAttribute(mesh, 'position2D', 'position2DHigh', 'position2DLow');
+        }
+
+        return MeshFilters.fitToUnsignedShortIndices(mesh);
     }
 
     function getGranularity(polygon, mode) {
