@@ -2283,7 +2283,7 @@ define([
                     attribute = attributes[name];
                     vaAttributes.push({
                         index : attributeIndices[name],
-                        vertexBuffer : attribute.values ? context.createVertexBuffer(attribute.componentDatatype.toTypedArray(attribute.values), bufferUsage) : undefined,
+                        vertexBuffer : attribute.values ? context.createVertexBuffer(attribute.componentDatatype.createTypedArray(attribute.values), bufferUsage) : undefined,
                         value : attribute.value ? attribute.value : undefined,
                         componentDatatype : attribute.componentDatatype,
                         componentsPerAttribute : attribute.componentsPerAttribute,
