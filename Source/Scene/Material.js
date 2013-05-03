@@ -38,7 +38,8 @@ define([
         '../Shaders/Materials/FadeMaterial',
         '../Shaders/Materials/PolylineArrowMaterial',
         '../Shaders/Materials/PolylineGlowMaterial',
-        '../Shaders/Materials/PolylineOutlineMaterial'
+        '../Shaders/Materials/PolylineOutlineMaterial',
+        '../Shaders/Materials/PolylineStippleMaterial'
     ], function(
         when,
         loadImage,
@@ -78,7 +79,8 @@ define([
         FadeMaterial,
         PolylineArrowMaterial,
         PolylineGlowMaterial,
-        PolylineOutlineMaterial) {
+        PolylineOutlineMaterial,
+        PolylineStippleMaterial) {
     "use strict";
 
     /**
