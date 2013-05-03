@@ -7,13 +7,7 @@
 		</glslToJavascript>
 
 		<createCesiumJs output="${sourceDirectory}/Cesium.js">
-			<sourcefiles dir="${sourceDirectory}">
-				<include name="**/*.js" />
-				<exclude name="*.js" />
-				<exclude name="Widgets/Dojo/**" />
-				<exclude name="Workers/**" />
-				<exclude name="**/*.profile.js" />
-			</sourcefiles>
+			<sourcefiles refid="cesiumJsFileSet" /> 
 		</createCesiumJs>
 
 		<createSpecList output="${specsDirectory}/SpecList.js">
@@ -31,10 +25,12 @@
 		<copy todir="Build">
 			<fileset dir="Apps/">
 				<include name="HelloWorld.html" />
+				<include name="index.html" />
 			</fileset>
 		</copy>
 
 		<replace file="Build/HelloWorld.html" token="../Build/" value="" />
+		<replace file="Build/index.html" token="../Build/" value="" />
 	</target>
 
 	<target name="minify" description="Combines all source files into a single stand-alone, minified script.">
@@ -67,6 +63,7 @@
 				<include name="Cesium/**" />
 				<include name="Documentation/**" />
 				<include name="HelloWorld.html" />
+				<include name="index.html" />
 			</fileset>
 			<include name="LICENSE.md" />
 			<include name="CHANGES.md" />
@@ -80,6 +77,7 @@
 			<include name="Source/**" />
 			<include name="Specs/**" />
 			<include name="ThirdParty/**" />
+			<include name="HelloWorld.html" />
 			<include name="index.html" />
 			<include name="LICENSE.md" />
 			<include name="CHANGES.md" />
@@ -89,6 +87,7 @@
 
 	<target name="clean" description="Cleans the build.">
 		<delete includeEmptyDirs="true" failonerror="false">
+			<fileset dir="${sourceDirectory}" includes="Cesium.js" />
 			<fileset dir="${buildDirectory}" defaultexcludes="false" />
 			<fileset dir="${instrumentedDirectory}" defaultexcludes="false" />
 			<fileset dir="${shadersDirectory}" includes="**/*.js" excludes="*.profile.js" />
@@ -108,7 +107,7 @@
 
 	<!-- Inputs -->
 	<!-- this version should be set to the upcoming version, so it can be tagged without requiring a bump first -->
-	<property name="version" value="b15" />
+	<property name="version" value="b16" />
 	<property name="sourceDirectory" location="Source" />
 	<property name="shadersDirectory" location="${sourceDirectory}/Shaders" />
 	<property name="examplesDirectory" location="Examples" />
@@ -141,6 +140,14 @@
 		<pathelement path="${toolsDirectory}/bsf-2.4.0/bsf.jar" />
 		<pathelement path="${toolsDirectory}/commons-logging-1.1.1/commons-logging-1.1.1.jar" />
 	</path>
+
+	<fileset dir="${sourceDirectory}" id="cesiumJsFileSet">
+		<include name="**/*.js" />
+		<exclude name="*.js" />
+		<exclude name="Widgets/Dojo/**" />
+		<exclude name="Workers/**" />
+		<exclude name="**/*.profile.js" />
+	</fileset>
 
 	<scriptdef name="glslToJavascript" language="javascript" src="${tasksDirectory}/glslToJavaScript.js" manager="bsf" classpathref="javascriptClassPath" loaderref="javascript.loader">
 		<attribute name="minify" />
@@ -194,7 +201,8 @@
 
 				<include name="Apps/**/*.js" />
 				<include name="Apps/Sandcastle/gallery/*.html" />
-				<exclude name="Apps/Sandcastle/Cesium-hint.js" />
+				
+				<exclude name="Apps/Sandcastle/ThirdParty/**" />
 
 				<include name="Specs/**/*.js" />
 
@@ -238,10 +246,8 @@
 		<mkdir dir="${combineOutputDirectory}" />
 		<property name="relativeCombineOutputDirectory" location="${combineOutputDirectory}" relative="true" basedir="${sourceDirectory}" />
 
-		<!-- create combined Cesium.js  -->
-		<exec executable="${nodePath}" dir="${sourceDirectory}">
-			<arg line="${rjsPath} -o optimize=${optimize} wrap=true baseUrl=. name=${relativeAlmondPath} include=main out=${relativeCombineOutputDirectory}/Cesium.js" />
-		</exec>
+		<!-- create combined Cesium.js	-->
+		<antcall target="combineJavaScript.combineCesium" />
 
 		<!-- create cesiumWorkerBootstrapper -->
 		<exec executable="${nodePath}" dir="${sourceDirectory}">
@@ -273,6 +279,18 @@
 				<exclude name="Widgets/Dojo/**" />
 			</fileset>
 		</copy>
+	</target>
+
+	<target name="combineJavaScript.combineCesium" depends="combineJavaScript.combineCesium.check" unless="no.combineCesium.create">
+		<exec executable="${nodePath}" dir="${sourceDirectory}">
+			<arg line="${rjsPath} -o optimize=${optimize} wrap=true baseUrl=. name=${relativeAlmondPath} include=main out=${relativeCombineOutputDirectory}/Cesium.js" />
+		</exec>
+	</target>
+
+	<target name="combineJavaScript.combineCesium.check">
+		<uptodate property="no.combineCesium.create" targetfile="${unminifiedOutputDirectory}/Cesium.js">
+			<srcfiles refid="cesiumJsFileSet" />  
+		</uptodate>
 	</target>
 
 	<target name="combineJavaScript.combineWorker">
@@ -429,6 +447,7 @@
 		<replace dir="${appOutputDirectory}" summary="true">
 			<replacefilter token="../../" value="" />
 			<replacefilter token="Source/" value="" />
+			<include name="HelloWorld.html" />
 			<include name="index.html" />
 			<include name="*.css" />
 		</replace>
@@ -437,6 +456,7 @@
 		<replace dir="${appOutputDirectory}" summary="true">
 			<replacefilter token="ThirdParty/dojo-release-1.8.3-src/" value="" />
 			<include name="${appStartupScript}" />
+			<include name="HelloWorld.html" />
 			<include name="index.html" />
 			<include name="*.css" />
 		</replace>

@@ -13,14 +13,9 @@ attribute vec3 nextPosition2DLow;
 attribute vec4 texCoordExpandWidthAndShow;
 attribute vec4 pickColor;
 
-#ifndef RENDER_FOR_PICK
 varying vec2  v_textureCoordinates;
 varying float v_width;
-#else
-varying vec4  v_pickColor;
-#endif
-
-uniform float u_morphTime;
+varying vec4  czm_pickColor;
 
 const vec2 czm_highResolutionSnapScale = vec2(1.0, 1.0);    // TODO
 
@@ -68,13 +63,13 @@ void main()
     float show = texCoordExpandWidthAndShow.w;
     
     vec4 p, prev, next;
-    if (u_morphTime == 1.0)
+    if (czm_morphTime == 1.0)
     {
         p = vec4(czm_translateRelativeToEye(position3DHigh.xyz, position3DLow.xyz), 1.0);
         prev = vec4(czm_translateRelativeToEye(prevPosition3DHigh.xyz, prevPosition3DLow.xyz), 1.0);
         next = vec4(czm_translateRelativeToEye(nextPosition3DHigh.xyz, nextPosition3DLow.xyz), 1.0);
     }
-    else if (u_morphTime == 0.0)
+    else if (czm_morphTime == 0.0)
     {
         p = vec4(czm_translateRelativeToEye(position2DHigh.zxy, position2DLow.zxy), 1.0);
         prev = vec4(czm_translateRelativeToEye(prevPosition2DHigh.zxy, prevPosition2DLow.zxy), 1.0);
@@ -85,15 +80,15 @@ void main()
         p = czm_columbusViewMorph(
                 czm_translateRelativeToEye(position2DHigh.zxy, position2DLow.zxy),
                 czm_translateRelativeToEye(position3DHigh.xyz, position3DLow.xyz),
-                u_morphTime);
+                czm_morphTime);
         prev = czm_columbusViewMorph(
                 czm_translateRelativeToEye(prevPosition2DHigh.zxy, prevPosition2DLow.zxy),
                 czm_translateRelativeToEye(prevPosition3DHigh.xyz, prevPosition3DLow.xyz),
-                u_morphTime);
+                czm_morphTime);
         next = czm_columbusViewMorph(
                 czm_translateRelativeToEye(nextPosition2DHigh.zxy, nextPosition2DLow.zxy),
                 czm_translateRelativeToEye(nextPosition3DHigh.xyz, nextPosition3DLow.xyz),
-                u_morphTime);
+                czm_morphTime);
     }
     
     vec4 endPointWC, p0, p1;
@@ -119,9 +114,9 @@ void main()
     float expandWidth = width * 0.5;
     vec2 direction;
 
-	if (czm_equalsEpsilon(normalize(prev.xyz - p.xyz), vec3(0.0), czm_epsilon1))
+	if (czm_equalsEpsilon(normalize(prev.xyz - p.xyz), vec3(0.0), czm_epsilon1) || czm_equalsEpsilon(prevWC, -nextWC, czm_epsilon1))
 	{
-	   direction = vec2(-nextWC.y, nextWC.x);
+	    direction = vec2(-nextWC.y, nextWC.x);
     }
 	else if (czm_equalsEpsilon(normalize(next.xyz - p.xyz), vec3(0.0), czm_epsilon1))
 	{
@@ -143,7 +138,6 @@ void main()
 	    // Because the z components of both vectors are zero, the x and y coordinate will be zero.
 	    // Therefore, the sine of the angle is just the z component of the cross product.
 	    float sinAngle = abs(direction.x * nextWC.y - direction.y * nextWC.x);
-	    
 	    expandWidth = clamp(expandWidth / sinAngle, 0.0, width * 2.0);
     }
 
@@ -151,10 +145,7 @@ void main()
     vec4 positionWC = vec4(endPointWC.xy + offset, -endPointWC.z, 1.0);
     gl_Position = czm_viewportOrthographic * positionWC * show;
     
-#ifndef RENDER_FOR_PICK
     v_textureCoordinates = vec2(texCoord, clamp(expandDir, 0.0, 1.0));
     v_width = width;
-#else
-    v_pickColor = pickColor;
-#endif
+    czm_pickColor = pickColor;
 }

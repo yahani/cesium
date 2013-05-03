@@ -1,6 +1,7 @@
 /*global define*/
 define([
         '../Core/DeveloperError',
+        '../Core/Color',
         '../Core/combine',
         '../Core/destroyObject',
         '../Core/Math',
@@ -25,6 +26,7 @@ define([
         '../Shaders/BillboardCollectionFS'
     ], function(
         DeveloperError,
+        Color,
         combine,
         destroyObject,
         CesiumMath,
@@ -133,7 +135,6 @@ define([
         this._sp = undefined;
         this._rs = undefined;
         this._vaf = undefined;
-        this._rsPick = undefined;
         this._spPick = undefined;
 
         this._billboards = [];
@@ -185,14 +186,6 @@ define([
         this._mode = SceneMode.SCENE3D;
         this._projection = undefined;
 
-        /**
-         * The current morph transition time between 2D/Columbus View and 3D,
-         * with 0.0 being 2D or Columbus View and 1.0 being 3D.
-         *
-         * @type Number
-         */
-        this.morphTime = this._mode.morphTime;
-
         // The buffer usage for each attribute is determined based on the usage of the attribute over time.
         this._buffersUsage = [
                               BufferUsage.STATIC_DRAW, // SHOW_INDEX
@@ -213,9 +206,6 @@ define([
             },
             u_atlasSize : function() {
                 return that._textureAtlas.getTexture().getDimensions();
-            },
-            u_morphTime : function() {
-                return that.morphTime;
             }
         };
     };
@@ -245,14 +235,14 @@ define([
      * // Example 1:  Add a billboard, specifying all the default values.
      * var b = billboards.add({
      *   show : true,
-     *   position : new Cartesian3(0.0, 0.0, 0.0),
-     *   pixelOffset : new Cartesian2(0.0, 0.0),
-     *   eyeOffset : new Cartesian3(0.0, 0.0, 0.0),
+     *   position : Cartesian3.ZERO,
+     *   pixelOffset : Cartesian2.ZERO,
+     *   eyeOffset : Cartesian3.ZERO,
      *   horizontalOrigin : HorizontalOrigin.CENTER,
      *   verticalOrigin : VerticalOrigin.CENTER,
      *   scale : 1.0,
      *   imageIndex : 0,
-     *   color : new Color(1.0, 1.0, 1.0, 1.0)
+     *   color : Color.WHITE
      * });
      *
      * // Example 2:  Specify only the billboard's cartographic position.
@@ -739,26 +729,38 @@ define([
 
     function writePickColor(billboardCollection, context, textureAtlasCoordinates, vafWriters, billboard) {
         var i = (billboard._index * 4);
-        var pickColor = billboard.getPickId(context).unnormalizedRgb;
 
         var pickWriters = vafWriters[pickPassPurpose];
         var writer = pickWriters[attributeIndices.pickColor];
-        writer(i + 0, pickColor.red, pickColor.green, pickColor.blue, 255);
-        writer(i + 1, pickColor.red, pickColor.green, pickColor.blue, 255);
-        writer(i + 2, pickColor.red, pickColor.green, pickColor.blue, 255);
-        writer(i + 3, pickColor.red, pickColor.green, pickColor.blue, 255);
+
+        var pickColor = billboard.getPickId(context).color;
+        var red = Color.floatToByte(pickColor.red);
+        var green = Color.floatToByte(pickColor.green);
+        var blue = Color.floatToByte(pickColor.blue);
+        var alpha = Color.floatToByte(pickColor.alpha);
+
+        writer(i + 0, red, green, blue, alpha);
+        writer(i + 1, red, green, blue, alpha);
+        writer(i + 2, red, green, blue, alpha);
+        writer(i + 3, red, green, blue, alpha);
     }
 
     function writeColor(billboardCollection, context, textureAtlasCoordinates, vafWriters, billboard) {
         var i = (billboard._index * 4);
-        var color = billboard.getColor();
 
         var colorWriters = vafWriters[colorPassPurpose];
         var writer = colorWriters[attributeIndices.color];
-        writer(i + 0, color.red * 255, color.green * 255, color.blue * 255, color.alpha * 255);
-        writer(i + 1, color.red * 255, color.green * 255, color.blue * 255, color.alpha * 255);
-        writer(i + 2, color.red * 255, color.green * 255, color.blue * 255, color.alpha * 255);
-        writer(i + 3, color.red * 255, color.green * 255, color.blue * 255, color.alpha * 255);
+
+        var color = billboard.getColor();
+        var red = Color.floatToByte(color.red);
+        var green = Color.floatToByte(color.green);
+        var blue = Color.floatToByte(color.blue);
+        var alpha = Color.floatToByte(color.alpha);
+
+        writer(i + 0, red, green, blue, alpha);
+        writer(i + 1, red, green, blue, alpha);
+        writer(i + 2, red, green, blue, alpha);
+        writer(i + 3, red, green, blue, alpha);
     }
 
     function writeOriginAndShow(billboardCollection, context, textureAtlasCoordinates, vafWriters, billboard) {
@@ -823,7 +825,7 @@ define([
         writeTextureCoordinatesAndImageSize(billboardCollection, context, textureAtlasCoordinates, vafWriters, billboard);
     }
 
-    function recomputeActualPositions(billboardCollection, billboards, length, frameState, morphTime, modelMatrix, recomputeBoundingVolume) {
+    function recomputeActualPositions(billboardCollection, billboards, length, frameState, modelMatrix, recomputeBoundingVolume) {
         var boundingVolume;
         if (frameState.mode === SceneMode.SCENE3D) {
             boundingVolume = billboardCollection._baseVolume;
@@ -835,7 +837,7 @@ define([
         for ( var i = 0; i < length; ++i) {
             var billboard = billboards[i];
             var position = billboard.getPosition();
-            var actualPosition = Billboard._computeActualPosition(position, frameState, morphTime, modelMatrix);
+            var actualPosition = Billboard._computeActualPosition(position, frameState, modelMatrix);
             if (typeof actualPosition !== 'undefined') {
                 billboard._setActualPosition(actualPosition);
 
@@ -858,11 +860,10 @@ define([
 
         var billboards = billboardCollection._billboards;
         var billboardsToUpdate = billboardCollection._billboardsToUpdate;
-        var morphTime = billboardCollection.morphTime;
         var modelMatrix = billboardCollection._modelMatrix;
 
         if (billboardCollection._mode !== mode ||
-                billboardCollection._projection !== projection ||
+            billboardCollection._projection !== projection ||
             mode !== SceneMode.SCENE3D &&
             !modelMatrix.equals(billboardCollection.modelMatrix)) {
 
@@ -872,12 +873,12 @@ define([
             billboardCollection._createVertexArray = true;
 
             if (mode === SceneMode.SCENE3D || mode === SceneMode.SCENE2D || mode === SceneMode.COLUMBUS_VIEW) {
-                recomputeActualPositions(billboardCollection, billboards, billboards.length, frameState, morphTime, modelMatrix, true);
+                recomputeActualPositions(billboardCollection, billboards, billboards.length, frameState, modelMatrix, true);
             }
         } else if (mode === SceneMode.MORPHING) {
-            recomputeActualPositions(billboardCollection, billboards, billboards.length, frameState, morphTime, modelMatrix, true);
+            recomputeActualPositions(billboardCollection, billboards, billboards.length, frameState, modelMatrix, true);
         } else if (mode === SceneMode.SCENE2D || mode === SceneMode.COLUMBUS_VIEW) {
-            recomputeActualPositions(billboardCollection, billboardsToUpdate, billboardCollection._billboardsToUpdateIndex, frameState, morphTime, modelMatrix, false);
+            recomputeActualPositions(billboardCollection, billboardsToUpdate, billboardCollection._billboardsToUpdateIndex, frameState, modelMatrix, false);
         }
     }
 
@@ -1107,12 +1108,6 @@ define([
             commandLists.pickList = pickList;
 
             if (typeof this._spPick === 'undefined') {
-                this._rsPick = context.createRenderState({
-                    depthTest : {
-                        enabled : true
-                    }
-                });
-
                 this._spPick = context.getShaderCache().getShaderProgram(
                         '#define RENDER_FOR_PICK 1\n' + BillboardCollectionVS,
                         '#define RENDER_FOR_PICK 1\n' + BillboardCollectionFS,
@@ -1136,7 +1131,7 @@ define([
                 command.shaderProgram = this._spPick;
                 command.uniformMap = this._uniforms;
                 command.vertexArray = va[j].va;
-                command.renderState = this._rsPick;
+                command.renderState = this._rs;
             }
         }
 
