@@ -1,10 +1,12 @@
 /*global define*/
-define(['../../Core/Cartesian2',
+define([
+        '../../Core/Cartesian2',
         '../../Core/defaultValue',
         '../../Core/DeveloperError',
         '../../Core/defineProperties',
         '../../Core/destroyObject',
         '../../Core/ScreenSpaceEventType',
+        '../../DynamicScene/DataSourceCollection',
         '../../DynamicScene/DataSourceDisplay',
         '../ClockViewModel',
         '../Animation/Animation',
@@ -12,17 +14,19 @@ define(['../../Core/Cartesian2',
         '../BaseLayerPicker/BaseLayerPicker',
         '../BaseLayerPicker/createDefaultBaseLayers',
         '../CesiumWidget/CesiumWidget',
+        '../DataSourceBrowser/DataSourceBrowser',
         '../FullscreenButton/FullscreenButton',
         '../HomeButton/HomeButton',
         '../SceneModePicker/SceneModePicker',
         '../Timeline/Timeline'
-        ], function(
+    ], function(
                 Cartesian2,
                 defaultValue,
                 DeveloperError,
                 defineProperties,
                 destroyObject,
                 ScreenSpaceEventType,
+                DataSourceCollection,
                 DataSourceDisplay,
                 ClockViewModel,
                 Animation,
@@ -30,6 +34,7 @@ define(['../../Core/Cartesian2',
                 BaseLayerPicker,
                 createDefaultBaseLayers,
                 CesiumWidget,
+                DataSourceBrowser,
                 FullscreenButton,
                 HomeButton,
                 SceneModePicker,
@@ -60,6 +65,7 @@ define(['../../Core/Cartesian2',
      * @param {Object} [options] Configuration options for the widget.
      * @param {Boolean} [options.animation=true] If set to false, the Animation widget will not be created.
      * @param {Boolean} [options.baselayerPicker=true] If set to false, the BaseLayerPicker widget will not be created.
+     * @param {Boolean} [options.dataSourceBrowser=true] If set to false, the DataSourceBrowser widget will not be created.
      * @param {Boolean} [options.fullscreenButton=true] If set to false, the FullscreenButton widget will not be created.
      * @param {Boolean} [options.homeButton=true] If set to false, the HomeButton widget will not be created.
      * @param {Boolean} [options.sceneModePicker=true] If set to false, the SceneModePicker widget will not be created.
@@ -118,8 +124,11 @@ define(['../../Core/Cartesian2',
 
         var clock = cesiumWidget.clock;
 
+        var dataSourceCollection = new DataSourceCollection();
+        this._dataSourceCollection = dataSourceCollection;
+
         //Data source display
-        var dataSourceDisplay = new DataSourceDisplay(cesiumWidget.scene);
+        var dataSourceDisplay = new DataSourceDisplay(cesiumWidget.scene, dataSourceCollection);
         this._dataSourceDisplay = dataSourceDisplay;
         clock.onTick.addEventListener(this._onTick, this);
 
@@ -186,6 +195,15 @@ define(['../../Core/Cartesian2',
             fullscreenButton = new FullscreenButton(fullscreenContainer, defaultValue(options.fullscreenElement, container));
         }
 
+        //DataSourceBrowser
+        var dataSourceBrowser;
+        if (typeof options.dataSourceBrowser === 'undefined' || options.dataSourceBrowser !== false) {
+            var dataSourceBrowserContainer = document.createElement('div');
+            dataSourceBrowserContainer.className = 'cesium-viewer-dataSourceBrowserContainer';
+            viewerContainer.appendChild(dataSourceBrowserContainer);
+            dataSourceBrowser = new DataSourceBrowser(dataSourceBrowserContainer, dataSourceCollection);
+        }
+
         this._container = container;
         this._viewerContainer = viewerContainer;
         this._cesiumWidget = cesiumWidget;
@@ -196,6 +214,7 @@ define(['../../Core/Cartesian2',
         this._animation = animation;
         this._timeline = timeline;
         this._fullscreenButton = fullscreenButton;
+        this._dataSourceBrowser = dataSourceBrowser;
     };
 
     defineProperties(Viewer.prototype, {
@@ -288,6 +307,17 @@ define(['../../Core/Cartesian2',
         },
 
         /**
+         * Gets the DataSourceBrowser.
+         * @memberof Viewer
+         * @type {DataSourceBrowser}
+         */
+        dataSourceBrowser : {
+            get : function() {
+                return this._dataSourceBrowser;
+            }
+        },
+
+        /**
          * Gets the display used for {@link DataSource} visualization.
          * @memberof Viewer
          * @type {DataSourceDisplay}
@@ -305,7 +335,7 @@ define(['../../Core/Cartesian2',
          */
         dataSources : {
             get : function() {
-                return this._dataSourceDisplay.getDataSources();
+                return this._dataSourceCollection;
             }
         },
 
@@ -432,9 +462,19 @@ define(['../../Core/Cartesian2',
             this._fullscreenButton = this._fullscreenButton.destroy();
         }
 
+        if (typeof this._dataSourceBrowser !== 'undefined') {
+            this._viewerContainer.removeChild(this._dataSourceBrowser.container);
+            this._dataSourceBrowser = this._dataSourceBrowser.destroy();
+        }
+
         this._cesiumWidget.clock.onTick.removeEventListener(this._onTick, this);
         this._cesiumWidget = this._cesiumWidget.destroy();
         this._dataSourceDisplay = this._dataSourceDisplay.destroy();
+
+        if (typeof this._dataSourceCollection.destroy === 'function') {
+            this._dataSourceCollection = this._dataSourceCollection.destroy();
+        }
+
         return destroyObject(this);
     };
 

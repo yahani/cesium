@@ -1,6 +1,7 @@
 @import url('./Animation/Animation.css');
 @import url('./BaseLayerPicker/BaseLayerPicker.css');
 @import url('./CesiumWidget/CesiumWidget.css');
+@import url('../DataSourceBrowser/DataSourceBrowser.css');
 @import url('./FullscreenButton/FullscreenButton.css');
 @import url('./HomeButton/HomeButton.css');
 @import url('./SceneModePicker/SceneModePicker.css');
