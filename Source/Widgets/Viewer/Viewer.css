@@ -1,11 +1,11 @@
-@import url('../Animation/Animation.css');
-@import url('../BaseLayerPicker/BaseLayerPicker.css');
-@import url('../CesiumWidget/CesiumWidget.css');
-@import url('../DataSourceBrowser/DataSourceBrowser.css');
-@import url('../FullscreenButton/FullscreenButton.css');
-@import url('../HomeButton/HomeButton.css');
-@import url('../SceneModePicker/SceneModePicker.css');
-@import url('../Timeline/Timeline.css');
+@import url(../Animation/Animation.css);
+@import url(../BaseLayerPicker/BaseLayerPicker.css);
+@import url(../CesiumWidget/CesiumWidget.css);
+@import url(../DataSourceBrowser/DataSourceBrowser.css);
+@import url(../FullscreenButton/FullscreenButton.css);
+@import url(../HomeButton/HomeButton.css);
+@import url(../SceneModePicker/SceneModePicker.css);
+@import url(../Timeline/Timeline.css);
 
 .cesium-viewer {
     font-family: sans-serif;
@@ -24,13 +24,6 @@
 .cesium-viewer-cesiumWidgetContainer {
 	width: 100%;
 	height: 100%;
-}
-
-.cesium-viewer-cesiumWidgetContainer .cesium-widget-logo {
-    bottom: 32px;
-    left: 179px;
-    width: 118px;
-    height: 26px;
 }
 
 .cesium-viewer-canvas {
@@ -68,9 +61,9 @@
 	bottom: 0;
 	right: 0;
 	padding: 0;
-    width: 29px;
-    height: 29px;
-    overflow: hidden;
+	width: 29px;
+	height: 29px;
+	overflow: hidden;
 }
 
 .cesium-viewer-dataSourceBrowserContainer {
@@ -109,62 +102,4 @@
 	height: 32px;
 	vertical-align: middle;
 	margin: 1px;
-}
-
-.cesium-viewer-loading {
-	display: none;
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	margin-top: -33px;
-	margin-left: -33px;
-	width: 66px;
-	height: 66px;
-	background-position: center;
-	background-repeat: no-repeat;
-	background-image: url(../Images/ajax-loader.gif);
-}
-
-@media only screen and (min-width: 600px) and (max-width: 900px) {
-	.cesium-viewer .cesium-viewer-animationContainer {
-		width: 136px;
-		height: 90px;
-	}
-	.cesium-viewer .cesium-viewer-timelineContainer {
-		left: 137px;
-	}
-	.cesium-viewer .cesium-widget-logo {
-		left: 146px;
-	}
-}
-
-@media only screen and (max-width: 599px) {
-	.cesium-viewer .cesium-viewer-animationContainer {
-		width: 106px;
-		height: 70px;
-	}
-	.cesium-viewer .cesium-viewer-timelineContainer {
-		left: 107px;
-	}
-	.cesium-viewer .cesium-widget-logo {
-		left: 116px;
-	}
-}
-
-@media only screen and (max-height: 300px) {
-    .cesium-viewer .cesium-baseLayerPicker-dropDown {
-        max-height: 125px;
-    }
-}
-
-@media only screen and (min-height: 300px) and (max-height: 425px) {
-    .cesium-viewer .cesium-baseLayerPicker-dropDown {
-        max-height: 225px;
-    }
-}
-
-@media only screen and (min-height: 425px) and (max-height: 550px) {
-    .cesium-viewer .cesium-baseLayerPicker-dropDown {
-        max-height: 325px;
-    }
 }

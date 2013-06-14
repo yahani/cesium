@@ -8,46 +8,40 @@ define([
         '../../Core/ScreenSpaceEventType',
         '../../DynamicScene/DataSourceCollection',
         '../../DynamicScene/DataSourceDisplay',
-        '../ClockViewModel',
         '../Animation/Animation',
         '../Animation/AnimationViewModel',
         '../BaseLayerPicker/BaseLayerPicker',
         '../BaseLayerPicker/createDefaultBaseLayers',
         '../CesiumWidget/CesiumWidget',
         '../DataSourceBrowser/DataSourceBrowser',
+        '../ClockViewModel',
         '../FullscreenButton/FullscreenButton',
+        '../getElement',
         '../HomeButton/HomeButton',
         '../SceneModePicker/SceneModePicker',
         '../Timeline/Timeline'
     ], function(
-                Cartesian2,
-                defaultValue,
-                DeveloperError,
-                defineProperties,
-                destroyObject,
-                ScreenSpaceEventType,
-                DataSourceCollection,
-                DataSourceDisplay,
-                ClockViewModel,
-                Animation,
-                AnimationViewModel,
-                BaseLayerPicker,
-                createDefaultBaseLayers,
-                CesiumWidget,
-                DataSourceBrowser,
-                FullscreenButton,
-                HomeButton,
-                SceneModePicker,
-                Timeline) {
+        Cartesian2,
+        defaultValue,
+        DeveloperError,
+        defineProperties,
+        destroyObject,
+        ScreenSpaceEventType,
+        DataSourceCollection,
+        DataSourceDisplay,
+        Animation,
+        AnimationViewModel,
+        BaseLayerPicker,
+        createDefaultBaseLayers,
+        CesiumWidget,
+        ClockViewModel,
+        DataSourceBrowser,
+        FullscreenButton,
+        getElement,
+        HomeButton,
+        SceneModePicker,
+        Timeline) {
     "use strict";
-
-    function setLogoOffset(centralBody, logoOffsetX, logoOffsetY) {
-        var logoOffset = centralBody.logoOffset;
-        if ((logoOffsetX !== logoOffset.x) || (logoOffsetY !== logoOffset.y)) {
-            centralBody.logoOffset.x = logoOffsetX;
-            centralBody.logoOffset.y = logoOffsetY;
-        }
-    }
 
     function onTimelineScrubfunction(e) {
         var clock = e.clock;
@@ -57,6 +51,7 @@ define([
 
     /**
      * A base widget for building applications.  It composites all of the standard Cesium widgets into one reusable package.
+     * The widget can always be extended by using mixins, which add functionality useful for a variety of applications.
      *
      * @alias Viewer
      * @constructor
@@ -71,9 +66,10 @@ define([
      * @param {Boolean} [options.sceneModePicker=true] If set to false, the SceneModePicker widget will not be created.
      * @param {Boolean} [options.timeline=true] If set to false, the Timeline widget will not be created.
      * @param {ImageryProviderViewModel} [options.selectedImageryProviderViewModel] The view model for the current base imagery layer, it not supplied the first available base layer is used.
-     * @param {Array} [options.imageryProviderViewModels=createDefaultBaseLayers()] The array of ImageryProviderViewModels to be selectable from the BaseLyerPicker.
+     * @param {Array} [options.imageryProviderViewModels=createDefaultBaseLayers()] The array of ImageryProviderViewModels to be selectable from the BaseLayerPicker.
      * @param {TerrainProvider} [options.terrainProvider=new EllipsoidTerrainProvider()] The terrain provider to use
      * @param {Element} [options.fullscreenElement=container] The element to make full screen when the full screen button is pressed.
+     * @param {Object} [options.contextOptions=undefined] Properties corresponding to <a href='http://www.khronos.org/registry/webgl/specs/latest/#5.2'>WebGLContextAttributes</a> used to create the WebGL context.  This object will be passed to the {@link Scene} constructor.
      * @param {SceneMode} [options.sceneMode=SceneMode.SCENE3D] The initial scene mode.
      *
      * @exception {DeveloperError} container is required.
@@ -86,25 +82,65 @@ define([
      * @see HomeButton
      * @see SceneModePicker
      * @see Timeline
+     * @see viewerDragDropMixin
+     * @see viewerDynamicObjectMixin
+     *
+     * @example
+     * //Initialize the viewer widget with several custom options and mixins.
+     * var viewer = new Viewer('cesiumContainer', {
+     *     //Start in Columbus Viewer
+     *     sceneMode : SceneMode.COLUMBUS_VIEW,
+     *     //Use standard Cesium terrain
+     *     terrainProvider : new CesiumTerrainProvider({
+     *         url : 'http://cesium.agi.com/smallterrain',
+     *         credit : 'Terrain data courtesy Analytical Graphics, Inc.'
+     *     }),
+     *     //Hide the base layer picker
+     *     baselayerPicker : false,
+     *     //Use OpenStreetMaps
+     *     selectedImageryProviderViewModel : new ImageryProviderViewModel({
+     *         name : 'Open\u00adStreet\u00adMap',
+     *         iconUrl : buildModuleUrl('Widgets/Images/ImageryProviders/openStreetMap.png'),
+     *         tooltip : 'OpenStreetMap (OSM) is a collaborative project to create a free editable map',
+     *         creationFunction : function() {
+     *             return new OpenStreetMapImageryProvider({
+     *                 url : 'http://tile.openstreetmap.org/'
+     *             });
+     *         }
+     *     })
+     * });
+     *
+     * //Add basic drag and drop functionality
+     * viewer.extend(viewerDragDropMixin);
+     *
+     * //Allow users to zoom and follow objects loaded from CZML by clicking on it.
+     * viewer.extend(viewerDynamicObjectMixin);
+     *
+     * //Show a pop-up alert if we encounter an error when processing a dropped file
+     * viewer.onDropError.addEventListener(function(dropHandler, name, error) {
+     *     console.log(error);
+     *     window.alert(error);
+     * });
      */
     var Viewer = function(container, options) {
-        options = defaultValue(options, defaultValue.EMPTY_OBJECT);
-
         if (typeof container === 'undefined') {
             throw new DeveloperError('container is required.');
         }
 
-        if (typeof container === 'string') {
-            var tmp = document.getElementById(container);
-            if (tmp === null) {
-                throw new DeveloperError('Element with id "' + container + '" does not exist in the document.');
-            }
-            container = tmp;
-        }
+        container = getElement(container);
 
         var viewerContainer = document.createElement('div');
         viewerContainer.className = 'cesium-viewer';
         container.appendChild(viewerContainer);
+
+        options = defaultValue(options, defaultValue.EMPTY_OBJECT);
+
+        var createBaseLayerPicker = typeof options.baseLayerPicker === 'undefined' || options.baseLayerPicker !== false;
+        var imageryProvider;
+        if (createBaseLayerPicker) {
+            // BaseLayerPicker will add the base layer later
+            imageryProvider = false;
+        }
 
         //Cesium widget
         var cesiumWidgetContainer = document.createElement('div');
@@ -112,15 +148,18 @@ define([
         viewerContainer.appendChild(cesiumWidgetContainer);
         var cesiumWidget = new CesiumWidget(cesiumWidgetContainer, {
             terrainProvider : options.terrainProvider,
-            sceneMode : options.sceneMode
+            imageryProvider : imageryProvider,
+            sceneMode : options.sceneMode,
+            contextOptions : options.contextOptions
         });
 
         //Subscribe for resize events and set the initial size.
+        var that = this;
+        this._needResize = true;
         this._resizeCallback = function() {
-            setLogoOffset(cesiumWidget.centralBody, cesiumWidget.cesiumLogo.offsetWidth + cesiumWidget.cesiumLogo.offsetLeft + 10, 28);
+            that._needResize = true;
         };
         window.addEventListener('resize', this._resizeCallback, false);
-        this._resizeCallback();
 
         var clock = cesiumWidget.clock;
 
@@ -156,13 +195,17 @@ define([
 
         //BaseLayerPicker
         var baseLayerPicker;
-        if (typeof options.baseLayerPicker === 'undefined' || options.baseLayerPicker !== false) {
+        if (createBaseLayerPicker) {
             var baseLayerPickerContainer = document.createElement('div');
             baseLayerPickerContainer.className = 'cesium-viewer-baseLayerPickerContainer';
             toolbar.appendChild(baseLayerPickerContainer);
             var providerViewModels = defaultValue(options.imageryProviderViewModels, createDefaultBaseLayers());
             baseLayerPicker = new BaseLayerPicker(baseLayerPickerContainer, cesiumWidget.centralBody.getImageryLayers(), providerViewModels);
             baseLayerPicker.viewModel.selectedItem = defaultValue(options.selectedImageryProviderViewModel, providerViewModels[0]);
+
+            //Grab the dropdown for resize code.
+            var elements = baseLayerPickerContainer.getElementsByClassName('cesium-baseLayerPicker-dropDown');
+            this._baseLayerPickerDropDown = elements[0];
         }
 
         //Animation
@@ -231,7 +274,7 @@ define([
 
         /**
          * Gets the CesiumWidget.
-         * @memberof Viewer
+         * @memberof Viewer.prototype
          * @type {CesiumWidget}
          */
         cesiumWidget : {
@@ -242,7 +285,7 @@ define([
 
         /**
          * Gets the HomeButton.
-         * @memberof Viewer
+         * @memberof Viewer.prototype
          * @type {HomeButton}
          */
         homeButton : {
@@ -253,7 +296,7 @@ define([
 
         /**
          * Gets the SceneModePicker.
-         * @memberof Viewer
+         * @memberof Viewer.prototype
          * @type {SceneModePicker}
          */
         sceneModePicker : {
@@ -264,7 +307,7 @@ define([
 
         /**
          * Gets the BaseLayerPicker.
-         * @memberof Viewer
+         * @memberof Viewer.prototype
          * @type {BaseLayerPicker}
          */
         baseLayerPicker : {
@@ -275,7 +318,7 @@ define([
 
         /**
          * Gets the Animation widget.
-         * @memberof Viewer
+         * @memberof Viewer.prototype
          * @type {Animation}
          */
         animation : {
@@ -286,7 +329,7 @@ define([
 
         /**
          * Gets the Timeline widget.
-         * @memberof Viewer
+         * @memberof Viewer.prototype
          * @type {Timeline}
          */
         timeline : {
@@ -297,7 +340,7 @@ define([
 
         /**
          * Gets the FullscreenButton.
-         * @memberof Viewer
+         * @memberof Viewer.prototype
          * @type {FullscreenButton}
          */
         fullscreenButton : {
@@ -319,7 +362,7 @@ define([
 
         /**
          * Gets the display used for {@link DataSource} visualization.
-         * @memberof Viewer
+         * @memberof Viewer.prototype
          * @type {DataSourceDisplay}
          */
         dataSourceDisplay : {
@@ -330,7 +373,7 @@ define([
 
         /**
          * Gets the set of {@link DataSource} instances to be visualized.
-         * @memberof Viewer
+         * @memberof Viewer.prototype
          * @type {DataSourceCollection}
          */
         dataSources : {
@@ -341,7 +384,7 @@ define([
 
         /**
          * Gets the canvas.
-         * @memberof Viewer
+         * @memberof Viewer.prototype
          * @returns {Canvas} The canvas.
          */
         canvas : {
@@ -352,7 +395,7 @@ define([
 
         /**
          * Gets the Cesium logo element.
-         * @memberof Viewer
+         * @memberof Viewer.prototype
          * @returns {Element} The logo element.
          */
         cesiumLogo : {
@@ -363,7 +406,7 @@ define([
 
         /**
          * Gets the scene.
-         * @memberof Viewer
+         * @memberof Viewer.prototype
          * @returns {Scene} The scene.
          */
         scene : {
@@ -374,7 +417,7 @@ define([
 
         /**
          * Gets the primary central body.
-         * @memberof Viewer
+         * @memberof Viewer.prototype
          * @returns {CentralBody} The primary central body.
          */
         centralBody : {
@@ -385,7 +428,7 @@ define([
 
         /**
          * Gets the clock.
-         * @memberof Viewer
+         * @memberof Viewer.prototype
          * @returns {Clock} the clock
          */
         clock : {
@@ -396,7 +439,7 @@ define([
 
         /**
          * Gets the scene transitioner.
-         * @memberof Viewer
+         * @memberof Viewer.prototype
          * @returns {SceneTransitioner} The scene transitioner.
          */
         sceneTransitioner : {
@@ -407,14 +450,14 @@ define([
 
         /**
          * Gets the screen space event handler.
-         * @memberof Viewer
+         * @memberof Viewer.prototype
          * @returns {ScreenSpaceEventHandler}
          */
         screenSpaceEventHandler : {
             get : function() {
                 return this._cesiumWidget.screenSpaceEventHandler;
             }
-        },
+        }
     });
 
     /**
@@ -423,6 +466,25 @@ define([
      */
     Viewer.prototype.isDestroyed = function() {
         return false;
+    };
+
+    /**
+     * Extends the base viewer functionality with the provided mixin.
+     * A mixin may add additional properties, functions, or other behavior
+     * to the provided viewer instance.
+     * @memberof Viewer
+     *
+     * @param mixin The Viewer mixin to add to this instance.
+     * @param options The options object to be passed to the mixin function.
+     *
+     * @see viewerDragDropMixin
+     * @see viewerDynamicObjectMixin
+     */
+    Viewer.prototype.extend = function(mixin, options) {
+        if (typeof mixin === 'undefined') {
+            throw new DeveloperError('mixin is required.');
+        }
+        mixin(this, options);
     };
 
     /**
@@ -479,6 +541,59 @@ define([
     };
 
     Viewer.prototype._onTick = function(clock) {
+        if (this._needResize) {
+            this._needResize = false;
+
+            var cesiumWidget = this._cesiumWidget;
+            var widgetWidth = cesiumWidget.canvas.clientWidth;
+
+            var timelineExists = typeof this._timeline !== 'undefined';
+            var animationExists = typeof this._animation !== 'undefined';
+            var animationContainer;
+
+            var animationWidth = 0;
+            if (animationExists) {
+                animationContainer = this._animation.container;
+
+                if (widgetWidth > 900) {
+                    animationWidth = 169;
+                    animationContainer.style.width = '169px';
+                    animationContainer.style.height = '112px';
+                } else if (widgetWidth >= 600) {
+                    animationWidth = 136;
+                    animationContainer.style.width = '136px';
+                    animationContainer.style.height = '90px';
+                } else {
+                    animationWidth = 106;
+                    animationContainer.style.width = '106px';
+                    animationContainer.style.height = '70px';
+                }
+                this._animation._resizeCallback();
+            }
+
+            var logoBottom = timelineExists ? 28 : 0;
+            var logoLeft = animationExists ? animationWidth : 0;
+
+            var logo = cesiumWidget.cesiumLogo;
+            var logoStyle = logo.style;
+            logoStyle.bottom = logoBottom + 'px';
+            logoStyle.left = logoLeft + 'px';
+
+            var logoOffset = cesiumWidget.centralBody.logoOffset;
+            logoOffset.x = logoLeft + 123;
+            logoOffset.y = logoBottom;
+
+            if (timelineExists) {
+                this._timeline.container.style.left = animationExists ? animationWidth + 'px' : 0;
+            }
+
+            var baseLayerPickerDropDown = this._baseLayerPickerDropDown;
+            if (typeof baseLayerPickerDropDown !== 'undefined') {
+                var baseLayerPickerMaxHeight = cesiumWidget.canvas.height - 100;
+                baseLayerPickerDropDown.style.maxHeight = baseLayerPickerMaxHeight + 'px';
+            }
+        }
+
         var currentTime = clock.currentTime;
         this._dataSourceDisplay.update(currentTime);
     };

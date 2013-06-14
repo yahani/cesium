@@ -1,59 +1,61 @@
 /*global define*/
-define(['dojo/_base/window',
-        'dojo/dom-class',
-        'dojo/io-query',
-        'dojo/parser',
-        'dojo/ready',
+define([
         'DynamicScene/CzmlDataSource',
         'Scene/PerformanceDisplay',
-        'Widgets/Dojo/checkForChromeFrame',
+        'Widgets/checkForChromeFrame',
         'Widgets/Viewer/Viewer',
-        'Widgets/Viewer/ViewerDropHandler',
-        'Widgets/Viewer/ViewerDynamicSceneControls'
-        ], function(
-                win,
-                domClass,
-                ioQuery,
-                parser,
-                ready,
-                CzmlDataSource,
-                PerformanceDisplay,
-                checkForChromeFrame,
-                Viewer,
-                ViewerDropHandler,
-                ViewerDynamicSceneControls) {
+        'Widgets/Viewer/viewerDragDropMixin',
+        'Widgets/Viewer/viewerDynamicObjectMixin',
+        'domReady!'
+    ], function(
+        CzmlDataSource,
+        PerformanceDisplay,
+        checkForChromeFrame,
+        Viewer,
+        viewerDragDropMixin,
+        viewerDynamicObjectMixin) {
     "use strict";
     /*global console*/
 
-    var viewer;
-    var dropHandler;
-    var dynamicSceneControls;
+    /*
+     * 'debug'  : true/false,   // Full WebGL error reporting at substantial performance cost.
+     * 'lookAt' : CZML id,      // The CZML ID of the object to track at startup.
+     * 'source' : 'file.czml',  // The relative URL of the CZML file to load at startup.
+     * 'stats'  : true,         // Enable the FPS performance display.
+     * 'theme'  : 'lighter',    // Use the dark-text-on-light-background theme.
+     */
+    var endUserOptions = {};
+    var queryString = window.location.search.substring(1);
+    if (queryString !== '') {
+        var params = queryString.split('&');
+        for ( var i = 0, len = params.length; i < len; ++i) {
+            var param = params[i];
+            var keyValuePair = param.split('=');
+            if (keyValuePair.length > 1) {
+                endUserOptions[keyValuePair[0]] = decodeURIComponent(keyValuePair[1].replace(/\+/g, ' '));
+            }
+        }
+    }
 
-    ready(function() {
-        parser.parse();
+    var loadingIndicator = document.getElementById('loadingIndicator');
 
-        checkForChromeFrame();
+    checkForChromeFrame('cesiumContainer').then(function(prompting) {
+        if (!prompting) {
+            startup();
+        } else {
+            loadingIndicator.style.display = 'none';
+        }
+    });
 
-        viewer = new Viewer('cesiumContainer');
-        dropHandler = new ViewerDropHandler(viewer);
-        dropHandler.onError.addEventListener(function(dropHandler, name, error) {
+    function startup() {
+        var viewer = new Viewer('cesiumContainer');
+        viewer.extend(viewerDragDropMixin);
+        viewer.extend(viewerDynamicObjectMixin);
+
+        viewer.onDropError.addEventListener(function(dropHandler, name, error) {
             console.log(error);
             window.alert(error);
         });
-
-        dynamicSceneControls = new ViewerDynamicSceneControls(viewer);
-
-        /*
-         * 'debug'  : true/false,   // Full WebGL error reporting at substantial performance cost.
-         * 'lookAt' : CZML id,      // The CZML ID of the object to track at startup.
-         * 'source' : 'file.czml',  // The relative URL of the CZML file to load at startup.
-         * 'stats'  : true,         // Enable the FPS performance display.
-         * 'theme'  : 'lighter',    // Use the dark-text-on-light-background theme.
-         */
-        var endUserOptions = {};
-        if (typeof window.location.search !== 'undefined') {
-            endUserOptions = ioQuery.queryToObject(window.location.search.substring(1));
-        }
 
         var scene = viewer.scene;
         var context = scene.getContext();
@@ -72,18 +74,25 @@ define(['dojo/_base/window',
                 var dataClock = source.getClock();
                 if (typeof dataClock !== 'undefined') {
                     dataClock.clone(viewer.clock);
+                    viewer.timeline.updateFromClock();
                     viewer.timeline.zoomTo(dataClock.startTime, dataClock.stopTime);
                 }
 
                 if (typeof endUserOptions.lookAt !== 'undefined') {
                     var dynamicObject = source.getDynamicObjectCollection().getObject(endUserOptions.lookAt);
                     if (typeof dynamicObject !== 'undefined') {
-                        dynamicSceneControls.trackedObject = dynamicObject;
+                        viewer.trackedObject = dynamicObject;
                     } else {
                         window.alert('No object with id ' + endUserOptions.lookAt + ' exists in the provided source.');
                     }
                 }
+            }, function(e) {
+                window.alert(e);
+            }).always(function() {
+                loadingIndicator.style.display = 'none';
             });
+        } else {
+            loadingIndicator.style.display = 'none';
         }
 
         if (endUserOptions.stats) {
@@ -99,7 +108,5 @@ define(['dojo/_base/window',
                 window.alert('Unknown theme: ' + theme);
             }
         }
-
-        domClass.remove(win.body(), 'loading');
-    });
+    }
 });

@@ -20,7 +20,8 @@ define([
         '../../Scene/SceneTransitioner',
         '../../Scene/SkyAtmosphere',
         '../../Scene/SkyBox',
-        '../../Scene/Sun'
+        '../../Scene/Sun',
+        '../getElement'
     ], function(
         buildModuleUrl,
         Cartesian2,
@@ -42,7 +43,8 @@ define([
         SceneTransitioner,
         SkyAtmosphere,
         SkyBox,
-        Sun) {
+        Sun,
+        getElement) {
     "use strict";
 
     function getDefaultSkyBoxUrl(suffix) {
@@ -58,9 +60,10 @@ define([
      * @param {Element|String} container The DOM element or ID that will contain the widget.
      * @param {Object} [options] Configuration options for the widget.
      * @param {Clock} [options.clock=new Clock()] The clock to use to control current time.
-     * @param {ImageryProvider} [options.imageryProvider=new BingMapsImageryProvider()] The imagery provider to serve as the base layer.
+     * @param {ImageryProvider} [options.imageryProvider=new BingMapsImageryProvider()] The imagery provider to serve as the base layer. If set to false, no imagery provider will be added.
      * @param {TerrainProvider} [options.terrainProvider=new EllipsoidTerrainProvider] The terrain provider.
      * @param {SceneMode} [options.sceneMode=SceneMode.SCENE3D] The initial scene mode.
+     * @param {Object} [options.contextOptions=undefined] Properties corresponding to <a href='http://www.khronos.org/registry/webgl/specs/latest/#5.2'>WebGLContextAttributes</a> used to create the WebGL context.  This object will be passed to the {@link Scene} constructor.
      *
      * @exception {DeveloperError} container is required.
      * @exception {DeveloperError} Element with id "container" does not exist in the document.
@@ -86,13 +89,7 @@ define([
             throw new DeveloperError('container is required.');
         }
 
-        if (typeof container === 'string') {
-            var tmp = document.getElementById(container);
-            if (tmp === null) {
-                throw new DeveloperError('Element with id "' + container + '" does not exist in the document.');
-            }
-            container = tmp;
-        }
+        container = getElement(container);
 
         options = defaultValue(options, {});
 
@@ -116,7 +113,7 @@ define([
         cesiumLogo.className = 'cesium-widget-logo';
         widgetNode.appendChild(cesiumLogo);
 
-        var scene = new Scene(canvas);
+        var scene = new Scene(canvas, options.contextOptions);
         scene.getCamera().controller.constrainedAxis = Cartesian3.UNIT_Z;
 
         var ellipsoid = Ellipsoid.WGS84;
@@ -146,7 +143,10 @@ define([
                 proxy : FeatureDetection.supportsCrossOriginImagery() ? undefined : new DefaultProxy('http://cesium.agi.com/proxy/')
             });
         }
-        centralBody.getImageryLayers().addImageryProvider(imageryProvider);
+
+        if (imageryProvider !== false) {
+            centralBody.getImageryLayers().addImageryProvider(imageryProvider);
+        }
 
         //Set the terrain provider if one is provided.
         if (typeof options.terrainProvider !== 'undefined') {
@@ -172,19 +172,19 @@ define([
             }
         }
 
-        var widget = this;
+        var that = this;
         //Subscribe for resize events and set the initial size.
         this._needResize = true;
         this._resizeCallback = function() {
-            widget._needResize = true;
+            that._needResize = true;
         };
         window.addEventListener('resize', this._resizeCallback, false);
 
         //Create and start the render loop
         this._isDestroyed = false;
         function render() {
-            if (!widget._isDestroyed) {
-                widget.render();
+            if (!that._isDestroyed) {
+                that.render();
                 requestAnimationFrame(render);
             }
         }
