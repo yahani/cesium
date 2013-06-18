@@ -726,12 +726,13 @@ define([
             this._dataSourceBrowser = this._dataSourceBrowser.destroy();
         }
 
+        this._cesiumWidget = this._cesiumWidget.destroy();
+        this._dataSourceDisplay = this._dataSourceDisplay.destroy();
+
         if (typeof this._dataSourceCollection.destroy === 'function') {
             this._dataSourceCollection = this._dataSourceCollection.destroy();
         }
 
-        this._cesiumWidget = this._cesiumWidget.destroy();
-        this._dataSourceDisplay = this._dataSourceDisplay.destroy();
         return destroyObject(this);
     };
 
